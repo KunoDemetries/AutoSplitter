@@ -1,4 +1,16 @@
-	settings.Add("missions", true, "Missions");    
+ state("iw5sp")
+{
+	int loading1 : 0x19ECCC4;
+	string200 map : 0xB23C64;
+	string200 map2 : 0xB23D0B;
+	int poser : 0x18002C3;
+	int dad : 0x5AC158;
+}
+
+
+startup
+{
+settings.Add("missions", true, "Missions");    
 	
 	vars.missions = new Dictionary<string,string> 
 	{ 
