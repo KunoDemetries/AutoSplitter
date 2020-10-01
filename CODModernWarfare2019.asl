@@ -1,3 +1,5 @@
+    state("ModernWarfare")
+    {
     string100 map : 0xDE83FA1;
     int loading1 :  0xEDD51C4;
     }
