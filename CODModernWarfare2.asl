@@ -1,3 +1,5 @@
+state("iw4sp")
+{	
 	string131 map : 0x5DA560;
 	int loading1 : 0x171338C;
 	int boi : 0xC98A50;
