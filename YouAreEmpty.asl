@@ -1,3 +1,4 @@
+state("you_are_empty")
 {
     bool isNotLoading : "ds2kernel.dll", 0xC00EC;
     string50 maps : "ds2kernel.dll", 0xBDC94;
