@@ -100,7 +100,7 @@ start
 
  isLoading
 {
-	return ((current.loading1 == 1) && (version == "1.1.12"));
+	return ((current.loading1 == 0) && (version == "1.1.12"));
 	return ((current.loading1 == 0) && (version == "Default"));
     return (current.map1 == "ui");
 }
