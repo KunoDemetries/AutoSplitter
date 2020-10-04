@@ -2,7 +2,7 @@ state("MW2CR")
 {
 	string6 decide: 0xA9809F;
     string50 map1 : 0x41758D1;
-	int loading1 : 0x43784A8;
+	int loading1 : 0x11BAC56C;
 }
 
 state("MW2CR", "Default")
