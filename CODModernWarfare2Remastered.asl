@@ -2,7 +2,7 @@ state("MW2CR")
 {
 	string6 decide: 0xA9809F;
     string50 map1 : 0x41758D1;
-	int loading1 : 0x43784A8;
+	int loading1 : 0x4B894F0;
 }
 
 state("MW2CR", "Default")
@@ -100,7 +100,7 @@ start
 
  isLoading
 {
-	return ((current.loading1 != 0) && (version == "1.1.12"));
+	return ((current.loading1 == 0) && (version == "1.1.12"));
 	return ((current.loading1 == 0) && (version == "Default"));
     return (current.map1 == "ui");
 }
@@ -121,3 +121,5 @@ split
 		}	
 	}
 }
+
+// help from klooger
