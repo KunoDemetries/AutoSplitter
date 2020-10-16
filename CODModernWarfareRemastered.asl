@@ -22,7 +22,7 @@ state("h1_sp64_ship","1.13")
 
 state("h1_sp64_ship","1.15")
 {
-	int loading1: 0xB5C6570;
+	int loading1: 0xD7EC10C;
 	string200 map : 0x45FF196;
 	string4 decide: 0x6668D4C;
 	string4 decide2: 0x781FAC;
@@ -163,8 +163,9 @@ start
 
  isLoading
 {
-	return (current.loading1 == 1);
-
+	return ((current.loading1 == 1) && (version != "1.15"));
+	return ((current.loading1 == 0) && (version == "1.15"));
+	
 	if ((version == "default") && (current.loading1 == 0))
 	{
 		return true;
