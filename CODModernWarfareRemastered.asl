@@ -170,6 +170,8 @@ start
 	{
 		return true;
 	}
+	return ((current.map == "ui") ||
+	(current.map == "coup"));
 }
 
 
