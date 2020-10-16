@@ -1,4 +1,4 @@
-state("h1_sp64_ship")
+ state("h1_sp64_ship")
 {
 	string4 decide: 0x6668D4C;
 	string4 decide2: 0x781FAC;
@@ -163,13 +163,22 @@ start
 
  isLoading
 {
-	return ((current.loading1 == 1) && (version != "1.15"));
-	return ((current.loading1 == 0) && (version == "1.15"));
-	
+	if((current.loading1 == 1) && (version != "1.15"))
+	{ 
+		return true;
+	}
+	else
+	{
+		if ((current.loading1 == 0) && (version == "1.15"))
+		{
+			return true;
+		}
+	}
 	if ((version == "default") && (current.loading1 == 0))
 	{
 		return true;
 	}
+	
 	return ((current.map == "ui") ||
 	(current.map == "coup"));
 }
