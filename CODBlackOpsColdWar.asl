@@ -1,8 +1,7 @@
 state("BlackOpsColdWar")
 {
-    int loading1 : 0x17A66B84;
-    string50 map : 0x15997914;
-    int loading2 : 0xE3F9238;
+    int loading1 : 0xF5F7754;
+    string50 map : 0x159B7F24;
 }
 
 startup
@@ -91,6 +90,5 @@ reset
 
 isLoading
 {
-    return (current.loading1 == 0) || 
-            (current.loading2 == 0);
+    return (current.loading1 == 0);
 }
