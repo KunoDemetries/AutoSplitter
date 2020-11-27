@@ -1,14 +1,14 @@
 state("BlackOpsColdWar")
 {
     int loading1 : 0xF5F7754;
-    string50 map : 0x159B7F24;
+    string50 map : 0x15FB4B48;
 }
 
 startup
 {
 	settings.Add("missions", true, "Missions");
     settings.Add("split", false, "Briefings");
-settings.SetToolTip("split", "Will Split on ever briefing (Includes interrogation)");
+    settings.SetToolTip("split", "Will Split on ever briefing (Includes interrogation)");
 
 	vars.missions = new Dictionary<string,string> 
     {    
