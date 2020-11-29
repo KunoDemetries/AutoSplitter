@@ -1,6 +1,6 @@
 state("BlackOpsColdWar")
 {
-    byte round : 0x10CE3958;
+    int round : 0xF5F945C;
 }
 
 startup
@@ -24,17 +24,33 @@ startup
     };    
 }
 
+init
+{
+    vars.doneMaps = new List<string>(); 
+
+}
+
 start
 {
-    return (current.round == 1);
+    if (current.round == 1)
+    {
+        return true;
+		vars.doneMaps.Clear();
+    }
 }
 
 split
 {
     string currentMap = (current.round.ToString());
 
-    if ((settings[currentMap]) && (current.round != old.round))    
+    if ((settings[currentMap]) && (current.round != old.round) && (!vars.doneMaps.Contains(currentMap)))    
     {
+		vars.doneMaps.Add(old.map);		
         return true;
     }
+}
+
+reset
+{
+    return (current.round == 0);
 }
