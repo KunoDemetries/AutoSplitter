@@ -1,7 +1,7 @@
 state("BlackOpsColdWar")
 {
-    int loading1 : 0xE5DFA28;
-    string50 map : 0x15981F24;
+    int loading1 : 0x15FB9638;
+    string50 map : 0x15986E24;
 }
 
 startup
@@ -24,7 +24,7 @@ startup
         {"s_siege","The Final Countdown (Good Ending)"},
         {"s_duga","Ashes to Ashes (Bad Ending)"},
         }; 
-
+// operation cirus demission_tundra
  	    foreach (var Tag in vars.missions)
 	    {
 		    settings.Add(Tag.Key, true, Tag.Value, "missions");
