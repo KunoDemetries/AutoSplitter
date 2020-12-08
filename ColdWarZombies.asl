@@ -1,6 +1,11 @@
+// An Autosplitter made for BOCW for zombies
+// This usually will have some bugs just because online MP will always be trash
+// Message KunoDemetries#6969 on discord if there is a problem or join the zombies discord 
 state("BlackOpsColdWar")
 {
     int round : 0xFC8434C;
+    int loading1 : 0xEC61758;
+
 }
 
 startup
@@ -31,13 +36,15 @@ startup
 init
 {
     vars.doneMaps = new List<string>(); 
+    vars.starter = false;
 }
 
 start
 {
-    if (current.round == 1)
+    if ((current.round == 1) && (current.loading1 != 0))
     {
 		vars.doneMaps.Clear();
+       vars.starter = true;
         return true;
     }
 }
@@ -50,6 +57,15 @@ split
     {
 		vars.doneMaps.Add(current.round.ToString());		
         return true;
+    }
+}
+
+gameTime
+{
+    if ((vars.starter == true) && (current.round == 1) && (current.loading1 != 0) && (current.loading1 == 1))
+    {
+        vars.starter = false;
+        return TimeSpan.FromSeconds(-10);
     }
 }
 
