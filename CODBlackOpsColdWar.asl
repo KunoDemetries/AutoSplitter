@@ -1,7 +1,7 @@
 state("BlackOpsColdWar")
 {
-    int loading1 : 0xE5DDF50;
-    string50 map : 0x15986E24;
+    int loading1 : 0xEC61758;
+    string50 map : 0x160082CC;
 }
 
 startup
