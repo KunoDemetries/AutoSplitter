@@ -1,6 +1,6 @@
 state("CoDWaW") {
     string50 map : 0x5592B8; 
-    int loading1 : 0x3075B14;
+    int loading1 : 0x3172284;
     int squares1 : 0x14ED874;
     int Seen : 0x14E742C;
 }
