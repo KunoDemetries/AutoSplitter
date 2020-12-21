@@ -1,11 +1,11 @@
 // Created by KunoDemetries#6969 
-// For vers 1.6
+// For vers 1.7
 
 
 state("BlackOpsColdWar")
 {
-    int loading1 : 0xECF0EE8; // It seems static addresses for things like loads and
-    string50 map : 0xEDD2AF3; // Level names are consistent to the 0xEA - 0xEF area
+    int loading1 : 0xECF3028; // It seems static addresses for things like loads and
+    string50 map : 0xEDD4C33; // Level names are consistent to the 0xEA - 0xEF area
 }
 
 startup
