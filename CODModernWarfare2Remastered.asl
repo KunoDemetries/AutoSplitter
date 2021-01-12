@@ -15,7 +15,7 @@ state("MW2CR", "Default")
 state("MW2CR", "1.1.12")
 {
 	string50 map1 : 0x41758D1;
-	int loading1 : 0x43784A8;
+	int loading1 : 0x4B894F0;
 	string6 decide: 0x11BAC56C;
 }
 
@@ -100,7 +100,7 @@ start
 
  isLoading
 {
-	return ((current.loading1 == 1) && (version == "1.1.12"));
+	return ((current.loading1 == 0) && (version == "1.1.12"));
 	return ((current.loading1 == 0) && (version == "Default"));
     return (current.map1 == "ui");
 }
