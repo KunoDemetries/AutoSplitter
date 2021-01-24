@@ -1,9 +1,9 @@
 // Created by KunoDemetries#6969 
-// For vers 1.8
+// For vers 1.7.6
 state("BlackOpsColdWar")
 {
-    int loading1 : 0xED58028; // It seems static addresses for things like loads and
-    string50 map : 0xEE39EB3; // Level names are consistent to the 0xEA - 0xEF area
+    int loading1 : 0xE179120; // It seems static addresses for things like loads and
+    string50 map : 0xECF9EF3; // Level names are consistent to the 0xEA - 0xEF area
 }
 
 startup
