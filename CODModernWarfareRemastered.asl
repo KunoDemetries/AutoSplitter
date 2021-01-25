@@ -120,11 +120,7 @@ startup
 
       	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
         {
-            vars.starter = 0;
-            vars.endsplit = 0;
-            vars.FuckFinalSplit = 0;
-            vars.doneMaps.Clear();
-            vars.doneMaps.Add(current.map.ToString());
+    	vars.doneMaps.Clear();
         });
 
     timer.OnStart += vars.onStart; 
