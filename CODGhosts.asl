@@ -36,18 +36,6 @@ startup
 		    settings.Add(Tag.Key, true, Tag.Value, "missions");
         };
 
-
-  	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
-        {
-            vars.starter = 0;
-            vars.endsplit = 0;
-            vars.FuckFinalSplit = 0;
-            vars.doneMaps.Clear();
-            vars.doneMaps.Add(current.map.ToString());
-        });
-
-    timer.OnStart += vars.onStart; 
-
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
         {        
         var timingMessage = MessageBox.Show (
@@ -79,7 +67,6 @@ split
 	{
 		if (settings[current.map]) 
 		{
-			vars.doneMaps.Add(old.map);
 			return true;	
 		}	
 	}
@@ -93,9 +80,4 @@ isLoading
 reset
 {
     return (current.map == null);
-}
-
-exit 
-{
-    timer.OnStart -= vars.onStart;
 }
