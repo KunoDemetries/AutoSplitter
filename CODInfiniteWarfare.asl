@@ -2,11 +2,12 @@ state("iw7_ship")
 {
 string100 map1 : 0x21E5F3C;
 int loading1 : 0xB0596AC;
-
 }
 
 startup
 {
+	settings.Add("missions", true, "Missions");
+
 	vars.missions = new Dictionary<string,string> 
 	{ 
 		{"europa", "Rising Threat"},
@@ -33,9 +34,37 @@ startup
 		{"marsbase", "Operation Blood Storm: All or Nothing"},
 		{"yard", "Operation Blood Storm: Assault the Shipyard"},
 	}; 
-	  	foreach (var Tag in vars.missions) 
-		{
-        settings.Add(Tag.Key, true, Tag.Value);
+	foreach (var Tag in vars.missions)
+	{
+		settings.Add(Tag.Key, true, Tag.Value, "missions");
+    };
+
+    
+  	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
+        {
+            vars.starter = 0;
+            vars.endsplit = 0;
+            vars.FuckFinalSplit = 0;
+            vars.doneMaps.Clear();
+            vars.doneMaps.Add(current.map.ToString());
+        });
+
+    timer.OnStart += vars.onStart; 
+
+	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
+        {        
+        var timingMessage = MessageBox.Show (
+               "This game uses Time without Loads (Game Time) as the main timing method.\n"+
+                "LiveSplit is currently set to show Real Time (RTA).\n"+
+                "Would you like to set the timing method to Game Time? This will make verification easier",
+                "LiveSplit | Call of Duty: Advanced Warfare",
+               MessageBoxButtons.YesNo,MessageBoxIcon.Question
+            );
+        
+            if (timingMessage == DialogResult.Yes)
+            {
+                timer.CurrentTimingMethod = TimingMethod.GameTime;
+            }
         }
 }
 
@@ -61,5 +90,9 @@ isLoading
 	return (current.loading1 == 0);
 }
 
+exit 
+{
+    timer.OnStart -= vars.onStart;
+}
 
 // v-meter iw7_ship.exe+1FDF420
