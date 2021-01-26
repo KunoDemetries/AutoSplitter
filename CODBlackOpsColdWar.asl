@@ -13,19 +13,19 @@ startup
     settings.SetToolTip("split", "Will Split on ever briefing (Includes interrogation)");  // making a note to explain the briefing setting
 
 	vars.missions = new Dictionary<string,string> // creating a dictionary just to not have to make 1.5k settings
-    {    
-        {"ger_hub","CIA Safehouse E9"}, // first "" is the in-game name, and the second "" is the actual name
-        {"nam_armada","Fractured Jaw"},
-        {"ger_stakeout","Brick in the Wall"},
-        {"rus_amerika","Redlight, Greenlight"},
-        {"rus_yamantau","Echoes of a Cold War"},
-        {"rus_kgb","Desperate Measures"},
-        {"nic_revolucion","End of the Line"},
-        {"nam_prisoner","Break on Through"},
-        {"ger_hub8","Identity Crisis"},
-        {"rus_siege","The Final Countdown (Good Ending)"},
-        {"rus_duga","Ashes to Ashes (Bad Ending)"},
-    }; 
+    	{    
+        	{"ger_hub","CIA Safehouse E9"}, // first "" is the in-game name, and the second "" is the actual name
+        	{"nam_armada","Fractured Jaw"},
+        	{"ger_stakeout","Brick in the Wall"},
+        	{"rus_amerika","Redlight, Greenlight"},
+        	{"rus_yamantau","Echoes of a Cold War"},
+        	{"rus_kgb","Desperate Measures"},
+        	{"nic_revolucion","End of the Line"},
+        	{"nam_prisoner","Break on Through"},
+        	{"ger_hub8","Identity Crisis"},
+        	{"rus_siege","The Final Countdown (Good Ending)"},
+        	{"rus_duga","Ashes to Ashes (Bad Ending)"},
+    	}; 
         // operation cirus demission_tundra
  	    foreach (var Tag in vars.missions) // Saying for every var in var.missions to make it have the key value of missions to then refrence it in the settings for missions
 	    {
@@ -35,7 +35,9 @@ startup
 
   	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
         {
-		vars.doneMaps.Clear();
+			vars.doneMaps.Clear();
+			vars.debreifsplit = 0;
+    		vars.splitter = 0;
         });
 
         timer.OnStart += vars.onStart; 
@@ -78,7 +80,7 @@ update
     }
 
     // A basic check to see if were in a level we weren't in previously and if that level's setting is true
-    if (((settings[current.map]) && (old.map != current.map) && (!vars.doneMaps.Contains(current.map))))
+    if ((settings[current.map]) && (old.map != current.map) && (!vars.doneMaps.Contains(current.map)))
 	{
 		vars.doneMaps.Add(old.map);				
 		vars.splitter = 1;	
@@ -94,7 +96,9 @@ start // a generic start
     if ((current.map == "takedown") && (current.loading1 != 0))
     {
 		vars.doneMaps.Clear(); // Always good to clear doneMaps in start and reset. Would recommend to also do it in 
-		return true;		    // update if you're back in e_frontend but most of the time it's not neccesary
+		vars.debreifsplit = 0; // update if you're back in e_frontend but most of the time it's not neccesary
+    	vars.splitter = 0; 
+		return true;		    
 	}
 }
 
