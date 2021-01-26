@@ -37,6 +37,8 @@ startup {
 
 	foreach (var s in sB)
 		settings.Add(s.Item2, true, s.Item3, s.Item1);
+
+	timer.CurrentTimingMethod = TimingMethod.GameTime;
 }
 
 start {
