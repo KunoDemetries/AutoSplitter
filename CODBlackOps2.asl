@@ -1,112 +1,51 @@
-state("t6sp")
-{
-	string65 map : 0xF4E62C;
-	double loading1 : 0x1A002C0;
-	string90 map2 : 0xC18138;
-	int exit : 0x2578DF0;
+// Original script by Kuno Demetries.
+// Enhancements by Ero.
+
+state("t6sp") {
+	string23 mapName1 : 0xC18138;
+	string23 mapName2 : 0xF4E62C;
+	double loading    : 0x1A002C0;
+	int exit          : 0x2578DF0;
 }
 
-startup
-{
-    vars.missions = new Dictionary<string,string> {  
-		{"monsoon.all.sabs", "Celerium"},
+startup {
+	var sB = new Dictionary<string, string> {
+		{"monsoon.all.sabs",     "Celerium"},
 		{"afghanistan.all.sabs", "Old Wounds"},
-		{"nicaragua.all.sabs", "Time and Fate"},
-		{"pakistan_1.all.sabs", "Fallen Angel"},
-		{"karma_1.all.sabs", "Karma"},
-		{"panama.all.sabs", "Suffer With Me"},
-		{"yemen.all.sabs", "Achilles Veil"},
-		{"blackout.all.sabs", "Odysseus"},
-		{"la_1.all.sabs", "Cordis Die"},
-		{"haiti.all.sabs", "Judgment Day"},
-	}; 
-		   foreach (var Tag in vars.missions) {
-        settings.Add(Tag.Key, true, Tag.Value);
-           }
-           
-    vars.loadings = new Dictionary<string,string> {
-        {"fronted.english.sabs","cutscene1"},
-        {"fronted.all.sabs","cutscene2"},
-        {"ts_afghanistan.all.sabs","cutscene3"},
-    };
-        vars.missions1A = new List<string>();
-        foreach (var Tag in vars.loadings) {
-        vars.missions1A.Add(Tag.Key);
-        }
+		{"nicaragua.all.sabs",   "Time and Fate"},
+		{"pakistan_1.all.sabs",  "Fallen Angel"},
+		{"karma_1.all.sabs",     "Karma"},
+		{"panama.all.sabs",      "Suffer With Me"},
+		{"yemen.all.sabs",       "Achilles Veil"},
+		{"blackout.all.sabs",    "Odysseus"},
+		{"la_1.all.sabs",        "Cordis Die"},
+		{"haiti.all.sabs",       "Judgment Day"}
+	};
 
-    
-  	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
-        {
-		vars.doneMaps.Clear();
-        });
+	foreach (var s in sB)
+		settings.Add(s.Key, true, s.Value);
 
-    timer.OnStart += vars.onStart; 
+	vars.loadings = new List<string> {
+		"fronted.english.sabs",
+		"fronted.all.sabs",
+		"ts_afghanistan.all.sabs"
+	};
 
-	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
-        {        
-        var timingMessage = MessageBox.Show (
-               "This game uses Time without Loads (Game Time) as the main timing method.\n"+
-                "LiveSplit is currently set to show Real Time (RTA).\n"+
-                "Would you like to set the timing method to Game Time? This will make verification easier",
-                "LiveSplit | Call of Duty: Black Ops 2",
-               MessageBoxButtons.YesNo,MessageBoxIcon.Question
-            );
-        
-            if (timingMessage == DialogResult.Yes)
-            {
-                timer.CurrentTimingMethod = TimingMethod.GameTime;
-            }
-        }
+	timer.CurrentTimingMethod = TimingMethod.GameTime;
 }
 
-init 
-{
-	vars.doneMaps = new List<string>(); 
+start {
+	return current.mapName2 == "angola.all.sabs" && current.loading != 0;
 }
 
-start
-{
-    if ((current.map == "angola.all.sabs") && (current.loading1 != 0)) {
-        vars.doneMaps.Clear();
-        return true;
-    }
+split {
+	return
+		current.mapName2 != old.mapName2 && settings[current.mapName2] ||
+		current.mapName1 == "haiti_gump_endings" && current.exit != 0;
 }
 
-isLoading
-{
-    if (current.map2 != "nicaragua_gump_josefina")
-	{
-		if ((current.loading1 == 0) ||
-		((current.map2 == "su_rts_mp_dockside")) ||
-		(vars.missions1A.Contains(current.map)))
-        {
-            return true;
-        }
-
-	else 
-		{
-			return false;
-		}
-
-	}	
-}
-
-split
-{
-    if (current.map != old.map) {
-	    if (settings[current.map]) {
-	            vars.doneMaps.Add(old.map);
-				return true;
-				}
-        }
-
-   if ((current.map2 == "haiti_gump_endings") && (current.exit != 0))
-   {
-       return true;
-   }		
-}
-
-exit 
-{
-    timer.OnStart -= vars.onStart;
+isLoading {
+	return current.mapName1 != "nicaragua_gump_josefina" && (
+		current.loading == 0 || current.mapName1 == "su_rts_mp_dockside" || vars.loadings.Contains(current.mapName2)
+	);
 }
