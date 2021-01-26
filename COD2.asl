@@ -8,7 +8,8 @@ startup
 {
 	settings.Add("missions", true, "Missions");
 
-	vars.missions = new Dictionary<string,string> { 
+	vars.missions = new Dictionary<string,string> 
+	{ 
 		{"demolition", "Demolition"},
 		{"tunkhunt", "Repairing the Wire"},
 		{"trainyard", "The Pipeline"},
@@ -36,18 +37,10 @@ startup
 		{"hill400_defend", " The Battle for Hill 400"},
 		{"rhine", " Crossing the Rhine"},
 	}; 
-	foreach (var Tag in vars.missions)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "missions");
-    };
-
-    
-  	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
-        {
-		vars.doneMaps.Clear();
-        });
-
-    timer.OnStart += vars.onStart; 
+		foreach (var Tag in vars.missions)
+		{
+			settings.Add(Tag.Key, true, Tag.Value, "missions");
+    	};
 
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
         {        
@@ -67,30 +60,19 @@ startup
 
 }
 
-init
-{
-	vars.doneMaps = new List<string>(); 
-
-}
-
 start
 {
 	if ((current.map == "moscow") && (old.map == "movie_eastern"))
 	{
-		vars.doneMaps.Clear();
 		return true;
 	}
 }
 
 split
 {
-	if (current.map != old.map) 
+	if ((current.map != old.map) && (settings[current.map]))
 	{
-		if (settings[current.map])
-		{
-			vars.doneMaps.Add(old.map);
-			return true;				
-		}
+		return true;
 	}
 
 	return (current.map == "credits");
@@ -98,15 +80,10 @@ split
  
 reset
 {
-	return ((current.map == "movie_eastern") && (old.map != "movie_eastern"));
+	return (current.map == "movie_eastern");
 }
 
 isLoading
 {
 	return (current.loading1 == 0);
-}
-
-exit 
-{
-    timer.OnStart -= vars.onStart;
 }
