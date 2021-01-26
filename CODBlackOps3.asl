@@ -20,9 +20,10 @@ startup {
 		{"coalescence", "Life"}
 	};
 
-	settings.Add("missions", true, "Missions");
+	settings.Add("Missions");
 
-	foreach (var s in sB) settings.Add(s.Key, true, s.Value, "missions");
+	foreach (var s in sB)
+		settings.Add(s.Key, true, s.Value, "Missions");
 
 	timer.CurrentTimingMethod = TimingMethod.GameTime;
 }
