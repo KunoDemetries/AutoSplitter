@@ -64,66 +64,55 @@ startup
     settings.Add("act3", true, "Act 3", "acta");
 
     vars.missions1 = new Dictionary<string,string> 
-	{ 
-		{"cargoship", "Crew Expendable"}, 
-		{"coup", "The Coup"},
-    };
- 	
-	 foreach (var Tag in vars.missions1)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "act0");
-    };
+		{ 
+			{"cargoship", "Crew Expendable"}, 
+			{"coup", "The Coup"},
+    	};
+		foreach (var Tag in vars.missions1)
+		{
+			settings.Add(Tag.Key, true, Tag.Value, "act0");
+    	};
 
     vars.missions2 = new Dictionary<string,string> 
-	{ 
-		{"blackout", "blackout"},
-		{"ts_armada", "Charlie Dont Surf"},
-		{"ts_bog_a", "The Bog"},
-		{"hunted", "Hunted"},
-		{"ac130", "Death From Above"},
-		{"ts_bog_b", "War Pig"},
-		{"airlift", "Shock and Awe"},
-		{"aftermath", "Aftermath"},
-    };
-
- 	foreach (var Tag in vars.missions2)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "act1");
-    };
+		{ 
+			{"blackout", "blackout"},
+			{"ts_armada", "Charlie Dont Surf"},
+			{"ts_bog_a", "The Bog"},
+			{"hunted", "Hunted"},
+			{"ac130", "Death From Above"},
+			{"ts_bog_b", "War Pig"},
+			{"airlift", "Shock and Awe"},
+			{"aftermath", "Aftermath"},
+    	};
+ 		foreach (var Tag in vars.missions2)
+		{
+			settings.Add(Tag.Key, true, Tag.Value, "act1");
+    	};
 
     vars.missions3 = new Dictionary<string,string> 
-	{ 
-		{"village_assault", "Safe House"},
-		{"scoutsniper", "All Ghillied Up"}, 
-		{"sniperescape", "One Shot, One Kill"},
-		{"village_defend", "Heat"},
-		{"ambush", "The Sins of the Father"},
-		{"icbm", "Ultimatum"},
-    };
-
- 	foreach (var Tag in vars.missions3)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "act2");
-    };
+		{ 
+			{"village_assault", "Safe House"},
+			{"scoutsniper", "All Ghillied Up"}, 
+			{"sniperescape", "One Shot, One Kill"},
+			{"village_defend", "Heat"},
+			{"ambush", "The Sins of the Father"},
+			{"icbm", "Ultimatum"},
+   		};
+		foreach (var Tag in vars.missions3)
+		{
+			settings.Add(Tag.Key, true, Tag.Value, "act2");
+    	};
         
     vars.missions4 = new Dictionary<string,string> 
-	{ 
-		{"launchfacility_a", "All In"},
-		{"launchfacility_b", "No Fighting in The War Room"},
-		{"jeepride", "Game Over"},
-	};  
-        
- 	foreach (var Tag in vars.missions4)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "act3");
-    };
-
-      	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
-        {
-    	vars.doneMaps.Clear();
-        });
-
-    timer.OnStart += vars.onStart; 
+		{ 
+			{"launchfacility_a", "All In"},
+			{"launchfacility_b", "No Fighting in The War Room"},
+			{"jeepride", "Game Over"},
+		};      
+ 		foreach (var Tag in vars.missions4)
+		{
+			settings.Add(Tag.Key, true, Tag.Value, "act3");
+    	};
 
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
         {        
@@ -154,7 +143,6 @@ split
 			
 			if (settings["coup"]) 
 			{				
-				vars.doneMaps.Add(old.map);		
 				return true;
 			}
 		}
@@ -162,7 +150,6 @@ split
 		{
 			if (settings[current.map]) 
 			{	
-				vars.doneMaps.Add(old.map);
 				return true;
 			}
 		}
@@ -174,7 +161,6 @@ start
 {
 	if ((current.map == "killhouse") && (current.loading1 == 0)) 
 	{
-    	vars.doneMaps.Clear();
     	return true;
     }
 }
@@ -208,8 +194,10 @@ start
 }
 
 
-gameTime {
-	if (vars.coupOffset == true) {					
+gameTime 
+{
+	if (vars.coupOffset == true) 
+	{					
 		vars.coupOffset = false;				
 		return vars.currentTime.Add(new TimeSpan (0, 4, 45));	
 	}
