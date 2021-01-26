@@ -1,131 +1,58 @@
-state("iw4sp")
-{	
-	string131 map : 0x5DA560;
-	int loading1 : 0x171338C;
-	int boi : 0xC98A50;
-	//int starter : 0xC6F280;
-    }
+// Original script by Kuno Demetries.
+// Enhancements by Ero.
 
-
-startup 
-{
-    settings.Add("acta", true, "All Acts");
-    settings.Add("act1", true, "Act 1", "acta");
-    settings.Add("act2", true, "Act 2", "acta");
-    settings.Add("act3", true, "Act 3", "acta");
-
-    vars.missions2 = new Dictionary<string,string> 
-	{ 
-		{"trainier", "S.S.D.D."}, 
-		{"roadkill", "Team Player"},
-		{"cliffhanger", "Cliffhanger"},
-		{"airport", "No Russian"},
-		{"favela", "Takedown"},
-    };
-
- 	foreach (var Tag in vars.missions2)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "act1");
-    };
-
-    vars.missions3 = new Dictionary<string,string> 
-	{ 
-		{"invasion", "Wolverines"},
-		{"favela_escape", "The Hornets Nest"},
-		{"arcadia", "Exodus"},
-		{"oilrig", "The Only Easy Day Was Yesterday"},
-		{"gulag", "The Gulag"},
-		{"dcburning", "Of Their Own Accord"},
-    };
- 	
-	foreach (var Tag in vars.missions3)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "act2");
-    };
-        
-    vars.missions4 = new Dictionary<string,string> 
-	{ 
-		{"contingency", "Contingency"},
-		{"dcemp", "Second Sun"}, 
-		{"dc_whitehouse", "Whiskey Hotel"},
-		{"estate", "Loose Ends"},
-		{"boneyard", "The Enemy of My Enemy"},
-		{"af_caves", "Just Like Old Times"},
-		{"af_chase", "Endgame"},
-		{"ending", "End"},
-    };
-        
- 	foreach (var Tag in vars.missions4)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "act3");
-    };
-
-      	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
-        {
-    	vars.doneMaps.Clear();
-	vars.doneMaps.Add(current.map);
-        });
-
-    timer.OnStart += vars.onStart; 
-
-	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
-        {        
-        var timingMessage = MessageBox.Show (
-               "This game uses Time without Loads (Game Time) as the main timing method.\n"+
-                "LiveSplit is currently set to show Real Time (RTA).\n"+
-                "Would you like to set the timing method to Game Time? This will make verification easier",
-                "LiveSplit | Call of Duty: Modern Warfare 2",
-               MessageBoxButtons.YesNo,MessageBoxIcon.Question
-            );
-        
-            if (timingMessage == DialogResult.Yes)
-            {
-                timer.CurrentTimingMethod = TimingMethod.GameTime;
-            }
-        }	
+state("iw4sp") {
+	string13 mapName : 0x5DA560;
+	int randVar      : 0xC98A50;
+	int loading      : 0x171338C;
 }
 
-init
-{
-    vars.doneMaps = new List<string>(); 
+startup {
+	var tB = (Func<string, string, string, Tuple<string, string, string>>) ((elmt1, elmt2, elmt3) => { return Tuple.Create(elmt1, elmt2, elmt3); });
+	var sB = new List<Tuple<string, string, string>> {
+		tB("Act 1", "trainier",      "S.S.D.D."),
+		tB("Act 1", "roadkill",      "Team Player"),
+		tB("Act 1", "cliffhanger",   "Cliffhanger"),
+		tB("Act 1", "airport",       "No Russian"),
+		tB("Act 1", "favela",        "Takedown"),
+		tB("Act 2", "invasion",      "Wolverines"),
+		tB("Act 2", "favela_escape", "The Hornets Nest"),
+		tB("Act 2", "arcadia",       "Exodus"),
+		tB("Act 2", "oilrig",        "The Only Easy Day Was Yesterday"),
+		tB("Act 2", "gulag",         "The Gulag"),
+		tB("Act 2", "dcburning",     "Of Their Own Accord"),
+		tB("Act 3", "contingency",   "Contingency"),
+		tB("Act 3", "dcemp",         "Second Sun"),
+		tB("Act 3", "dc_whitehouse", "Whiskey Hotel"),
+		tB("Act 3", "estate",        "Loose Ends"),
+		tB("Act 3", "boneyard",      "The Enemy of My Enemy"),
+		tB("Act 3", "af_caves",      "Just Like Old Times"),
+		tB("Act 3", "af_chase",      "Endgame"),
+		tB("Act 3", "ending",        "End")
+	};
+
+	settings.Add("Act 1");
+	settings.Add("Act 2");
+	settings.Add("Act 3");
+
+	foreach (var s in sB)
+		settings.Add(s.Item2, true, s.Item3, s.Item1);
 }
 
-split
-{
-	if (current.map != old.map) 
-	{
-		if (settings[current.map]) 
-		{
-			vars.doneMaps.Add(old.map);
-			return true;	
-		}	
-	}
-
-    return ((current.boi == 1048576000) && (current.map == "ending"));
-}   
-
-start
-{
-	if ((current.map == "trainer") && (old.map == "ui") && (current.loading != 0)) 
-	{
-    	vars.doneMaps.Clear();
-	vars.doneMaps.Add(current.map);
-    	return true;
-    }
+start {
+	return current.mapName == "trainer" && old.mapName == "ui" && current.loading != 0;
 }
 
- 
- reset
-{
-    return ((current.map == "ui") && (old.map != "ui"));
+split {
+	return
+		current.mapName != old.mapName && settings[current.mapName] ||
+		current.randVar == 1048576000 && current.mapName == "ending";
 }
 
-isLoading
-{
-	return (current.loading1 == 0);
+reset {
+	return current.mapName == "ui" && old.mapName != "ui";
 }
 
-exit 
-{
-    timer.OnStart -= vars.onStart;
+isLoading {
+	return current.loading == 0;
 }
