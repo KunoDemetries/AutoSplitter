@@ -29,7 +29,8 @@ startup {
 
 	settings.Add("missions", true, "Missions");
 
-	foreach (var s in sB) settings.Add(s.Key, true, s.Value, "missions");
+	foreach (var s in sB)
+		settings.Add(s.Key, true, s.Value, "missions");
 
 	timer.CurrentTimingMethod = TimingMethod.GameTime;
 }
