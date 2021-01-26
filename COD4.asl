@@ -91,7 +91,7 @@ startup {
     }
 
 init {
-	vars.doneMaps = new List<string>(); 
+	vars.doneMaps = new List<string>(); // Actually needed because intel%
 	vars.coupOffset = false;
 	vars.currentTime = new TimeSpan(0, 0, 0);	//TimeSpan object used to add a timer offset after The Coup
 }
