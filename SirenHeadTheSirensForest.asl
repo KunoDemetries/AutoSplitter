@@ -1,68 +1,51 @@
-state("Sirean Head")
-{
-    byte loading1 :"UnityPlayer.dll", 0x135FE9B;
+// Original script by Kuno Demetries.
+// Enhancements by Ero.
+
+state("Sirean Head") {
+	byte loading :"UnityPlayer.dll", 0x135FE9B;
 }
 
-startup
-{
-	settings.Add("missions", true, "All Levels");
-	settings.SetToolTip("missions", "IDK why I added this customization lol");
+startup {
+	settings.Add("All Levels");
 
-	vars.missions = new Dictionary<string,string> 
-    { 
-        {"2","Level 2"},
-        {"3","Level 3"},
-        {"4","Level 4"},
-    };
-    
-    	foreach (var Tag in vars.missions)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "missions");
-    };
+	var sB = new Dictionary<string,string> {
+		{"2", "Level 2"},
+		{"3", "Level 3"},
+		{"4", "Level 4"},
+	};
+
+	foreach (var s in sB)
+		settings.Add(s.Key, true, s.Value, "All Levels");
+
+	timer.CurrentTimingMethod = TimingMethod.GameTime;
 }
 
-init
-{
-    vars.counter = 1;
-    vars.oldcounter = 1;
-    vars.value = 0;
+init {
+	current.counter = 1;
+	vars.value = 0;
 }
 
-update
-{
-    if (current.loading1 == 5)
-    {
-        vars.value = current.loading1;
-    }
+update {
+	if (current.loading == 5)
+		vars.value = current.loading;
 
-    if ((current.loading1 != old.loading1) && (current.loading1 != 5) && (vars.value != current.loading1))
-    {
-        vars.value = current.loading1; 
-        vars.counter++;
-    }
+	if (old.loading != current.loading && current.loading != 5 && vars.value != current.loading) {
+		vars.value = current.loading;
+		current.counter++;
+	}
 }
 
-start
-{
-    if ((current.loading1 == 5) && (old.loading1 != 5))
-    {
-        vars.counter = 1;
-        vars.oldcounter = 1;
-        return true;
-    }
+start {
+	if (old.loading != 5 && current.loading == 5) {
+		current.counter = 1;
+		return true;
+	}
 }
 
-split 
-{
-    if ((vars.counter != vars.oldcounter) && (settings[(vars.counter.ToString())]))
-    {
-        vars.oldcounter++;
-        return true;
-    }
-
+split {
+	return old.counter != current.counter && settings[vars.counter.ToString()];
 }
 
-isLoading
-{
-    return (current.loading1 != 5);
+isLoading {
+	return current.loading != 5;
 }
