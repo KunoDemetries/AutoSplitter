@@ -3,28 +3,28 @@
 
 state("s2_sp64_ship") {
 	int loading      : 0x2AB9B44;
-	string14 mapName : 0x6A122B4;
+	string10 mapName : 0x6A122B4;
 }
 
 startup {
 	var sB = new Dictionary<string, string> {
-		{"cobra", "Operation Cobra"},
-		{"marigny", "Stronghold"},
-		{"train", "S.O.E."},
-		{"paris", "Liberation"},
-		{"aachen", "Collateral Damage"},
-		{"hurtgen", "Death Factory"},
-		{"hill", "Hill 493"},
-		{"bulge", "Battle of The Bulge"},
-		{"taken", "Ambush"},
+		{"cobra",      "Operation Cobra"},
+		{"marigny",    "Stronghold"},
+		{"train",      "S.O.E."},
+		{"paris",      "Liberation"},
+		{"aachen",     "Collateral Damage"},
+		{"hurtgen",    "Death Factory"},
+		{"hill",       "Hill 493"},
+		{"bulge",      "Battle of The Bulge"},
+		{"taken",      "Ambush"},
 		{"taken_tent", "The Rhine"},
 		{"labor_camp", "Epilogue"}
 	};
 
-	settings.Add("missions", true, "Missions");
+	settings.Add("Missions");
 
 	foreach (var s in sB)
-		settings.Add(s.Key, true, s.Value, "missions");
+		settings.Add(s.Key, true, s.Value, "Missions");
 
 	timer.CurrentTimingMethod = TimingMethod.GameTime;
 }
