@@ -1,15 +1,14 @@
-state("s2_sp64_ship")
-{
-	string200 map: 0x6A122B4;
-    int loading1:  0x2AB9B44;
+// Original script by Kuno Demetries.
+// Enhancements by Ero.
+
+state("s2_sp64_ship") {
+	int loading      : 0x2AB9B44;
+	string14 mapName : 0x6A122B4;
 }
 
-startup 
-{
-	settings.Add("missions", true, "Missions");
-
-	vars.missions = new Dictionary<string,string> {  
-		{"cobra", "Operation Cobra"}, 
+startup {
+	var sB = new Dictionary<string, string> {
+		{"cobra", "Operation Cobra"},
 		{"marigny", "Stronghold"},
 		{"train", "S.O.E."},
 		{"paris", "Liberation"},
@@ -19,42 +18,25 @@ startup
 		{"bulge", "Battle of The Bulge"},
 		{"taken", "Ambush"},
 		{"taken_tent", "The Rhine"},
-        {"labor_camp", "Epilogue"},
-		};  
+		{"labor_camp", "Epilogue"}
+	};
 
- 	foreach (var Tag in vars.missions)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "missions");
-    };
-}
- 
-init
-{
-	vars.doneMaps = new List<string>(); 
+	settings.Add("missions", true, "Missions");
+
+	foreach (var s in sB)
+		settings.Add(s.Key, true, s.Value, "missions");
+
+	timer.CurrentTimingMethod = TimingMethod.GameTime;
 }
 
-start
-{
-	if ((current.map == "normandy") && (current.map != "transport_ship"))
-	{
-		vars.doneMaps.Clear();
-		return true;
-	}
+start {
+	return current.mapName == "normandy" && current.mapName != "transport_ship";
 }
 
-split
-{
-	if (current.map != old.map) 
-	{
-		if (settings[current.map]) 
-		{
-			vars.doneMaps.Add(old.map);
-			return true;	
-		}	
-	}
+split {
+	return current.mapName != old.mapName && settings[current.mapName];
 }
 
-isLoading
-{
-	return (current.loading1 == 0);	
+isLoading {
+	return current.loading == 0;
 }
