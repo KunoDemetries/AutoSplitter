@@ -1,118 +1,68 @@
-state("jericho")
-{
-    string50 map : 0x3C4E8A;
-    int loading1 : 0x3C1AFC;
+// Original script by Kuno Demetries.
+// Enhancements by Ero.
+
+state("jericho") {
+	int loading  : 0x3C1AFC;
+	string22 map : 0x3C4E8A;
 }
 
-startup
-{
-    settings.Add("l1",true,"Al-Khali");
-    settings.Add("l2",true,"World War 2");
-    settings.Add("l3",true,"The Crusades");
-    settings.Add("l4",true,"Roman Provinces");
-    settings.Add("l5",true,"Sumeria");
+startup {
+	var tB = (Func<string, string, string, Tuple<string, string, string>>) ((elmt1, elmt2, elmt3) => { return Tuple.Create(elmt1, elmt2, elmt3); });
+	var sB = new List<Tuple<string, string, string>> {
+		tB("Al-Khali",        "alk_tomb.dds",           "The Tomb"),
+		tB("Al-Khali",        "alk_bunker_00.dds",      "Operation Vigil"),
+		tB("Al-Khali",        "alk_city.dds",           "Al-Khali"),
+		tB("Al-Khali",        "alk_bunker_01.dds",      "Green"),
+		tB("Al-Khali",        "alk_final.dds",          "Man Down!"),
+		tB("World War 2",     "wwii_pillboxes.dds",     "The Path of Souls"),
+		tB("World War 2",     "wwii_mosque.dds",        "Blackwatch"),
+		tB("World War 2",     "wwii_mosque_inside.dds", "Ambush"),
+		tB("World War 2",     "wwii_vigil.dds",         "The Flames of Anger"),
+		tB("World War 2",     "wwii_vigil_inside.dds",  "Exorcism"),
+		tB("World War 2",     "wwii_bradenburg.dds",    "Bradenburg Gate"),
+		tB("The Crusades",    "cru_labyrinh.dds",       "Motley Crew"),
+		tB("The Crusades",    "cru_sewers.dds",         "Sewers"),
+		tB("The Crusades",    "cru_keep.dds",           "Out of the Frying Pan..."),
+		tB("The Crusades",    "cru_catacomb.dds",       "Tortured Souls"),
+		tB("The Crusades",    "cru_chapel.dds",         "Black Rose"),
+		tB("Roman Provinces", "rom_caldrium.dds",       "The Low road"),
+		tB("Roman Provinces", "rom_tepidarium.dds",     "Decadence"),
+		tB("Roman Provinces", "rom_palace_01.dds",      "Temple of Pain"),
+		tB("Roman Provinces", "rom_palace_02.dds",      "Gardens of Hell"),
+		tB("Roman Provinces", "rom_coloseum.dds",       "Morituri te Salutant"),
+		tB("Roman Provinces", "rom_chamber.dds",        "Guts"),
+		tB("Sumeria",         "sum_ziggurat_02.dds",    "Spiritual Guide"),
+		tB("Sumeria",         "sum_ziggurat_03.dds",    "Skin"),
+		tB("Sumeria",         "sum_ziggurat_04.dds",    "Flesh"),
+		tB("Sumeria",         "sum_ziggurat_meat.dds",  "Blood"),
+		tB("Sumeria",         "sum_ziggurat_05.dds",    "Sacrifice"),
+		tB("Sumeria",         "sum_end.dds",            "Pyxis Prima")
+	};
 
-    vars.missions1 = new Dictionary<string,string> {
-       {"alk_tomb.dds","The Tomb"},
-       {"alk_bunker_00.dds","Operation Vigil"},
-       {"alk_city.dds","Al Khali"},
-       {"alk_bunker_01.dds","Green"},
-       {"alk_final.dds","Man Down!"},
-   };  
-    
-    foreach (var Tag in vars.missions1)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "l1");
-    };
+	settings.Add("Al-Khali");
+	settings.Add("World War 2");
+	settings.Add("The Crusades");
+	settings.Add("Roman Provinces");
+	settings.Add("Sumeria");
 
-    vars.missions2 = new Dictionary<string,string> {
-        {"wwii_pillboxes.dds","The Path of Souls"},
-        {"wwii_mosque.dds","Blackwatch"},
-        {"wwii_mosque_inside.dds","Ambush"},
-        {"wwii_vigil.dds","The Flames of Anger"},
-        {"wwii_vigil_inside.dds","Exorcism"},
-        {"wwii_bradenburg.dds","Bradenburg Gate"},
-    };
+	foreach (var s in sB)
+		settings.Add(s.Item2, true, s.Item3, s.Item1);
 
- 	foreach (var Tag in vars.missions2)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "l2");
-    };
-
-
-    vars.missions3 = new Dictionary<string,string> {
-        {"cru_labyrinh.dds","Motley Crew"},
-        {"cru_sewers.dds","Sewers"},
-        {"cru_keep.dds","Out of the Frying Pan..."},
-        {"cru_catacomb.dds","Tortured Souls"},
-        {"cru_chapel.dds","Black Rose"},
-    };
-
- 	foreach (var Tag in vars.missions3)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "l3");
-    }; 
-
-    vars.missions4 = new Dictionary<string,string> {
-        {"rom_caldrium.dds","The Low road"},
-        {"rom_tepidarium.dds","Decadence"},
-        {"rom_palace_01.dds","Temple of Pain"},
-        {"rom_palace_02.dds","Gardens of Hell"},
-        {"rom_coloseum.dds","Morituri te Salutant"},
-        {"rom_chamber.dds","Guts"},
-    };
-
- 	foreach (var Tag in vars.missions4)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "l4");
-    };   
-
-    vars.missions5 = new Dictionary<string,string> {
-        {"sum_ziggurat_02.dds","spiritual Guide"},
-        {"sum_ziggurat_03.dds","Skin"},
-        {"sum_ziggurat_04.dds","Flesh"},
-        {"sum_ziggurat_meat.dds","Blood"},
-        {"sum_ziggurat_05.dds","Sacrifice"},
-        {"sum_end.dds","Pyxis Prima"},
-    };
-    
- 	foreach (var Tag in vars.missions5)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "l5");
-    };  
+	vars.startMissions = new HashSet<string> {"alk_desert.dds", "wwii_biggates.dds", "cru_river.dds", "rom_outskirts.dds", "sum_ziggurat_01.dds"};
 }
 
-start
-{
-    if ((current.loading1 == 0) && (current.map != old.map)) {
-    if ((current.map == "alk_desert.dds") ||
-        (current.map == "wwii_biggates.dds") ||
-        (current.map == "cru_river.dds") ||
-        (current.map == "rom_outskirts.dds") ||
-        (current.map == "sum_ziggurat_01.dds"))
-        {
-            return true;
-            }
-    }
+start {
+	return current.loading == 0 && current.map != old.map && vars.startMissions.Contains(current.map);
 }
 
-split
-{
-	if (current.map.ToLowerInvariant() != old.map.ToLowerInvariant()) 
-	{
-		if (settings[current.map.ToLowerInvariant()]) 
-		{
-			return true;	
-		}	
-	}
+split {
+	return current.map.ToLower() != old.map.ToLower() && settings[current.map.ToLower()];
 }
 
-isLoading
-{
-    return (current.loading1 == 0);
+reset {
+	return current.map == "Default.dds";
 }
 
-reset
-{
-    return (current.map == "Default.dds");
+isLoading {
+	return current.loading == 0;
 }
