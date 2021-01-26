@@ -49,6 +49,8 @@ startup {
 		settings.Add(s.Item2, true, s.Item3, s.Item1);
 
 	vars.startMissions = new HashSet<string> {"alk_desert.dds", "wwii_biggates.dds", "cru_river.dds", "rom_outskirts.dds", "sum_ziggurat_01.dds"};
+
+	timer.CurrentTimingMethod = TimingMethod.GameTime;
 }
 
 start {
