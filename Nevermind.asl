@@ -1,9 +1,11 @@
-state("nevermind")
-{
-    int loading1 : 0x1342198;
+state("nevermind") {
+    int loading : 0x1342198;
 }
 
-isLoading
-{
-    return (current.loading1 != 3);
+startup {
+	timer.CurrentTimingMethod = TimingMethod.GameTime;
+}
+
+isLoading {
+    return current.loading != 3;
 }
