@@ -1,114 +1,91 @@
-state("Spiderwick")
-{
-    int cutscenes : 0xAE4DB0;
-    int cinematics : 0x32C4A8;
-    int loading1 : 0xA356B8;
-     string20 levels : 0xA57F88;
-     string25 playarea : 0xA57F68;
-     string20 chapter : 0x2E47A5;
-}
+// Original script by Kuno Demetries.
+// Enhancements by Ero.
 
-
-init
-{
-    vars.Wrsplitter = 0;
-    vars.doneMaps = new List<string>(); 
+state("Spiderwick") {
+	string20 chapter  : 0x2E47A5;
+	int cinematics    : 0x32C4A8;
+	int loading       : 0xA356B8;
+	string25 playArea : 0xA57F68;
+	string20 levels   : 0xA57F88;
+	int cutscenes     : 0xAE4DB0;
 }
 
 startup {
-  settings.Add("chapters", false, "Chapter Splits");
-  settings.Add("wr", true, "World Record Splits");
+	var tB = (Func<string, string, string, Tuple<string, string, string>>) ((elmt1, elmt2, elmt3) => { return Tuple.Create(elmt1, elmt2, elmt3); });
+	var sB = new List<Tuple<string, string, string>> {
+		tB("chapters", "Chapter1", "Chapter 1"),
+		tB("chapters", "Chapter2", "Chapter 2"),
+		tB("chapters", "Chapter3", "Chapter 3"),
+		tB("chapters", "Chapter4", "Chapter 4"),
+		tB("chapters", "Chapter5", "Chapter 5"),
+		tB("chapters", "Chapter6", "Chapter 6"),
+		tB("chapters", "Chapter7", "Chapter 7"),
+		tB("chapters", "Chapter8", "Chapter 8"),
+		tB("wr",       "7",        "Field Guide"),
+		tB("wr",       "15",       "Stone"),
+		tB("wr",       "22",       "Monacle"),
+		tB("wr",       "34",       "Quarry"),
+		tB("wr",       "55",       "Troll"),
+		tB("wr",       "56",       "RedCap"),
+		tB("wr",       "62",       "Splattergun"),
+		tB("wr",       "76",       "Cellar Key"),
+		tB("wr",       "78",       "Lucinda"),
+		tB("wr",       "86",       "Acorn"),
+		tB("wr",       "94",       "Quarry 2"),
+		tB("wr",       "107",      "Griffin"),
+		tB("wr",       "117",      "Return to the Mansion"),
+		tB("wr",       "121",      "House Arrest"),
+		tB("wr",       "123",      "Ogre Fight")
+	};
 
+	settings.Add("chapters", false, "Chapter Splits");
+	settings.Add("wr", true, "World Record Splits");
 
-    vars.Chapters = new Dictionary<string,string> {
-        {"Chapter1","Chapter 1"},
-        {"Chapter2","Chapter 2"},
-        {"Chapter3","Chapter 3"},
-        {"Chapter4","Chapter 4"},
-        {"Chapter5","Chapter 5"},
-        {"Chapter6","Chapter 6"},
-        {"Chapter7","Chapter 7"},
-        {"Chapter8","Chapter 8"},
-    };
-    vars.ChaptersA = new List<string>();
-    foreach (var Tag in vars.Chapters) {
-    settings.Add(Tag.Key, true, Tag.Value, "chapters");
-    vars.ChaptersA.Add(Tag.Key);
-    };
+	foreach (var s in sB) {
+		if (s.Item1 == "chapters") vars.chSet.Add(s.Item2);
+		if (s.Item1 == "wr") vars.wrSet.Add(s.Item2);
+		settings.Add(s.Item2, true, s.Item3, s.Item1);
+	}
 
-    vars.WRsplits = new Dictionary<string,string> { 
-        {"7","Field Guide"},
-        {"15","Stone"},
-        {"22","Monacle"},
-        {"34","Quarry"},
-        {"55","Troll"},
-        {"56", "RedCap"},
-        {"62","Splattergun"},
-        {"76","Cellar Key"},
-        {"78","Lucinda"},
-        {"86","Acorn"},
-        {"94","Quarry 2"},
-        {"107","Griffin"},
-        {"117","Return to the Mansion"},
-        {"121","House Arrest"},
-        {"123","Ogre Fight"},
-    };
-    vars.WRsplitsA = new List<string>();
-    foreach (var Tag in vars.WRsplits) {
-    settings.Add(Tag.Key, true, Tag.Value, "wr");
-    vars.WRsplitsA.Add(Tag.Key);
-    };
+	timer.CurrentTimingMethod = TimingMethod.GameTime;
+
+	vars.chSet = new HashSet<string>();
+	vars.wrSet = new HashSet<string>();
+	vars.doneMaps = new List<string>();
 }
 
-
-update
-{
-    if ((current.cinematics != old.cinematics) && (current.cinematics == 0)) {
-        vars.Wrsplitter++;
-    }
-
-     if ((current.cutscenes == 0) && (current.cutscenes != old.cutscenes)) {
-        vars.Wrsplitter++;
-    }
-
-print(vars.Wrsplitter.ToString());
+init {
+	vars.wrSplits = 0;
 }
 
-
-start
-    {
-    if ((current.playarea != "shell") && (old.playarea == "shell")) {
-        vars.Wrsplitter = 0;
-        vars.doneMaps.Clear();
-        return true;
-    }
+update {
+	if (current.cinematics != old.cinematics && current.cinematics == 0 ||
+	    current.cutscenes != old.cutscenes && current.cutscenes == 0)
+		vars.wrSplits++;
 }
 
-split
-    {
-    string currentMap = (vars.Wrsplitter.ToString());
-
-        if (!vars.doneMaps.Contains(currentMap)) {
-            if (settings[currentMap.Trim()]) {
-                 if (vars.ChaptersA.Contains(current.chapter) ||
-                 (vars.WRsplitsA.Contains(currentMap))) {
-                vars.doneMaps.Add(currentMap);
-        return true;
-        }
-        else {
-        return false;
-        }
-        }
-        }
-    return ((vars.Wrsplitter > 128) && (current.chapter == "Chapter7") && (current.cinematics == 1) && (current.cutscenes == 0) && (current.levels == "ealth"));
-        }
-
-reset
-{
-    return (current.playarea =="shell");
+start {
+	if (current.playArea != "shell" && old.playArea == "shell") {
+		vars.wrSplits = 0;
+		vars.doneMaps.Clear();
+		return true;
+	}
 }
 
-isLoading
-{
-    return (current.loading1 == 1);
+split {
+	string currMap = vars.wrSplits.ToString();
+	if (settings[currMap] && !vars.doneMaps.Contains(currMap) && (vars.chSet.Contains(current.chapter) || vars.wrSet.Contains(currMap))) {
+		vars.doneMaps.Add(currMap);
+		return true;
+	}
+
+	return vars.wrSplits > 128 && current.chapter == "Chapter7" && current.cinematics == 1 && current.cutscenes == 0 && current.levels == "ealth";
+}
+
+reset {
+	return current.playArea =="shell";
+}
+
+isLoading {
+	return current.loading == 1;
 }
