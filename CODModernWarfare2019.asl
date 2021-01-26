@@ -1,89 +1,56 @@
-    state("ModernWarfare")
-    {
-    string100 map : 0xDE83FA1;
-    int loading1 :  0xEDD51C4;
-    }
+// Original script by Kuno Demetries.
+// Enhancements by Ero.
 
-startup 
-    {
-        settings.Add("act1", true, "Act 1");
-        settings.Add("act2", true, "Act 2");
-        settings.Add("act3", true, "Act 3");
+state("ModernWarfare") {
+	string12 mapName : 0xDE83FA1;
+	int loading      : 0xEDD51C4;
+}
 
-        vars.missions2 = new Dictionary<string,string> { 
-        {"piccadilly","Piccadilly"},
-        {"safehouse","embedded"},
-        {"ouse_finale","Proxy War"},
-        {"townhoused","Clean House"},
-        {"marines","Hunting Party"},
-        {"embassy","Embassy"},
-        };
+startup {
+	var tB = (Func<string, string, string, Tuple<string, string, string>>) ((elmt1, elmt2, elmt3) => { return Tuple.Create(elmt1, elmt2, elmt3); });
+	var sB = new List<Tuple<string, string, string>> {
+		tB("Act 1", "piccadilly",   "Piccadilly"),
+		tB("Act 1", "safehouse",    "Embedded"),
+		tB("Act 1", "ouse_finale",  "Proxy War"),
+		tB("Act 1", "townhoused",   "Clean House"),
+		tB("Act 1", "marines",      "Hunting Party"),
+		tB("Act 1", "embassy",      "Embassy"),
+		tB("Act 2", "highway",      "Highway of Death"),
+		tB("Act 2", "hometown",     "Hometown"),
+		tB("Act 2", "tunnels",      "The Wolf's Den"),
+		tB("Act 2", "captive",      "Captive"),
+		tB("Act 3", "stpetersburg", "Old Comrads"),
+		tB("Act 3", "estate",       "Going Dark"),
+		tB("Act 3", "lab",          "Into the Furnace")
+	};
 
-        vars.missions2A = new List<string>();
-        foreach (var Tag in vars.missions2) {
-        settings.Add(Tag.Key, true, Tag.Value, "act1");
-        vars.missions2A.Add(Tag.Key); };
+	settings.Add("Act 1");
+	settings.Add("Act 2");
+	settings.Add("Act 3");
 
-        vars.missions3 = new Dictionary<string,string> { 
-		{"highway","Highway of Death"},
-        {"hometown","Hometown"},
-        {"tunnels","The Wolf's Den"},
-        {"captive","Captive"},
-        };
-        vars.missions3A = new List<string>();
-        foreach (var Tag in vars.missions3) {
-        settings.Add(Tag.Key, true, Tag.Value, "act2");
-        vars.missions3A.Add(Tag.Key); };
-        
-        vars.missions4 = new Dictionary<string,string> { 
-        {"stpetersburg","Old Comrads"},
-        {"estate","Going Dark"},
-        {"lab","Into the Furnace"},
-        };
-        
-        vars.missions4A = new List<string>();
-        foreach (var Tag in vars.missions4) {
-        settings.Add(Tag.Key, true, Tag.Value, "act3");
-        vars.missions4A.Add(Tag.Key); };
-    }
+	foreach (var s in sB)
+		settings.Add(s.Item2, true, s.Item3, s.Item1);
 
-init
-    {
-    vars.doneMaps = new List<string>(); 
-    }
+	vars.doneMaps = new HashSet<string>();
 
-split
-    {
-    string currentMap = current.map;
+	timer.CurrentTimingMethod = TimingMethod.GameTime;
+}
 
-    if ((currentMap != old.map)) {
-        if (!vars.doneMaps.Contains(current.map)) {
-            if (settings[currentMap.Trim()]) {
-                if (vars.missions2A.Contains(currentMap) ||
-                vars.missions3A.Contains(currentMap) ||
-                vars.missions4A.Contains(currentMap)) {
-            vars.doneMaps.Add(current.map);
-            return true;
-            }
-            else {
-            return false;
-            }
-        }
-        }
-    }
-    }   
-
-start
-    {
-	if ((current.map == "proxywar") && (current.loading1 == 1118989) && ((old.loading1 != 1118989)))
-    {
-    vars.doneMaps.Clear();
-	vars.doneMaps.Add(current.map);
-    return true;
-    }
-    }
-
-isLoading
-   {
-	    return ((current.loading1 == 1118988));
+start {
+	if (current.mapName == "proxywar" && current.loading == 1118989 && old.loading != 1118989) {
+		vars.doneMaps.Clear();
+		vars.doneMaps.Add(current.mapName);
+		return true;
 	}
+}
+
+split {
+	if (current.mapName != old.mapName && settings[current.mapName.Trim()] && !vars.doneMaps.Contains(current.mapName)) {
+		vars.doneMaps.Add(current.mapName);
+		return true;
+	}
+}
+
+isLoading {
+	return current.loading == 1118988;
+}
