@@ -8,39 +8,37 @@ state("t6sp")
 
 startup
 {
-    vars.missions = new Dictionary<string,string> {  
-		{"monsoon.all.sabs", "Celerium"},
-		{"afghanistan.all.sabs", "Old Wounds"},
-		{"nicaragua.all.sabs", "Time and Fate"},
-		{"pakistan_1.all.sabs", "Fallen Angel"},
-		{"karma_1.all.sabs", "Karma"},
-		{"panama.all.sabs", "Suffer With Me"},
-		{"yemen.all.sabs", "Achilles Veil"},
-		{"blackout.all.sabs", "Odysseus"},
-		{"la_1.all.sabs", "Cordis Die"},
-		{"haiti.all.sabs", "Judgment Day"},
-	}; 
-		   foreach (var Tag in vars.missions) {
-        settings.Add(Tag.Key, true, Tag.Value);
-           }
+	settings.Add("missions", true, "Missions");
+
+    vars.missions = new Dictionary<string,string> 
+		{  
+			{"monsoon.all.sabs", "Celerium"},
+			{"afghanistan.all.sabs", "Old Wounds"},
+			{"nicaragua.all.sabs", "Time and Fate"},
+			{"pakistan_1.all.sabs", "Fallen Angel"},
+			{"karma_1.all.sabs", "Karma"},
+			{"panama.all.sabs", "Suffer With Me"},
+			{"yemen.all.sabs", "Achilles Veil"},
+			{"blackout.all.sabs", "Odysseus"},
+			{"la_1.all.sabs", "Cordis Die"},
+			{"haiti.all.sabs", "Judgment Day"},
+		}; 
+		foreach (var Tag in vars.missions)
+		{
+			settings.Add(Tag.Key, true, Tag.Value, "missions");
+    	};
            
-    vars.loadings = new Dictionary<string,string> {
-        {"fronted.english.sabs","cutscene1"},
-        {"fronted.all.sabs","cutscene2"},
-        {"ts_afghanistan.all.sabs","cutscene3"},
-    };
+    vars.loadings = new Dictionary<string,string> 
+		{
+        	{"fronted.english.sabs","cutscene1"},
+        	{"fronted.all.sabs","cutscene2"},
+        	{"ts_afghanistan.all.sabs","cutscene3"},
+    	};
         vars.missions1A = new List<string>();
-        foreach (var Tag in vars.loadings) {
-        vars.missions1A.Add(Tag.Key);
+        foreach (var Tag in vars.loadings) 
+		{
+        	vars.missions1A.Add(Tag.Key);
         }
-
-    
-  	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
-        {
-		vars.doneMaps.Clear();
-        });
-
-    timer.OnStart += vars.onStart; 
 
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
         {        
@@ -59,15 +57,10 @@ startup
         }
 }
 
-init 
-{
-	vars.doneMaps = new List<string>(); 
-}
-
 start
 {
-    if ((current.map == "angola.all.sabs") && (current.loading1 != 0)) {
-        vars.doneMaps.Clear();
+    if ((current.map == "angola.all.sabs") && (current.loading1 != 0)) 
+	{
         return true;
     }
 }
@@ -93,20 +86,13 @@ isLoading
 
 split
 {
-    if (current.map != old.map) {
-	    if (settings[current.map]) {
-	            vars.doneMaps.Add(old.map);
-				return true;
-				}
-        }
+    if ((current.map != old.map) && (settings[current.map])) 
+	{
+		return true;
+    }
 
-   if ((current.map2 == "haiti_gump_endings") && (current.exit != 0))
+   if ((current.map2 == "haiti_gump_endings") && (current.exit != 0)) // USed as end split
    {
        return true;
    }		
-}
-
-exit 
-{
-    timer.OnStart -= vars.onStart;
 }
