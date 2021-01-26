@@ -1,71 +1,49 @@
-state("SniperElite4_DX11") 
-{
-    string100 map : 0xEB0BEB;
-    float loading1 : 0xCFCAF0;
-    float islandload : 0xC15A90; 
+// Original script by Kuno Demetries.
+// Enhancements by Ero.
+
+state("SniperElite4_DX11") {
+	float islandLoad  : 0xC15A90;
+	float loading     : 0xCFCAF0;
+	string100 mapName : 0xEB0BEB;
 }
 
-state("SniperElite4_DX12") 
-{
-	string100 map :  0xE5A2AB;
-	float loading1 : 0xE55958;
-	float islandload : 0xB683E0; 
+state("SniperElite4_DX12") {
+	float islandLoad  : 0xB683E0;
+	float loading     : 0xE55958;
+	string100 mapName : 0xE5A2AB;
 }
 
-startup
-{
-	settings.Add("missions", true, "Missions");
-
-	vars.missions = new Dictionary<string,string> 
-	{ 
-    	{"Marina", "Bianti Village"},
-        {"Viaduct", "Regilino Viaduct"},
-        {"Dockyard", "Lorino Dockyard"},
-        {"Monte_Cassino", "Abrunza Monastery"},
-        {"Coastal_Facility", "Magazzeno Facility"},
-        {"Forest", "Giovi Fiorini Mansion"},
-        {"Fortress", "allagra Fortress"},
+startup {
+	var sB = new Dictionary<string, string> {
+		{"Marina", "Bianti Village"},
+		{"Viaduct", "Regilino Viaduct"},
+		{"Dockyard", "Lorino Dockyard"},
+		{"Monte_Cassino", "Abrunza Monastery"},
+		{"Coastal_Facility", "Magazzeno Facility"},
+		{"Forest", "Giovi Fiorini Mansion"},
+		{"Fortress", "allagra Fortress"}
 	};
- 	
-	 foreach (var Tag in vars.missions)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "missions");
-    };
- }
 
-init
-{
-	vars.doneMaps = new List<string>(); 
+	settings.Add("Missions");
+
+	foreach (var s in sB)
+		settings.Add(s.Key, true, s.Value, "Missions");
+
+	timer.CurrentTimingMethod = TimingMethod.GameTime;
 }
 
-start
-{
-	if ((current.map == "Island") && (current.loading1 != 0))
-	{
-		vars.doneMaps.Clear();
-		return true;		
-	}
+start {
+	return current.mapName == "Island" && current.loading != 0;
 }
 
-split
-{
-	if (current.map != old.map) 
-	{
-		if (settings[current.map]) 
-		{
-			vars.doneMaps.Add(old.map);
-			return true;	
-		}	
-	}
+split {
+	return current.mapName != old.mapName && settings[current.mapName];
 }
 
-reset
-{
-	return ((current.map == "Island") && (old.map != "Island"));
+reset {
+	return current.mapName == "Island" && old.mapName != "Island";
 }
 
-isLoading
-{
-	return ((current.loading1 == 0)) ||
-  	((current.islandload == 0));
+isLoading {
+	return current.loading == 0 || current.islandLoad == 0;
 }
