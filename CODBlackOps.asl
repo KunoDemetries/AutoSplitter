@@ -87,7 +87,7 @@ isLoading
 
 reset
 {
-	return (current.map == "frontend");
+	return ((current.map == "frontend") && (old.map != "pentagon")); // Adding the old.map thing just because of new timing rules, prolly runners don't want to reset when leaving USDD 
 }
 
 split
@@ -103,6 +103,7 @@ split
 		{
 			return true;
 		}
+
 	}
 }			
 
