@@ -12,30 +12,27 @@ startup
 {
     settings.Add("rounders", false, "Round Splits"); // A grouping for settings for rounds
     
-
     vars.rounds = new Dictionary<string,string> // creating a string dictionary
-    {
-        {"2","Round 2"},
-        {"3","Round 3"},
-        {"4","Round 4"},
-        {"5","Round 5"},
-        {"10","Round 10"},
-        {"15","Round 15"},
-        {"30","Round 30"},
-        {"50","Round 50"},
-        {"70","Round 70"},
-        {"100","Round 100"},
-    };
-
- 	foreach (var Tag in vars.rounds) // setting each variable in the Dictionary to the word tag rounders to link it to the master setting
-	{
-	    settings.Add(Tag.Key, true, Tag.Value, "rounders");
-    }; 
+    	{
+    	    {"2","Round 2"},
+    	    {"3","Round 3"},
+    	    {"4","Round 4"},
+    	    {"5","Round 5"},
+    	    {"10","Round 10"},
+    	    {"15","Round 15"},
+    	    {"30","Round 30"},
+    	    {"50","Round 50"},
+   		    {"70","Round 70"},
+    	    {"100","Round 100"},
+   		};
+ 		foreach (var Tag in vars.rounds) // setting each variable in the Dictionary to the word tag rounders to link it to the master setting
+		{
+		    settings.Add(Tag.Key, true, Tag.Value, "rounders");
+    	}; 
 
     
   	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
         {
-		vars.doneMaps.Clear(); //clear the done rounds if the run was reset
       	 	vars.starter = true; // setting the gameTimer to true
         });
 
@@ -68,24 +65,19 @@ start
 {
     if ((current.round == 1) && (current.loading1 != 0)) // if round is 1 and loading is done start
     {
-		vars.doneMaps.Clear(); //clear the done rounds if the run was reset
-       vars.starter = true; // setting the gameTimer to true
+    	vars.starter = true; // setting the gameTimer to true
         return true; // returning true to start the timer
     }
 }
 
 split
 {
-    if ((settings[(current.round.ToString())]) && (current.round != old.round) && (!vars.doneMaps.Contains((current.round.ToString()))))    
-    {
-		vars.doneMaps.Add(current.round.ToString());		
-        return true;
-    }
+    return ((settings[(current.round.ToString())]) && (current.round != old.round));
 }
 
 gameTime
 {
-    if ((vars.starter == true) && (current.round == 1) && (current.loading1 != 0) && (current.loading1 == 1)) // doing a check if were actually playing
+    if ((vars.starter == true) && (current.round == 1) && (current.loading1 != 0)) // doing a check if were actually playing
     {
         vars.starter = false; //setting the starter to false for the next run (could also do this in reset)
         return TimeSpan.FromSeconds(-10); // removing 10 seconds to match up with the timing method (could also be used to add time)
@@ -94,8 +86,10 @@ gameTime
 
 reset
 {
-    if (current.round == 0) // if you're back in main menu round is 0
-    {
-        return true;
-    }
+    return (current.round == 0); // if you're back in main menu round is 0
+}
+
+exit 
+{
+    timer.OnStart -= vars.onStart;
 }
