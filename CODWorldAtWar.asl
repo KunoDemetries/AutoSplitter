@@ -1,4 +1,6 @@
-state("CoDWaW") {
+// The ASL has to work for coop and solo Any%, so this is gonna get annoying fast lol
+state("CoDWaW") 
+{
     string50 map : 0x5592B8; 
     int loading1 : 0x3172284;
     int squares1 : 0x14ED874;
@@ -8,12 +10,13 @@ state("CoDWaW") {
 startup {
 	settings.Add("act0", true, "Missions");
 		
-	vars.missions = new Dictionary<string,string> { 
+	vars.missions = new Dictionary<string,string> 
+		{ 
         	{"pel1", "Little Resistance"}, 
        		{"pel2", "Hard Landing"},
        		{"sniper", "Vendetta"},
        		{"see1", "Their Land, Their Blood"},
-		{"pel1a", "Burn 'em Out"},
+			{"pel1a", "Burn 'em Out"},
        		{"pel1b", "Relentless"},
        		{"see2", "Blood and Iron"},
        		{"ber1", "Ring of Steel"},
@@ -23,10 +26,11 @@ startup {
        		{"oki3","Breaking Point"},
        		{"ber3","Heart of the Reich"},
        		{"ber3b","Downfall"},
-	};
-    	foreach (var Tag in vars.missions) {
-       	settings.Add(Tag.Key, true, Tag.Value, "act0");
-    }
+		};
+    	foreach (var Tag in vars.missions) 
+		{
+   			settings.Add(Tag.Key, true, Tag.Value, "act0");
+  		}
 
       	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
         {
@@ -54,13 +58,14 @@ startup {
 
 init 
 {
-	vars.doneMaps = new List<string>(); 
+	vars.doneMaps = new List<string>(); // Coop runners can enter the wrong level by accident, so doneMaps needed
 }
 
 start
 {
-    if ((current.map == "mak") && (current.squares1 == 16384)) {
-        vars.doneMaps.Clear();
+    if ((current.map == "mak") && (current.squares1 == 16384)) 
+	{
+        vars.doneMaps.Clear(); 
         return true;
     }
 }
@@ -68,21 +73,21 @@ start
 isLoading
 {
     return (current.loading1 == 0) ||
-    ((current.map == "see1") && (current.Seen == 0));
+    ((current.map == "see1") && (current.Seen == 0)); // Because the level TLTB has the old timing method using the code seen to have the old method
 }
 
-reset {
-	return (old.map != "ui" && current.map == "ui");
+reset 
+{
+	return (old.map != "ui");
 }
 
 split
 {
-    if (current.map != old.map) {
-	    if (settings[old.map]) {
-	            vars.doneMaps.Add(old.map);
-				return true;
-				}
-        }			
+    if ((current.map != old.map) && (settings[old.map]) && (!vars.doneMaps.Contains(current.map)))
+	{
+        vars.doneMaps.Add(old.map);
+		return true;
+	}			
 }
 
 exit 
