@@ -1,13 +1,14 @@
+// Gotta love .exe changes so you don't need an identifer 
 state("SniperElite4_DX11") 
 {
-    string100 map : 0xEB0BEB;
+    string16 map : 0xEB0BEB;
     float loading1 : 0xCFCAF0;
     float islandload : 0xC15A90; 
 }
 
 state("SniperElite4_DX12") 
 {
-	string100 map :  0xE5A2AB;
+	string16 map :  0xE5A2AB;
 	float loading1 : 0xE55958;
 	float islandload : 0xB683E0; 
 }
@@ -17,25 +18,48 @@ startup
 	settings.Add("missions", true, "Missions");
 
 	vars.missions = new Dictionary<string,string> 
-	{ 
-    	{"Marina", "Bianti Village"},
-        {"Viaduct", "Regilino Viaduct"},
-        {"Dockyard", "Lorino Dockyard"},
-        {"Monte_Cassino", "Abrunza Monastery"},
-        {"Coastal_Facility", "Magazzeno Facility"},
-        {"Forest", "Giovi Fiorini Mansion"},
-        {"Fortress", "allagra Fortress"},
-	};
- 	
-	 foreach (var Tag in vars.missions)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "missions");
-    };
- }
+		{ 
+    		{"Marina", "Bianti Village"},
+    	    {"Viaduct", "Regilino Viaduct"},
+    	    {"Dockyard", "Lorino Dockyard"},
+    	    {"Monte_Cassino", "Abrunza Monastery"},
+    		{"Coastal_Facility", "Magazzeno Facility"},
+    	    {"Forest", "Giovi Fiorini Mansion"},
+    	    {"Fortress", "allagra Fortress"},
+		};
+		foreach (var Tag in vars.missions)
+		{
+			settings.Add(Tag.Key, true, Tag.Value, "missions");
+    	};
+
+    vars.onStart = (EventHandler)((s, e) => 
+    {
+		vars.doneMaps.Clear();
+    });
+
+    timer.OnStart += vars.onStart; 
+
+
+    	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
+        {        
+        var timingMessage = MessageBox.Show (
+               "This game uses Time without Loads (Game Time) as the main timing method.\n"+
+                "LiveSplit is currently set to show Real Time (RTA).\n"+
+                "Would you like to set the timing method to Game Time? This will make verification easier",
+                "LiveSplit | Sniper Elite 4",
+               MessageBoxButtons.YesNo,MessageBoxIcon.Question
+            );
+        
+            if (timingMessage == DialogResult.Yes)
+            {
+                timer.CurrentTimingMethod = TimingMethod.GameTime;
+            }
+        }		
+}
 
 init
 {
-	vars.doneMaps = new List<string>(); 
+	vars.doneMaps = new List<string>(); // You get kicked to the main menu, so adding this just in case
 }
 
 start
@@ -49,13 +73,10 @@ start
 
 split
 {
-	if (current.map != old.map) 
+	if ((current.map != old.map) && (settings[current.map]) && (!vars.doneMaps.Contains(current.map)))
 	{
-		if (settings[current.map]) 
-		{
-			vars.doneMaps.Add(old.map);
-			return true;	
-		}	
+		vars.doneMaps.Add(current.map);
+		return true;		
 	}
 }
 
@@ -68,4 +89,9 @@ isLoading
 {
 	return ((current.loading1 == 0)) ||
   	((current.islandload == 0));
+}
+
+exit 
+{
+    timer.OnStart -= vars.onStart;
 }
