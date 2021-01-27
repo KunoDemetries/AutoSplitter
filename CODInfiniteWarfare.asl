@@ -39,6 +39,13 @@ startup
 		settings.Add(Tag.Key, true, Tag.Value, "missions");
     };
 
+    vars.onStart = (EventHandler)((s, e) => // Because of a lack of a start function clearing doneMaps like this
+        {
+
+            vars.doneMaps.Clear();
+        });
+    timer.OnStart += vars.onStart; 
+
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
         {        
         var timingMessage = MessageBox.Show (
@@ -58,18 +65,15 @@ startup
 
 init 
 {
-	vars.doneMaps = new List<string>(); 
+	vars.doneMaps = new List<string>(); // Like most newer cods you can enter old levels while still playing the game, so gotta have doneMaps 
 }
 
 split
 {
-  if (current.map1 != old.map1) 
+  if ((current.map1 != old.map1) && (settings[current.map1]))
   	{
-	    if (settings[current.map1]) 
-		{
-	        vars.doneMaps.Add(old.map1);
-			return true;
-		}
+	    vars.doneMaps.Add(old.map1);
+		return true;
 	}
 }
 
@@ -78,5 +82,9 @@ isLoading
 	return (current.loading1 == 0);
 }
 
+exit 
+{
+    timer.OnStart -= vars.onStart;
+}
 
 // v-meter iw7_ship.exe+1FDF420
