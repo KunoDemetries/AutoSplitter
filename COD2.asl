@@ -62,18 +62,12 @@ startup
 
 start
 {
-	if ((current.map == "moscow") && (old.map == "movie_eastern"))
-	{
-		return true;
-	}
+	return ((current.map == "moscow") && (old.map == "movie_eastern"));
 }
 
 split
 {
-	if ((current.map != old.map) && (settings[current.map]))
-	{
-		return true;
-	}
+	return ((current.map != old.map) && (settings[current.map]));
 
 	return (current.map == "credits");
 }
