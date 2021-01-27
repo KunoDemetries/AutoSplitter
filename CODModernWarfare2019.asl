@@ -1,3 +1,4 @@
+// Still broken as up update 1.30.10
 state("ModernWarfare")
 {
     string100 map : 0xDE83FA1;
@@ -48,6 +49,13 @@ startup
 			settings.Add(Tag.Key, true, Tag.Value, "act3");
     	};
 
+    vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
+    {
+		vars.doneMaps.Clear();
+    });
+
+    timer.OnStart += vars.onStart; 
+
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
         {        
         var timingMessage = MessageBox.Show (
@@ -63,13 +71,18 @@ startup
                 timer.CurrentTimingMethod = TimingMethod.GameTime;
             }
         }	
+}
 
+init
+{
+    vars.doneMaps = new List<string>(); // You can accidently enter a previous level so adding this just in case someone gets kicked to the menu
 }
 
 split
 {
-	if ((current.map != old.map) && (settings[(current.map)]))
+	if ((current.map != old.map) && (settings[(current.map)]) && (!vars.doneMaps.Contains(current.map)))
 	{
+		vars.doneMaps.Add(current.map);	
 		return true;
 	}
 }
@@ -79,6 +92,7 @@ start
 {
 	if ((current.map == "proxywar") && (current.loading1 == 1118989) && ((old.loading1 != 1118989)))
     {
+		vars.doneMaps.Clear();
     	return true;
     }
 }
@@ -86,4 +100,9 @@ start
 isLoading
 {
     return ((current.loading1 == 1118988));
+}
+
+exit 
+{
+    timer.OnStart -= vars.onStart;
 }
