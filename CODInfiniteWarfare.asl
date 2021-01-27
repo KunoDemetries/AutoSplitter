@@ -70,7 +70,7 @@ init
 
 split
 {
-  if ((current.map1 != old.map1) && (settings[current.map1]))
+  if ((current.map1 != old.map1) && (settings[current.map1]) && (!vars.doneMaps.Contains(old.map1)))
   	{
 	    vars.doneMaps.Add(old.map1);
 		return true;
