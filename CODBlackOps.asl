@@ -36,11 +36,10 @@ startup
         {
 		vars.USDDtime = false;
         });
-
+	// Really helpful especially if runners for whatever reason have livesplit reset on USDD  
     timer.OnStart += vars.onStart; 
 
-
-	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time 
+	if (timer.CurrentTimingMethod == TimingMethod.RealTime)  
         {        
         var timingMessage = MessageBox.Show (
                "This game uses Time without Loads (Game Time) as the main timing method.\n"+
@@ -55,7 +54,7 @@ startup
                 timer.CurrentTimingMethod = TimingMethod.GameTime;
 			}
         }	
-
+	// I just like to give the customization for this just because forcing it to IGT no matter what seems like a shit thing to do
 }
 
 init
@@ -93,18 +92,17 @@ reset
 
 split
 {
-    if ((settings[current.map]) && (current.map != old.map))
+    if ((settings[current.map]) && (current.map != old.map)) // If setting is true, and on a different map 
   	{
-		if (current.map == "pentagon")
+		if (current.map == "pentagon") // if were on USDD
 		{
-			vars.USDDtime = true;
+			vars.USDDtime = true; // adds game time of 4:55
 			return true;
 		}
-		else
+		else // if not on USDD split
 		{
 			return true;
 		}
-
 	}
 }			
 
