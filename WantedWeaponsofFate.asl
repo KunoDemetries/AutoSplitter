@@ -1,6 +1,7 @@
+// With help from Voxgizer
 state("Wanted")
 {
-    string25 map : 0x0073060C, 0x58, 0xC;
+    string25 map : 0x00733140, 0x78, 0x4, 0x64, 0x30, 0x40, 0x4, 0x2EC;
 	int loading1 : 0x73EF70;
 }
 
@@ -24,6 +25,29 @@ startup
 	{
 		settings.Add(Tag.Key, true, Tag.Value, "missions");
     };
+
+    vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
+    {
+		vars.doneMaps.Clear();
+    });
+
+    timer.OnStart += vars.onStart; 
+
+    if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
+    {        
+    var timingMessage = MessageBox.Show (
+           "This game uses Time without Loads (Game Time) as the main timing method.\n"+
+            "LiveSplit is currently set to show Real Time (RTA).\n"+
+            "Would you like to set the timing method to Game Time? This will make verification easier",
+            "LiveSplit | Wanted: Weapons of Fate",
+           MessageBoxButtons.YesNo,MessageBoxIcon.Question
+        );
+        
+        if (timingMessage == DialogResult.Yes)
+        {
+            timer.CurrentTimingMethod = TimingMethod.GameTime;
+        }
+    }	
 }
 
 init
@@ -42,9 +66,9 @@ start
 
 split
 { 
-	if ((current.map != old.map) && (settings[current.map]) && (!vars.doneMaps.Contains(current.map)))
+	if ((current.map != old.map) && (settings[(current.map)]) && (!vars.doneMaps.Contains(current.map))) // done maps needed because of shit checkpoints
 	{
-		vars.doneMaps.Add(old.map);				
+		vars.doneMaps.Add(current.map);				
 		return true;	
 	}	
 }
@@ -53,4 +77,9 @@ split
 isLoading
 {
 	return (current.loading1 == 1);
+}
+
+exit 
+{
+    timer.OnStart -= vars.onStart;
 }
