@@ -45,18 +45,12 @@ startup
 
 start
 {
-	if ((current.map1 == "logue") && (current.loading1 != 0))
-	{
-		return true;	
-	}
+	return ((current.map1 == "logue") && (current.loading1 != 0));
 }
 
 split
 {
-	if ((current.map != old.map) && (settings[current.map]))
-	{
-		return true;		
-	}
+	return ((current.map != old.map) && (settings[current.map]));
 }
 
 isLoading
