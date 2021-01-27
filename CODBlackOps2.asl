@@ -1,8 +1,8 @@
 state("t6sp")
 {
-	string65 map : 0xF4E62C;
-	double loading1 : 0x1A002C0;
-	string90 map2 : 0xC18138;
+	string21 map : 0xF4E62C;
+	int loading1 : 0xDF20B0;
+	string24 map2 : 0xC18138;
 	int exit : 0x2578DF0;
 }
 
@@ -41,58 +41,47 @@ startup
         }
 
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
-        {        
-        var timingMessage = MessageBox.Show (
-               "This game uses Time without Loads (Game Time) as the main timing method.\n"+
-                "LiveSplit is currently set to show Real Time (RTA).\n"+
-                "Would you like to set the timing method to Game Time? This will make verification easier",
-                "LiveSplit | Call of Duty: Black Ops 2",
-               MessageBoxButtons.YesNo,MessageBoxIcon.Question
-            );
-        
+    {        
+    	var timingMessage = MessageBox.Show 
+		(
+           "This game uses Time without Loads (Game Time) as the main timing method.\n"+
+            "LiveSplit is currently set to show Real Time (RTA).\n"+
+            "Would you like to set the timing method to Game Time? This will make verification easier",
+            "LiveSplit | Call of Duty: Black Ops 2",
+            MessageBoxButtons.YesNo,MessageBoxIcon.Question
+        );
             if (timingMessage == DialogResult.Yes)
             {
                 timer.CurrentTimingMethod = TimingMethod.GameTime;
             }
-        }
+    }
 }
 
 start
 {
-    if ((current.map == "angola.all.sabs") && (current.loading1 != 0)) 
-	{
-        return true;
-    }
+    return ((current.map == "angola.all.sabs") && (current.loading1 != 0)); // Starts closer now because of a new loading value
 }
 
 isLoading
 {
-    if (current.map2 != "nicaragua_gump_josefina")
+    if (current.map2 != "nicaragua_gump_josefina") // No matter what address I used, it always turns true in the middle of joesefina's cutscene mid level
 	{
-		if ((current.loading1 == 0) ||
-		((current.map2 == "su_rts_mp_dockside")) ||
-		(vars.missions1A.Contains(current.map)))
+		if ((current.loading1 != 19696744) || 
+		((current.map2 == "su_rts_mp_dockside")) || // Training course level that map1 doesn't switch to most of the time
+		(vars.missions1A.Contains(current.map))) 
         {
             return true;
         }
-
-	else 
+		else // IDK why probably because of the double if, but it likes to not unpause without a return false on an else
 		{
 			return false;
 		}
-
 	}	
 }
 
 split
 {
-    if ((current.map != old.map) && (settings[current.map])) 
-	{
-		return true;
-    }
+    return ((current.map != old.map) && (settings[current.map]));
 
-   if ((current.map2 == "haiti_gump_endings") && (current.exit != 0)) // USed as end split
-   {
-       return true;
-   }		
+	return ((current.map2 == "haiti_gump_endings") && (current.exit != 0)); // Used as end split once decision is made	
 }
