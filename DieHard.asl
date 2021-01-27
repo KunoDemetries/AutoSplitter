@@ -75,7 +75,7 @@ startup
 
 init
 {
-    vars.doneMaps = new List<string>(); 
+    vars.doneMaps = new List<string>(); // You can accidently checkpoint yourself back to a previous level, so doneMaps needed 
 }
 
 start
@@ -91,13 +91,10 @@ start
 
 split
 {
-	if (current.map != old.map) 
+	if ((current.map != old.map) && (settings[current.map]))
 	{
-		if (settings[current.map]) 
-		{
-			vars.doneMaps.Add(old.map);
-			return true;	
-		}	
+		vars.doneMaps.Add(old.map);
+		return true;	
 	}
 }
 
