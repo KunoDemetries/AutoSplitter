@@ -10,30 +10,23 @@ startup
 	settings.Add("missions", true, "Missions");
 
     vars.missions = new Dictionary<string,string> 
-	{ 
-	    {"Church_02.World00p","Contamination - Metastasis"},
-    	{"Warehouse_01.World00p","Flight - Ambush"},
-	    {"Warehouse_02.World00p","Flight- Holiday"},
-	    {"Warehouse_03.World00p","flight- Desolation"},
-	    {"Subway_01.World00p","Descent - Terminus"},
-	    {"Subway_02.World00p","Descent - Orange Line"},
-	    {"Subway_03.World00p","Descent - The L"},
-	    {"Office_01.World00p","Malice - Leviathan"},
-	    {"Hospital_01.World00p","Extraction Point - Malignancy"},
-	    {"Hospital_02.World00p","Extraction Point - Dark Heart"},
-	    {"Hospital_03.World00p","Epilogue"},
-    };
-   foreach (var Tag in vars.missions)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "missions");
-    };
-
-      	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
-        {
-		vars.doneMaps.Clear();
-        });
-
-    timer.OnStart += vars.onStart; 
+		{ 
+		    {"Church_02.World00p","Contamination - Metastasis"},
+    		{"Warehouse_01.World00p","Flight - Ambush"},
+		    {"Warehouse_02.World00p","Flight- Holiday"},
+		    {"Warehouse_03.World00p","flight- Desolation"},
+		    {"Subway_01.World00p","Descent - Terminus"},
+		    {"Subway_02.World00p","Descent - Orange Line"},
+		    {"Subway_03.World00p","Descent - The L"},
+		    {"Office_01.World00p","Malice - Leviathan"},
+		    {"Hospital_01.World00p","Extraction Point - Malignancy"},
+		    {"Hospital_02.World00p","Extraction Point - Dark Heart"},
+		    {"Hospital_03.World00p","Epilogue"},
+    	};
+   		foreach (var Tag in vars.missions)
+		{
+			settings.Add(Tag.Key, true, Tag.Value, "missions");
+    	};
 
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
         {        
@@ -52,18 +45,9 @@ startup
         }
 }
 
-init
-{
-	vars.doneMaps = new List<string>(); 
-}
-
 start
 {
-    if ((current.map1 == "Church_01.World00p") && (current.loading1 != 0) && (current.cutscene == 0))
-	{
-		vars.doneMaps.Clear();
-		return true;
-	}
+    return ((current.map1 == "Church_01.World00p") && (current.loading1 != 0) && (current.cutscene == 0));
 }
 
 isLoading
@@ -78,17 +62,5 @@ reset
 
 split
 {
-	if (current.map1 != old.map1) 
-	{
-		if (settings[current.map1]) 
-		{
-			vars.doneMaps.Add(old.map1);
-			return true;	
-		}	
-	}
-}
-
-exit 
-{
-    timer.OnStart -= vars.onStart;
+	if ((current.map1 != old.map1) && (settings[current.map1]));
 }
