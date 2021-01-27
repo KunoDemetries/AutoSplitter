@@ -56,7 +56,6 @@ startup
   	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
         {
         vars.doneMaps.Clear();
-		vars.doneMaps.Add(current.levels.ToString());
         });
 
     timer.OnStart += vars.onStart; 
@@ -80,7 +79,7 @@ startup
 
 init
 {
-    vars.doneMaps = new List<string>(); 
+    vars.doneMaps = new List<string>(); // Can accidently enter a previous level, doneMaps needed
 }
 
 start
@@ -88,7 +87,6 @@ start
     if ((current.levels == 3) && (current.loading1 == 1)) 
     {
         vars.doneMaps.Clear();
-		vars.doneMaps.Add(current.levels.ToString());
         return true;
     }
 }
@@ -97,13 +95,10 @@ split
 {
      string currentMap = current.levels.ToString();
 
-	if (current.levels != old.levels) 
+	if ((current.levels != old.levels) && (settings[currentMap]) && ((!vars.doneMaps.Contains(currentMap))))
 	{
-		if (settings[currentMap]) 
-		{
-			vars.doneMaps.Add(currentMap);
-			return true;	
-		}	
+		vars.doneMaps.Add(currentMap);
+		return true;	
 	}
     
     if ((current.levels == 37) && (current.endsplit == 11))
@@ -119,7 +114,7 @@ reset
 
 isLoading
 {
-return (current.loading1 == 0);
+	return (current.loading1 == 0);
 }
 
 exit 
