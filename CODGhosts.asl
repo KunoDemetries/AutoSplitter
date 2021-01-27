@@ -5,8 +5,6 @@ state("iw6sp64_ship")
     int loading2 : 0x774853C;
 }
 
-
-
 startup
 {
     settings.Add("missions", true, "Missions");    
@@ -55,21 +53,12 @@ startup
 
 start
 {
-	if ((current.map == "prologue") && (current.loading2 == 0))
-	{
-		return true;
-	}
+	return ((current.map == "prologue") && (current.loading2 == 0));
 }
 
 split
 {
-	if (current.map != old.map) 
-	{
-		if (settings[current.map]) 
-		{
-			return true;	
-		}	
-	}
+	return ((current.map != old.map) && (settings[current.map]));
 }
 
 isLoading
