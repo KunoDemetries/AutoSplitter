@@ -63,7 +63,7 @@ startup
 init // making throwaway vars for comparison and tracking
 {
     vars.debreifsplit = 0;
-    vars.doneMaps = new List<string>(); 
+    vars.doneMaps = new List<string>(); // Because of how menuing works you can accidently enter into a previous level, so doneMaps needed
     vars.splitter = 0;
 }
 
@@ -91,7 +91,7 @@ update
     }
 }
 
-start // a generic start 
+start 
 {
     if ((current.map == "takedown") && (current.loading1 != 0))
     {
@@ -108,15 +108,9 @@ split // Basically if the "update" function's checks turned true to split
             (vars.splitter == 1));
 }
 
-reset // e_frontend is the main menu screen
+reset // e_frontend is the main menu screen (like most 3arc games)
 {
-    if (current.map == "e_frontend")
-    {
-        
-		vars.doneMaps.Clear(); // Always good to clear doneMaps in start and reset
-		return true;		
-	
-    }
+    return (current.map == "e_frontend");
  }
 
 
