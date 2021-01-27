@@ -10,7 +10,8 @@ startup
 {
 	settings.Add("missions", true, "Missions");
 
-	vars.missions = new Dictionary<string,string> { 
+	vars.missions = new Dictionary<string,string> 
+	{ 
 		{"recovery","Atlas"},
 		{"lagos","Traffic"},
 		{"fusion","Fission"},
@@ -50,21 +51,12 @@ startup
 
 start
 {
-	if ((current.map == "seoul") && (current.loading1 == 0))
-	{
-		return true;
-	}
+	return ((current.map == "seoul") && (current.loading1 == 0));
 }
 
 split
 {
-	if (current.map != old.map) 
-	{
-		if (settings[(current.map)])
-		{
-			return true;				
-		}
-	}
+	return ((current.map != old.map) && (settings[(current.map)]));
 }
  
 reset
@@ -74,5 +66,5 @@ reset
 
 isLoading
 {
-	return ((current.loading1 == 1));
+	return (current.loading1 == 1);
 }
