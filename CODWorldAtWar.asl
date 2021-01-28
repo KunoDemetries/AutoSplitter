@@ -78,14 +78,14 @@ isLoading
 
 reset 
 {
-	return (old.map != "ui");
+	return (current.map == "ui");
 }
 
 split
 {
-    if ((current.map != old.map) && (settings[old.map]) && (!vars.doneMaps.Contains(current.map)))
+    if ((current.map != old.map) && (settings[current.map]) && (!vars.doneMaps.Contains(current.map)))
 	{
-        vars.doneMaps.Add(old.map);
+        vars.doneMaps.Add(current.map);
 		return true;
 	}			
 }
