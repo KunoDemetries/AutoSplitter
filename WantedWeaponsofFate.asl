@@ -1,7 +1,6 @@
-// With help from Voxgizer
 state("Wanted")
 {
-    string25 map : 0x00733140, 0x78, 0x4, 0x64, 0x30, 0x40, 0x4, 0x2EC;
+    string25 map : 0x0073055C, 0x8, 0x4, 0x78, 0xC;
 	int loading1 : 0x73EF70;
 }
 
@@ -33,21 +32,21 @@ startup
 
     timer.OnStart += vars.onStart; 
 
-    if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
-    {        
-    var timingMessage = MessageBox.Show (
-           "This game uses Time without Loads (Game Time) as the main timing method.\n"+
-            "LiveSplit is currently set to show Real Time (RTA).\n"+
-            "Would you like to set the timing method to Game Time? This will make verification easier",
-            "LiveSplit | Wanted: Weapons of Fate",
-           MessageBoxButtons.YesNo,MessageBoxIcon.Question
-        );
+    	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
+        {        
+        var timingMessage = MessageBox.Show (
+               "This game uses Time without Loads (Game Time) as the main timing method.\n"+
+                "LiveSplit is currently set to show Real Time (RTA).\n"+
+                "Would you like to set the timing method to Game Time? This will make verification easier",
+                "LiveSplit | Wanted: Weapons of Fate",
+               MessageBoxButtons.YesNo,MessageBoxIcon.Question
+            );
         
-        if (timingMessage == DialogResult.Yes)
-        {
-            timer.CurrentTimingMethod = TimingMethod.GameTime;
-        }
-    }	
+            if (timingMessage == DialogResult.Yes)
+            {
+                timer.CurrentTimingMethod = TimingMethod.GameTime;
+            }
+        }	
 }
 
 init
