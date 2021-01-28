@@ -15,7 +15,7 @@ state("OLGame")
     float xcoord  : 0x02020F38, 0x278, 0x40, 0x454, 0x80;
     float ycooord : 0x2020F38, 0x278, 0x40, 0x454, 0x84;
     float zcoord  : 0x2020F38, 0x278, 0x40, 0x454, 0x88;
-    string100 map : 0x02020F38, 0x42C, 0x40, 0x9C8, 0xF8, 0xAB4, 0x80, 0x0;  // Thanks to cheat mods for the game you can find current checkpoint
+    string100 map : 0x02006F00, 0x6F4, 0x40, 0xAB4, 0x80, 0x0;  // Thanks to cheat mods for the game you can find current checkpoint
     int inControl : 0x02020F38, 0x248, 0x60, 0x30, 0x278, 0x54; // In control == 1
 }
 
@@ -146,22 +146,22 @@ startup
 update
 {
     vars.mapcomparison = current.map; // Just reinforcing it here as in init
-// For Outlast
-    if (current.map == "Admin_Gates" && current.zcoord > -551.86 && current.zcoord < -551.84 && current.xcoord > -16422.93 && current.xcoord < -16416.11 && current.inControl == 1)
+	// For Outlast
+    if ((vars.mapcomparison == "Admin_Gates") && (current.zcoord > -551.86) && (current.zcoord < -551.84) && (current.xcoord > -16422.93) && (current.xcoord < -16416.11 && current.inControl == 1))
     {
         vars.starter = 1;
     }
-// For whistleblower
-    if (current.map == "Hospital_Free" && current.zcoord > 559.14 && current.zcoord < 559.16 && current.xcoord > 9543.68 && current.xcoord < 9550.54 && current.inControl == 1)
+	// For whistleblower
+    if (vars.mapcomparison == "Hospital_Free" && current.zcoord > 559.14 && current.zcoord < 559.16 && current.xcoord > 9543.68 && current.xcoord < 9550.54 && current.inControl == 1)
     {
         vars.starter = 1; 
     }
-// For outlast
+	// For outlast
     if ((current.xcoord == -20600) && (current.ycoord == -1578) && (current.zcord == -4098) && (vars.OnceFinalSplit != 1))
     {
         vars.endsplit = 1;
     }
-// For whistleblower 
+	// For whistleblower 
     if ((Math.Abs(-4098.51 - current.zcoord) < 0.01 && current.inControl == 0) && (vars.OnceFinalSplit != 1))
     {
         vars.endsplit = 1;
