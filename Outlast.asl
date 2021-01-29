@@ -180,7 +180,7 @@ update
         vars.starter = 1;
     }
 	// For whistleblower
-    if (vars.mapcomparison == "Hospital_Free" && current.zcoord > 559.14 && current.zcoord < 559.16 && current.xcoord > 9543.68 && current.xcoord < 9550.54 && current.inControl == 1)
+    if (vars.Checker == 1 && current.zcoord > 559.14 && current.zcoord < 559.16 && current.xcoord > 9543.68 && current.xcoord < 9550.54 && current.inControl == 1)
     {
         vars.starter = 1; 
     }
