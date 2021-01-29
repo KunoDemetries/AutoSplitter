@@ -26,7 +26,7 @@ init
     vars.endsplit = 0; // Used to do the final split
     vars.OnceFinalSplit = 0; // After the game finishes the end split returns true (mattmatt's fault) so I added this to make it split once
     vars.mapcomparison = current.map; // For whatever reason map returns Null and livesplit likes to linger on it so this is the easiest fix without changing addresses for something minor
-    
+    vars.Checker = 0;
 
     // Checking the games memory size to see if it's the steam version 
     switch (modules.First().ModuleMemorySize) 
@@ -40,27 +40,27 @@ init
 startup     
 {
     settings.Add("OL", true, "Outlast"); // Grouping all the Outlast splits together
-	settings.Add("adminblock", true, "Admin Block", "OL"); // Each Chapter is related to one of these
-	settings.Add("prisionblock", true, "Prison Block", "OL");
-	settings.Add("sewers", true, "Sewers", "OL");
-	settings.Add("maleward", true, "Male Ward", "OL");
-	settings.Add("courtyard", true, "Courtyard", "OL");
-	settings.Add("femaleward", true, "Female Ward", "OL");
-	settings.Add("return", true, "Return to the Admin Block" , "OL");
-	settings.Add("lab", true, "Underground Lab", "OL");
+		settings.Add("adminblock", true, "Admin Block", "OL"); // Each Chapter is related to one of these
+		settings.Add("prisionblock", true, "Prison Block", "OL");
+		settings.Add("sewers", true, "Sewers", "OL");
+		settings.Add("maleward", true, "Male Ward", "OL");
+		settings.Add("courtyard", true, "Courtyard", "OL");
+		settings.Add("femaleward", true, "Female Ward", "OL");
+		settings.Add("return", true, "Return to the Admin Block" , "OL");
+		settings.Add("lab", true, "Underground Lab", "OL");
 
     settings.Add("WB", true, "Whistleblower");
-    settings.Add("hospital", true, "Hospital", "WB");
-    settings.Add("rec", true, "Recreation Area", "WB");
-    settings.Add("prision", true, "Prison", "WB");
-    settings.Add("drying", true, "Drying Ground", "WB");
-    settings.Add("vocation", true, "Vocational Block", "WB");
-    settings.Add("exit", true, "Exit", "WB");
+    	settings.Add("hospital", true, "Hospital", "WB");
+    	settings.Add("rec", true, "Recreation Area", "WB");
+    	settings.Add("prision", true, "Prison", "WB");
+    	settings.Add("drying", true, "Drying Ground", "WB");
+    	settings.Add("vocation", true, "Vocational Block", "WB");
+    	settings.Add("exit", true, "Exit", "WB");
     //zeko's Code, basically works like how my dictionaries work for other ASLs just only one big dictionary and a definer at the bottom sorting it in a order that livesplit will read because of 
     // C# 7.0 or whatever, really the order doesn't seem to matter lol as long as you sort it at the bottom
- var tB = (Func<string, string, string, Tuple<string, string, string>>) ((elmt1, elmt2, elmt3) => { return Tuple.Create(elmt1, elmt2, elmt3); });
-    var sB = new List<Tuple<string, string, string>> 
-    {
+ 	var tB = (Func<string, string, string, Tuple<string, string, string>>) ((elmt1, elmt2, elmt3) => { return Tuple.Create(elmt1, elmt2, elmt3); });
+    	var sB = new List<Tuple<string, string, string>> 
+    	{
             tB("adminblock", "Admin_MainHall","After first cutscene"),
             tB("adminblock","Admin_SecurityRoom","Power shuts off"),
             tB("prisionblock","Prison_Start","Interact wtih keyboard"),
@@ -113,10 +113,11 @@ startup
             tB("exit","MaleRevisit_Start","Start of Exit"),
             tB("exit","AdminBlock_Start","Long hallway"),
         };
-    foreach (var s in sB) settings.Add(s.Item2, true, s.Item3, s.Item1);
+    	foreach (var s in sB) settings.Add(s.Item2, true, s.Item3, s.Item1);
 
-    vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
+	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
         {
+			vars.Checker = 0;			
             vars.starter = 0; // Generic starting split
             vars.endsplit = 0; // generic end split
             vars.OnceFinalSplit = 0; // So it doesn't split more than once for the end split
@@ -141,13 +142,40 @@ startup
                 timer.CurrentTimingMethod = TimingMethod.GameTime;
             }
         }
+
+	
 }
 
 update
 {
+	// for outlast to be able to not have it endlessly start if you're resetting from the start of the game (thanks mattmatt)
+	if ((vars.starter == 0) && (current.zcoord.ToString() == "-551.8501") && (current.xcoord.ToString() == "-16422.93"))
+	{
+		vars.Checker = 1;
+	}
+	
+	if ((vars.starter == 0) && (current.zcoord.ToString() == "559.15") && (current.xcoord.ToString() == "9543.678"))
+	{
+		vars.Checker = 1;
+	}
+
+	print(current.zcoord.ToString());
+
+	// For outlast to end split
+    if ((current.xcoord == -20600) && (current.ycoord == -1578) && (current.zcord == -4098) && (vars.OnceFinalSplit != 1))
+    {
+        vars.endsplit = 1;
+    }
+	// For whistleblower to end split
+    if ((Math.Abs(-4098.51 - current.zcoord) < 0.01 && current.inControl == 0) && (vars.OnceFinalSplit != 1))
+    {
+        vars.endsplit = 1;
+    }
+
     vars.mapcomparison = current.map; // Just reinforcing it here as in init
-	// For Outlast
-    if ((vars.mapcomparison == "Admin_Gates") && (current.zcoord > -551.86) && (current.zcoord < -551.84) && (current.xcoord > -16422.93) && (current.xcoord < -16416.11 && current.inControl == 1))
+	// For Outlast	
+
+    if  ((vars.Checker == 1) && (vars.mapcomparison == "Admin_Gates") && (current.zcoord > -551.86) && (current.zcoord < -551.84) && (current.xcoord > -16422.93) && (current.xcoord < -16416.11 && current.inControl == 1))
     {
         vars.starter = 1;
     }
@@ -155,16 +183,6 @@ update
     if (vars.mapcomparison == "Hospital_Free" && current.zcoord > 559.14 && current.zcoord < 559.16 && current.xcoord > 9543.68 && current.xcoord < 9550.54 && current.inControl == 1)
     {
         vars.starter = 1; 
-    }
-	// For outlast
-    if ((current.xcoord == -20600) && (current.ycoord == -1578) && (current.zcord == -4098) && (vars.OnceFinalSplit != 1))
-    {
-        vars.endsplit = 1;
-    }
-	// For whistleblower 
-    if ((Math.Abs(-4098.51 - current.zcoord) < 0.01 && current.inControl == 0) && (vars.OnceFinalSplit != 1))
-    {
-        vars.endsplit = 1;
     }
 }
 
@@ -175,6 +193,7 @@ start
         vars.starter = 0;
         vars.endsplit = 0;
         vars.OnceFinalSplit = 0;
+		vars.Checker = 0;
         vars.doneMaps.Clear();
         vars.doneMaps.Add(current.map.ToString());
         return true;
