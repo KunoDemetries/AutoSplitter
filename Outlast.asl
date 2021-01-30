@@ -175,7 +175,7 @@ update
     vars.mapcomparison = current.map; // Just reinforcing it here as in init
 	// For Outlast	
 
-    if  ((vars.Checker == 1) && (vars.mapcomparison == "Admin_Gates") && (current.zcoord > -551.86) && (current.zcoord < -551.84) && (current.xcoord > -16422.93) && (current.xcoord < -16416.11 && current.inControl == 1))
+    if  ((vars.Checker == 1) && (current.zcoord > -551.86) && (current.zcoord < -551.84) && (current.xcoord > -16422.93) && (current.xcoord < -16416.11 && current.inControl == 1))
     {
         vars.starter = 1;
     }
