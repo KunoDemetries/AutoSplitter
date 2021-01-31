@@ -1,7 +1,7 @@
 state("game")
 {
     byte loading1 : "Core.dll", 0xCCF60;
-    byte splitter : "Core.dll", 0x1CC11B;
+//    byte splitter : "Core.dll", 0x1CC11B;
 }
 
 
