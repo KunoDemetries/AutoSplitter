@@ -13,8 +13,8 @@ startup
 		{"/02_RES_A_1_stage1","Act 2: When the Water Broke"},
 		{"/03_DCF_A_stage1","Act 3: Russian's Last Dance"},
 		{"/04_AIR_A_stage1","Act 4: Fear of Flying Fuck"},
-		{"/05_OFF_A_stage1","Act 5: Shut The Fuck Up"},
-		{"/06_CF_A_stage1","Act 6: Shoot That MotherFucker!"},
+		{"/05_OFF_B_stage1","Act 5: Shut The Fuck Up"},
+		{"06_CF_A_stage1","Act 6: Shoot That MotherFucker!"},
 		{"/07_MOU_A_stage1","Act 7: Spiders Don't Have Wings"},
 		{"/08_MVA_B_stage1","Act 8: Dust to Dust"},
 		{"/09_CHU_A_1_stage1","Act 9; How's Your Father?"},
@@ -47,34 +47,6 @@ startup
                 timer.CurrentTimingMethod = TimingMethod.GameTime;
             }
         }	
-
-
-  vars.SetTextComponent = (Action<string, string>)((id, text) =>
-    {
-        var textSettings = timer.Layout.Components.Where(x => x.GetType().Name == "TextComponent").Select(x => x.GetType().GetProperty("Settings").GetValue(x, null));
-        var textSetting = textSettings.FirstOrDefault(x => (x.GetType().GetProperty("Text1").GetValue(x, null) as string) == id);
-        if (textSetting == null)
-        {
-        var textComponentAssembly = Assembly.LoadFrom("Components\\LiveSplit.Text.dll");
-        var textComponent = Activator.CreateInstance(textComponentAssembly.GetType("LiveSplit.UI.Components.TextComponent"), timer);
-        timer.Layout.LayoutComponents.Add(new LiveSplit.UI.Components.LayoutComponent("LiveSplit.Text.dll", textComponent as LiveSplit.UI.Components.IComponent));
-
-        textSetting = textComponent.GetType().GetProperty("Settings", BindingFlags.Instance | BindingFlags.Public).GetValue(textComponent, null);
-        textSetting.GetType().GetProperty("Text1").SetValue(textSetting, id);
-        }
-
-        if (textSetting != null)
-        textSetting.GetType().GetProperty("Text2").SetValue(textSetting, text);
-    });
-	settings.Add("quest_state", true, "Quest State");
-}
-
-update
-{
-		if (settings["quest_state"]) 
-    {
-      vars.SetTextComponent("Quest State", (current.map)); 
-    }
 }
 
 
