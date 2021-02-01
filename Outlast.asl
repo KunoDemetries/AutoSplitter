@@ -8,12 +8,13 @@
                         trying to change his start method cause IDC to really learn it as the OL mods said really to just implement a split function
                         so that's what I did
                         Any problems contact Kuno Demetries#6969
+                        (love you mattmatt)
 */
 state("OLGame")
 {
     int isLoading : 0x01FFBCC8, 0x118;  // Generic Loading string
     float xcoord  : 0x02020F38, 0x278, 0x40, 0x454, 0x80;
-    float ycooord : 0x2020F38, 0x278, 0x40, 0x454, 0x84;
+    float ycoord  : 0x2020F38, 0x278, 0x40, 0x454, 0x84;
     float zcoord  : 0x2020F38, 0x278, 0x40, 0x454, 0x88;
     string100 map : 0x02006F00, 0x6F4, 0x40, 0xAB4, 0x80, 0x0;  // Thanks to cheat mods for the game you can find current checkpoint
     int inControl : 0x02020F38, 0x248, 0x60, 0x30, 0x278, 0x54; // In control == 1
@@ -24,7 +25,7 @@ init
     vars.doneMaps = new List<string>(); // Test to see if we split for a setting already
     vars.starter = 0; // Used for the starting check just so everything can just stay in Update
     vars.endsplit = 0; // Used to do the final split
-    vars.OnceFinalSplit = 0; // After the game finishes the end split returns true (mattmatt's fault) so I added this to make it split once
+    vars.OnceFinalSplit = 0; // After the game finishes the end split returns true  so I added this to make it split once
     vars.mapcomparison = current.map; // For whatever reason map returns Null and livesplit likes to linger on it so this is the easiest fix without changing addresses for something minor
     vars.Checker = 0;
 
@@ -148,18 +149,20 @@ startup
 
 update
 {
-	// for outlast to be able to not have it endlessly start if you're resetting from the start of the game (thanks mattmatt)
-	if ((vars.starter == 0) && (current.zcoord.ToString() == "-551.8501") && (current.xcoord.ToString() == "-16422.93"))
+    vars.mapcomparison = current.map;
+
+	// for outlast to be able to not have it endlessly start if you're resetting from the start of the game
+	if ((current.isLoading == 1) && (current.map == "Admin_Gates") && (current.xcoord > -16422.94))
 	{
 		vars.Checker = 1;
 	}
 	
+    print(vars.Checker.ToString());
+
 	if ((vars.starter == 0) && (current.zcoord.ToString() == "559.15") && (current.xcoord.ToString() == "9543.678"))
 	{
 		vars.Checker = 1;
 	}
-
-	print(current.zcoord.ToString());
 
 	// For outlast to end split
     if ((current.xcoord == -20600) && (current.ycoord == -1578) && (current.zcord == -4098) && (vars.OnceFinalSplit != 1))
@@ -172,10 +175,7 @@ update
         vars.endsplit = 1;
     }
 
-    vars.mapcomparison = current.map; // Just reinforcing it here as in init
-	// For Outlast	
-
-    if  ((vars.Checker == 1) && (current.zcoord > -551.86) && (current.zcoord < -551.84) && (current.xcoord > -16422.93) && (current.xcoord < -16416.11 && current.inControl == 1))
+    if  ((vars.Checker == 1) && (current.xcoord > -16422.93) && (current.xcoord < -16416.11) && (current.inControl == 1))
     {
         vars.starter = 1;
     }
@@ -202,8 +202,6 @@ start
 
 split
 {
-    vars.mapcomparison = current.map;
-
     if ((settings[(vars.mapcomparison)]) && (!vars.doneMaps.Contains(vars.mapcomparison)))
     {
         vars.doneMaps.Add(vars.mapcomparison);
@@ -219,7 +217,7 @@ split
 
 isLoading
 {
-    return current.isLoading == 1;
+    return (current.isLoading == 1);
 }
 
 exit 
