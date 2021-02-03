@@ -75,7 +75,7 @@ startup
 
 split
 {
-	return ((current.map != old.map) && (settings[current.map]) && (!vars.doneMaps.Contains(old.map)));
+	return ((current.map != old.map) && (settings[current.map]));
 
     return ((current.endsplit == 1048576000) && (current.map == "ending")); // end split
 }   
