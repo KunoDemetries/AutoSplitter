@@ -6,7 +6,6 @@ state("iw4sp")
 	//int starter : 0xC6F280;
     }
 
-
 startup 
 {
     settings.Add("acta", true, "All Acts");
@@ -57,13 +56,6 @@ startup
 			settings.Add(Tag.Key, true, Tag.Value, "act3");
     	};
 
-      	vars.onStart = (EventHandler)((s, e) => // Wouldn't need it if I didn't know that Klooger manually starts and resets lol
-        {
-    	vars.doneMaps.Clear();
-        });
-
-    timer.OnStart += vars.onStart; 
-
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
         {        
         var timingMessage = MessageBox.Show (
@@ -81,30 +73,16 @@ startup
         }	
 }
 
-init
-{
-    vars.doneMaps = new List<string>(); 
-}
-
 split
 {
-	if ((current.map != old.map) && (settings[current.map]) && (!vars.doneMaps.Contains(old.map)))
-	{
-			vars.doneMaps.Add(old.map);
-			return true;		
-	}
+	return ((current.map != old.map) && (settings[current.map]) && (!vars.doneMaps.Contains(old.map)));
 
     return ((current.endsplit == 1048576000) && (current.map == "ending")); // end split
 }   
 
 start
 {
-	if ((current.map == "trainer") && (old.map == "ui") && (current.loading != 0)) 
-	{
-    	vars.doneMaps.Clear();
-		vars.doneMaps.Add(current.map);
-    	return true;
-    }
+	return ((current.map == "trainer")  && (current.loading1 != 0));
 }
 
  
@@ -116,9 +94,4 @@ start
 isLoading
 {
 	return (current.loading1 == 0);
-}
-
-exit 
-{
-    timer.OnStart -= vars.onStart;
 }
