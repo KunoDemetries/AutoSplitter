@@ -67,6 +67,7 @@ startup
             tB("prisionblock","Prison_Start","Interact wtih keyboard"),
             tB("prisionblock","Prison_IsolationCells02_Soldier","After Fire"),
             tB("sewers","Sewer_start","Entering Sewers"),
+            tB("sewers", "Sewer_FlushWater","Before Flushing Water"),
             tB("sewers","Sewer_WaterFlushed","Turning 2nd valve"),
             tB("sewers","Sewer_Citern2","Before waterhops"),
             tB("maleward","Male_Start","Entering Male Ward"),
