@@ -6,19 +6,16 @@ state("FixitFelixJr")
 
 start
 {
-	if (current.start1 == 4)
-	{
-		return true;		
-	}
+	return (current.start1 == 4);
 }
 
 
 split
 {
-	return((current.reset1 == 6));
+	return (current.reset1 == 6);
 }
 
  reset
 {
-    	return((current.reset1 == 0));
+    	return (current.reset1 == 0);
 }
