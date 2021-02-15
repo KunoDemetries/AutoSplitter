@@ -1,7 +1,8 @@
 state("s2_sp64_ship")
 {
 	string15 map : 0x6A122B4;
-    int loading1 : 0x2AB9B44;
+    int loading1 : 0x46B4A0C0;
+    int loading2 : 0x2900008;
 }
 
 startup 
@@ -79,7 +80,7 @@ split
 
 isLoading
 {
-	return (current.loading1 == 0);	
+	return ((current.loading1 == 0) && (current.loading2 == 0));	
 }
 
 exit 
