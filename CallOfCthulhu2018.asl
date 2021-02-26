@@ -12,7 +12,6 @@ state("CallOfCthulhu", "version.latest")
 
 startup
 {
-    settings.Add("initial_version", false, "Initial Game Version");
 	settings.Add("missions", true, "Missions");
 
 	vars.missions = new Dictionary<string,string>
