@@ -1,21 +1,26 @@
 // Splits once loading is done because can't do a logical check for which load screen is which without entering the level first sadly
 // Easiest fix compared to trying to sort through hours of finding a code for the current map as it's usually locked cause UE4 bad
-state("CallOfCthulhu")
+state("CallOfCthulhu", "version.initial")
 {
-	int loading1 : 0x0313B1D0, 0x8;
+    int loading1 : 0x031351D0, 0x8;
+}
+
+state("CallOfCthulhu", "version.latest")
+{
+    int loading1 : 0x031351D0, 0x8;
 }
 
 startup
 {
 	settings.Add("missions", true, "Missions");
 
-	vars.missions = new Dictionary<string,string> 
-    	{  
+	vars.missions = new Dictionary<string,string>
+    	{
 			{"1","Chapter 2: Dark Water"},
 			{"2","Chapter 3: Garden of the Hawkins mansion"},
 			{"3","Chapter 4: Tunnels Under the Hawkins mansion"},
 			{"4","Chapter 5: Riverside Institute"},
-			{"5","Chapter 6: Hawkins mansion"},				
+			{"5","Chapter 6: Hawkins mansion"},
 			{"6","Chapter 7: The Nameless Bookstore"},
 			{"7","Chapter 8: Riverside Institute"},
 			{"8","Chapter 9: Riverside Institute"},
@@ -30,16 +35,15 @@ startup
 			settings.Add(Tag.Key, true, Tag.Value, "missions");
     	};
 
-		
-    vars.onStart = (EventHandler)((s, e) => 
+    vars.onStart = (EventHandler)((s, e) =>
     {
 		vars.counter = 0;
     });
 
-    timer.OnStart += vars.onStart; 
+    timer.OnStart += vars.onStart;
 
     	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
-        {        
+        {
         var timingMessage = MessageBox.Show (
                "This game uses Time without Loads (Game Time) as the main timing method.\n"+
                 "LiveSplit is currently set to show Real Time (RTA).\n"+
@@ -47,12 +51,12 @@ startup
                 "LiveSplit | Wanted: Weapons of Fate",
                MessageBoxButtons.YesNo,MessageBoxIcon.Question
             );
-        
+
             if (timingMessage == DialogResult.Yes)
             {
                 timer.CurrentTimingMethod = TimingMethod.GameTime;
             }
-        }	
+        }
 }
 
 init
@@ -72,10 +76,15 @@ update
 
 start
 {
+    if (modules.First().ModuleMemorySize == 0x57397248)
+        version = "version.initial";
+    else
+        version = "version.latest";
+
 	if ((current.loading1 != 2) && (old.loading1 == 2))
 	{
 		vars.counter = 0;
-		return true;			
+		return true;
 	}
 }
 
