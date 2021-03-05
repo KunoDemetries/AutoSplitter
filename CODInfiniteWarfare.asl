@@ -1,7 +1,7 @@
 state("iw7_ship")
 {
-string100 map1 : 0x21E5F3C;
-int loading1 : 0xB0596AC;
+  string100 map1 : 0x21E5F3C;
+  byte loading1 : 0x5D65B77;
 }
 
 startup
@@ -25,7 +25,7 @@ startup
 		{"titanjackal", "Operation Burn Water: Fight or Flight"},
 		{"shipcrib_rogue", "Retribution: Rescued"},
 		{"rogue", "Operation Dark Quarry"},	
-		{"shipcrib_prisoner", "Retribution: Cost of Victory"},
+		{"shipcrib_prisoner", "Retribution: Cost of Victory"}, 
 		{"prisoner", "Operation Black Flag: Prisoner Escort"},
 		{"heist", "Operation Black Flag: Trap is Sprung"},
 		{"heistspace", "Operation Blood Storm: Trojan House"},
@@ -71,10 +71,10 @@ init
 split
 {
   if ((current.map1 != old.map1) && (settings[current.map1]) && (!vars.doneMaps.Contains(old.map1)))
-  	{
+    {
 	    vars.doneMaps.Add(old.map1);
-		return true;
-	}
+		  return true;
+	  }
 }
 
 isLoading
