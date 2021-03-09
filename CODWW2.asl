@@ -1,8 +1,7 @@
 state("s2_sp64_ship")
 {
 	string15 map : 0x6A122B4;
-    int loading1 : 0x46B4A0C0;
-    int loading2 : 0x2900008;
+    int loading1 : 0xB3ED23C;
 }
 
 startup 
@@ -62,7 +61,7 @@ init
 
 start
 {
-	if ((current.map == "normandy") && (current.map != "transport_ship"))
+	if ((current.map == "normandy") && (current.map != "transport_ship") && (current.loading1 != 0))
 	{
 		vars.doneMaps.Clear();
 		return true;
@@ -80,7 +79,7 @@ split
 
 isLoading
 {
-	return ((current.loading1 == 0) && (current.loading2 == 0));	
+	return ((current.loading1 == 0));	
 }
 
 exit 
