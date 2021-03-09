@@ -1,7 +1,7 @@
 state("BlackOps")
 {
 	string35 map : 0x21033E8; // Doesn't work for langagues other than English (idk why)
-	long loading1: 0x356E7F4;	// Changed based on timing method changes by community vote
+	long loading1: 0x2AEA4B0;	// Changed based on timing method changes by community vote
 }
 
 startup 
