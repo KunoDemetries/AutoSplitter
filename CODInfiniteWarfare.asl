@@ -1,7 +1,7 @@
 state("iw7_ship")
 {
   string100 map1 : 0x21E5F3C;
-  byte loading1 : 0x5D65B77;
+  byte loading1 : 0x3A997DC;
 }
 
 startup
@@ -79,7 +79,8 @@ split
 
 isLoading
 {
-	return (current.loading1 == 0);
+	return (current.loading1 == 0) ||
+	(current.loading1 == 1);
 }
 
 exit 
