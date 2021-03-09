@@ -10,7 +10,7 @@ Unity:
   - Unity doesn't commonly use a string value, but you could still probably find it
   - Most likely each area will have a number associated for it (menu 0, level1 1) which will be a 4byte
 
-Chromium: 
+Chrome: 
   - shitty engine that dumps it's addresses every load (basically what UE does with it's string values)
   - Mainly just stick to byte/4byte and you'll find a loading value hopefully. The value itself will be static (like 0) during loads and constantly change during gameplay 
   
