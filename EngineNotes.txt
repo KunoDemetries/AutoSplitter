@@ -1,0 +1,23 @@
+Unreal Engine 3/4:
+  - Commonly the loading value you will a 4byte
+  - Most loading pointers (if needed) will only have 1 offset, usually 0x8 for whatever reason
+  - For a string value it will be a unicode for UE4, and UE3 will generally still be a u/16 or whatever isn't unicode. 
+  - Commonly string values get dumped (meaning removed from memory) every load, so I would just get as close as you can to finding the correct one and pointer scanning it. It's 
+  trial and error until you get it.
+
+Unity: 
+  - Loading will *almost always* be a byte or a double
+  - Unity doesn't commonly use a string value, but you could still probably find it
+  - Most likely each area will have a number associated for it (menu 0, level1 1) which will be a 4byte
+
+Chromium: 
+  - shitty engine that dumps it's addresses every load (basically what UE does with it's string values)
+  - Mainly just stick to byte/4byte and you'll find a loading value hopefully. The value itself will be static (like 0) during loads and constantly change during gameplay 
+  
+IW Engine:
+  - Static for everything, meaning don't pointer scan you're wasting your time
+  - String map will always exist
+  - Loading will always be a 4byte
+  - For all engines (old like cod1 to bocw) you will be able to find the map names within the game files, newer games will be hardish depending on if you actually know where to look
+  - Cheat engine works all the way up to basically WW2 (IW has a dll injector blocker), for WW2 use cosmic, anything past that you'll just have to get me to make it (MW2R does work with CE
+  but I wouldn't recommend it lol)
