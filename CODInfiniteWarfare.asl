@@ -1,7 +1,7 @@
 state("iw7_ship")
 {
-  string100 map1 : 0x21E5F3C;
-  byte loading1 : 0x3A997DC;
+	string100 map1 : 0x21E5F3C;
+	byte loading1 : 0x5D65B77;
 }
 
 startup
@@ -79,13 +79,10 @@ split
 
 isLoading
 {
-	return (current.loading1 == 0) ||
-	(current.loading1 == 1);
+	return (current.loading1 == 0);
 }
 
 exit 
 {
     timer.OnStart -= vars.onStart;
 }
-
-// v-meter iw7_ship.exe+1FDF420
