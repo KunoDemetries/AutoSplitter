@@ -1,8 +1,6 @@
 state("thiv")
 {
-    //string10 map : "ChromeEngine2.dll", 0x40A939;
-	//int loading3: "ChromeEngine2.dll", 0x2FD61C;
-	string10 map: "ChromeEngine2.dll", 0x4AF96C;
+	string10 map : "ChromeEngine2.dll", 0x4AF96C;
 	int loading3 : "ChromeEngine2.dll", 0x42963C;
 	int scene : "ChromeEngine2.dll", 0x2FD614;
 }
@@ -31,10 +29,7 @@ startup
 
 start
 {
-    if ((current.map == "Mission_01") && (current.loading3 != old.loading3))
-    {
-		return true;       
-    }
+    return ((current.map == "Mission_01") && (current.loading3 != old.loading3));
 }
 
 isLoading
@@ -44,13 +39,7 @@ isLoading
 
 split
 {
-	if (current.map != old.map) 
-	{
-		if (settings[current.map]) 
-		{			
-			return true;	
-		}	
-	}
+	return ((current.map != old.map) && (settings[current.map]));
 }
 
 reset
