@@ -1,67 +1,44 @@
-// Thanks to Earllgray for testing the ASL
 state("SMBBBHD")
 {
-    int isNotLoading : "mono-2.0-bdwgc.dll", 0x0039B56C, 0x794, 0x90, 0x2C; // This was found by Ellie
-    int splitter : "UnityPlayer.dll", 0x01099D78, 0x4, 0x8, 0x1C, 0xBC, 0x18, 0x30; // Based on time bonus value after finishing each level, turns to null in main menu
+	byte decided : "UnityPlayer.dll", 0x010BF87C, 0x28, 0x88, 0x24, 0xA0, 0xC0, 0x90;
+    int isNotLoading : "mono-2.0-bdwgc.dll", 0x0039B56C, 0x794, 0x90, 0x2C;
+	int state : "mono-2.0-bdwgc.dll", 0x0039B56C, 0x79C, 0x4C, 0x10, 0xE8;
+	int stage : "mono-2.0-bdwgc.dll", 0x0039B56C, 0x7AC, 0x20, 0x6C, 0x28;
+	int world : "mono-2.0-bdwgc.dll", 0x0039B56C, 0x7AC, 0x20, 0x6C, 0x24;
+	float igt : "mono-2.0-bdwgc.dll", 0x0039CC58, 0x48, 0x6DC, 0x44, 0x90, 0x10;
 }
 
 init
 {
     timer.IsGameTimePaused = false;
     game.Exited += (s, e) => timer.IsGameTimePaused = true;
-    vars.trigger = false; //Used for settings 1 and 2
-    vars.comparison = null; // Used for settings 1 and 2
-    vars.comparison2 = null; // Used for settings 3
-    vars.trigger2 = false; // Used for settings 3
+	vars.betStages = null;
 }
 
 startup
 {
-
-
     settings.Add("BBB", true, "Super Monkey Ball Banana Blitz HD");
-    	settings.Add("1", true, "Split Every Level Change?", "BBB");
-    	settings.Add("2", false, "Split Every State Change", "BBB");
-        settings.Add("3",true, "Split on Bonus levels?", "BBB");
-        	settings.SetToolTip("1", "This is basically just never split, disable if you use option 2");
-        	settings.SetToolTip("2", "Warning: This will split a lot more than you think, Disable the 1st and 3rd option if you use this one");
-        	settings.SetToolTip("3", "Bonus levels are removed normally, so this setting will make sure it happens");
-
+    	settings.Add("1", true, "Splits Every Stage", "BBB");
+    	settings.Add("2", false, "Splits Every World", "BBB");
+        settings.Add("3", false, "Splits Bonus levels", "BBB");
+        	settings.SetToolTip("1", "This is will split every stage, disable if you want to split worlds.");
+        	settings.SetToolTip("2", "This will split every world, Disable the 1st and 3rd option if you use this one");
+        	settings.SetToolTip("3", "Disable options 1 and 2 if you want to split only on bonus stages");
 }
 
-update
+start
 {
-    // Basically split everytime the value "splitter" changes but can't be in the main menu, and entering a level from the main menu
-    if ((current.splitter != old.splitter) && (current.splitter != 0) && (current.splitter != null) && (settings["1"]) && (current.splitter != vars.comparison))
-    {
-        vars.trigger = true;
-    }
-    // Dangerous as it splits for every change even for nulls
-    if ((current.splitter != old.splitter) && settings["2"] && (current.splitter != vars.comparison))
-    {
-        vars.trigger = true;
-    }
-    // This is used just because after defeating a boss, or exiting a level it'll split 3 times
-    if ((current.splitter == 0) && (current.splitter != old.splitter) && (old.splitter != null) && (settings["3"]) && (current.splitter != vars.comparison2))
-    {
-        vars.comparison2 = 0;
-        vars.trigger2 = true;
-    }
+	return ((current.stage == 0) && (current.world == 0) && (current.decided == 1 && old.decided == 0));
 }
 
 split 
 {
-    if (vars.trigger == true)
-    {
-        vars.comparison = current.splitter;
-        vars.trigger = false;
-        return true;
-    }
-
-    if (vars.trigger2 == true)
-    {
-        vars.trigger2 = false;
-        return true;
+	if (settings["BBB"]) 
+	{
+			return ((settings["1"] && current.stage != old.stage)    ||
+					(settings["2"] && current.world != old.world)    ||
+					(settings["3"] && current.stage != old.stage && current.stage == 8) ||
+					(current.stage == 9 && current.world == 9 && current.state != old.state && current.state == 10));
     }
 }
 
