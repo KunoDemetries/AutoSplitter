@@ -3,8 +3,8 @@
 // Message KunoDemetries#6969 on discord if there is a problem or join the zombies discord 
 state("BlackOpsColdWar")
 {
-    int round : 0xFC390E4; // A built in counter for rounds (TY 3arc)
-    int loading1 : 0xE179120; // taken from the campaign load remover because it works here
+    int round :  0x108C640C; // A built in counter for rounds (TY 3arc)
+    int loading1 :  0xF5F3C70; // taken from the campaign load remover because it works here
 
 }
 
