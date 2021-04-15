@@ -1,9 +1,9 @@
 // Created by KunoDemetries#6969 
-// For vers 1.8.2
+// For vers 1.10.5
 state("BlackOpsColdWar")
 {
-    int loading1 : 0xFA7D5F8; // It seems static addresses for things like loads and
-    string50 map : 0xFB5F2A3; // Level names are consistent to the 0xEA - 0xEF area
+    int loading1 : 0xF5F3C70; // It seems static addresses for things like loads and
+    string50 map : 0xF6DCF73; // Level names are consistent to the 0xEA - 0xEF area
 }
 
 startup
@@ -116,8 +116,7 @@ reset // e_frontend is the main menu screen
 		return true;		
 	
     }
- }
-
+}
 
 isLoading
 {
