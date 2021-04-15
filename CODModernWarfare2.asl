@@ -2,9 +2,8 @@ state("iw4sp")
 {	
 	string131 map : 0x5DA560;
 	int loading1 : 0x171338C;
-	int endsplit : 0xC98A50;
-	//int starter : 0xC6F280;
-    }
+	int endsplit : 0x3E3ED0;
+}
 
 startup 
 {
@@ -12,6 +11,8 @@ startup
     settings.Add("act1", true, "Act 1", "acta");
     settings.Add("act2", true, "Act 2", "acta");
     settings.Add("act3", true, "Act 3", "acta");
+    settings.Add("end", true, "End Split");
+    settings.SetToolTip("end", "This will split when you throw the knife at the end of the run, disabling this will cause timing issues");
 
     vars.missions2 = new Dictionary<string,string> 
 		{ 
@@ -77,16 +78,15 @@ split
 {
 	return ((current.map != old.map) && (settings[current.map]));
 
-    return ((current.endsplit == 1048576000) && (current.map == "ending")); // end split
+    return ((settings["end"]) && (current.endsplit ==600) && (current.map == "ending")); 
 }   
 
 start
 {
 	return ((current.map == "trainer")  && (current.loading1 != 0));
 }
-
  
- reset
+reset
 {
     return ((current.map == "ui") && (old.map != "ui"));
 }
