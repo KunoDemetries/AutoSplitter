@@ -76,9 +76,15 @@ startup
 
 split
 {
-	return ((current.map != old.map) && (settings[current.map]));
+	if ((current.map != old.map) && (settings[current.map]))
+    {
+        return true;
+    }
 
-    return ((settings["end"]) && (current.endsplit ==600) && (current.map == "ending")); 
+    if ((settings["end"]) && (current.endsplit == 600) && (current.map == "ending"))
+    {
+        return true;
+    } 
 }   
 
 start
