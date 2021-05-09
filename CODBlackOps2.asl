@@ -1,9 +1,9 @@
 state("t6sp")
 {
-	string21 map : 0xF4E62C;
-	int loading1 : 0xDF20B0;
-	string24 map2 : 0xC18138;
-	int exit : 0x2578DF0;
+	string21 map : 0xF4E62C; // Regular splitter map
+	int loading1 :0x3D83614;
+	string24 map2 : 0xC18138; // Used to remove certain sections of the games for loads that the usual load remover counts as a load
+	int exit : 0x2578DF0; // Exit split ae end split
 }
 
 startup
@@ -66,7 +66,7 @@ isLoading
 {
     if (current.map2 != "nicaragua_gump_josefina") // No matter what address I used, it always turns true in the middle of joesefina's cutscene mid level
 	{
-		if ((current.loading1 != 19696744) || 
+		if ((current.loading1 == 0) || 
 		((current.map2 == "su_rts_mp_dockside")) || // Training course level that map1 doesn't switch to most of the time
 		(vars.missions1A.Contains(current.map))) 
         {
