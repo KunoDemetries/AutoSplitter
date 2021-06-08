@@ -20,6 +20,14 @@ state("MW2CR", "1.1.12")
 	string6 decide: 0x11BAC56C;
 }
 
+state("MW2CR", "1.1.13")
+{
+
+	string50 map : 0x41767F6;
+	byte loading1 : 0x4B8A4F0;
+}
+
+
 init
 {
 	if (current.decide == "1.1.12") 
@@ -31,9 +39,18 @@ init
     version = "Default";
   	}
       
+    if ( modules.First().ModuleMemorySize == 300334080)
+    {
+        version = "1.1.13";
+    }
+
 	vars.doneMaps = new List<string>(); // Just in case intel% is added in the future (been talks) just adding a doneMaps just in case
 }
 
+update
+{
+    print(modules.First().ModuleMemorySize.ToString());
+}
 
 startup 
 {
@@ -125,6 +142,7 @@ start
 	return ((current.loading1 == 0) && (version == "1.1.12"));
 	return ((current.loading1 == 0) && (version == "Default"));
     return (current.map == "ui");
+    return ((current.loading1 == 0) && (version = "1.1.13"));
 }
  
  reset
