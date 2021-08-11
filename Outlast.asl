@@ -18,6 +18,7 @@ state("OLGame")
     float zcoord  : 0x2020F38, 0x278, 0x40, 0x454, 0x88;
     string100 map : 0x02006F00, 0x6F4, 0x40, 0xAB4, 0x80, 0x0;  // Thanks to cheat mods for the game you can find current checkpoint
     int inControl : 0x02020F38, 0x248, 0x60, 0x30, 0x278, 0x54; // In control == 1
+    byte ender : 0x20220D3;
 }
 
 init
@@ -27,7 +28,8 @@ init
     vars.endsplit = 0; // Used to do the final split
     vars.OnceFinalSplit = 0; // After the game finishes the end split returns true  so I added this to make it split once
     vars.mapcomparison = current.map; // For whatever reason map returns Null and livesplit likes to linger on it so this is the easiest fix without changing addresses for something minor
-    vars.Checker = 0;
+    vars.Checker1 = 0;
+	vars.Checker2 = 0;	
 
     // Checking the games memory size to see if it's the steam version 
     switch (modules.First().ModuleMemorySize) 
@@ -119,7 +121,8 @@ startup
 
 	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
         {
-			vars.Checker = 0;			
+			vars.Checker1 = 0;	
+			vars.Checker2 = 0;					
             vars.starter = 0; // Generic starting split
             vars.endsplit = 0; // generic end split
             vars.OnceFinalSplit = 0; // So it doesn't split more than once for the end split
@@ -144,8 +147,6 @@ startup
                 timer.CurrentTimingMethod = TimingMethod.GameTime;
             }
         }
-
-	
 }
 
 update
@@ -155,33 +156,30 @@ update
 	// for outlast to be able to not have it endlessly start if you're resetting from the start of the game
 	if ((current.isLoading == 1) && (current.map == "Admin_Gates") && (current.xcoord > -16422.94))
 	{
-		vars.Checker = 1;
+		vars.Checker1 = 1;
 	}
-	
-    print(vars.Checker.ToString());
-
-	if ((vars.starter == 0) && (current.zcoord.ToString() == "559.15") && (current.xcoord.ToString() == "9543.678"))
+	// for WB
+	if ((vars.starter == 0) && (current.xcoord < 9550) && (current.map == "Hospital_Free") && (old.isLoading == 1))
 	{
-		vars.Checker = 1;
+		vars.Checker2 = 1;
 	}
-
 	// For outlast to end split
-    if ((current.xcoord == -20600) && (current.ycoord == -1578) && (current.zcord == -4098) && (vars.OnceFinalSplit != 1))
+    if ((current.xcoord == -20596) && (current.ycoord == -1578) && (current.zcord == -4098) && (vars.OnceFinalSplit != 1) && (current.ender != 63))
     {
         vars.endsplit = 1;
     }
 	// For whistleblower to end split
-    if ((Math.Abs(-4098.51 - current.zcoord) < 0.01 && current.inControl == 0) && (vars.OnceFinalSplit != 1))
+    if ((current.xcoord < -16380) && (current.inControl == 0) && (vars.OnceFinalSplit != 1) && (current.map == "AdminBlock_Start"))
     {
         vars.endsplit = 1;
     }
-
-    if  ((vars.Checker == 1) && (current.xcoord > -16422.93) && (current.xcoord < -16416.11) && (current.inControl == 1))
+    // outlast starter, ik it doesn't work if you start from new game
+    if ((vars.Checker1 == 1) && (current.xcoord > -16422.93) && (current.inControl == 1))
     {
         vars.starter = 1;
     }
-	// For whistleblower
-    if (vars.Checker == 1 && current.zcoord > 559.14 && current.zcoord < 559.16 && current.xcoord > 9543.68 && current.xcoord < 9550.54 && current.inControl == 1)
+	// For whistleblower starter
+    if ((vars.Checker2 == 1) && (current.xcoord > 9550) && (current.inControl == 1))
     {
         vars.starter = 1; 
     }
@@ -194,7 +192,8 @@ start
         vars.starter = 0;
         vars.endsplit = 0;
         vars.OnceFinalSplit = 0;
-		vars.Checker = 0;
+		vars.Checker1 = 0;
+		vars.Checker2 = 0;
         vars.doneMaps.Clear();
         vars.doneMaps.Add(current.map.ToString());
         return true;
@@ -221,7 +220,7 @@ isLoading
     return (current.isLoading == 1);
 }
 
-exit 
+shutdown 
 {
     timer.OnStart -= vars.onStart;
 }
