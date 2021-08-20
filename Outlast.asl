@@ -18,7 +18,6 @@ state("OLGame")
     float zcoord  : 0x2020F38, 0x278, 0x40, 0x454, 0x88;
     string100 map : 0x02006F00, 0x6F4, 0x40, 0xAB4, 0x80, 0x0;  // Thanks to cheat mods for the game you can find current checkpoint
     int inControl : 0x02020F38, 0x248, 0x60, 0x30, 0x278, 0x54; // In control == 1
-    byte ender : 0x20220D3;
 }
 
 init
@@ -164,7 +163,7 @@ update
 		vars.Checker2 = 1;
 	}
 	// For outlast to end split
-    if ((current.xcoord == -20596) && (current.ycoord == -1578) && (current.zcord == -4098) && (vars.OnceFinalSplit != 1) && (current.ender != 63))
+    if ((current.xcoord == -20596) && (current.ycoord == -1578) && (current.zcord == -4098) && (vars.OnceFinalSplit != 1))
     {
         vars.endsplit = 1;
     }
