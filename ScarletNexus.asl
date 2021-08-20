@@ -11,7 +11,7 @@ init
 {
     vars.FinalValueFemale = 0;
     vars.FinalValueMale = 0;
-    vars.Name = "duck";
+    vars.Name = "duck"; // IK this could not have anything in it, but I also like ducks so lol. I have to set the var to a string or it won't work because it can't convert a null to a string
     vars.doneMaps = new List<string>();
 }
 
@@ -164,7 +164,14 @@ startup
         });
     timer.OnStart += vars.onStart; 
 
+        vars.onReset = (LiveSplit.Model.Input.EventHandlerT<LiveSplit.Model.TimerPhase>)((s, e) => 
+        {
+            vars.doneMaps.Clear(); // Needed because checkpoints bad in game 
+        });
+    timer.OnReset += vars.onReset; 
 }
+
+//[11828] Cannot implicitly convert type 'System.EventHandler' to 'LiveSplit.Model.Input.EventHandlerT<LiveSplit.Model.TimerPhase>'
 
 
 update
