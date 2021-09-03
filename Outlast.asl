@@ -14,8 +14,8 @@ state("OLGame")
 {
     int isLoading : 0x01FFBCC8, 0x118;  // Generic Loading string
     float xcoord  : 0x02020F38, 0x278, 0x40, 0x454, 0x80;
-    float ycoord  : 0x2020F38, 0x278, 0x40, 0x454, 0x84;
-    float zcoord  : 0x2020F38, 0x278, 0x40, 0x454, 0x88;
+    float zcoord  : 0x2020F38, 0x278, 0x40, 0x454, 0x84;
+    float ycoord  : 0x2020F38, 0x278, 0x40, 0x454, 0x88;
     string100 map : 0x02006F00, 0x6F4, 0x40, 0xAB4, 0x80, 0x0;  // Thanks to cheat mods for the game you can find current checkpoint
     int inControl : 0x02020F38, 0x248, 0x60, 0x30, 0x278, 0x54; // In control == 1
 }
@@ -131,6 +131,13 @@ startup
         // subsequently fixed issues with certain splits as well, so double bonus points
     timer.OnStart += vars.onStart; 
 
+       vars.onReset = (LiveSplit.Model.Input.EventHandlerT<LiveSplit.Model.TimerPhase>)((s, e) => 
+        {
+            vars.doneMaps.Clear(); // Needed because checkpoints bad in game 
+            vars.OnceFinalSplit = 0; // So it doesn't split more than once for the end split
+        });
+    timer.OnReset += vars.onReset; 
+
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
         {        
         var timingMessage = MessageBox.Show (
@@ -163,7 +170,7 @@ update
 		vars.Checker2 = 1;
 	}
 	// For outlast to end split
-    if ((current.xcoord == -20596) && (current.ycoord == -1578) && (current.zcord == -4098) && (vars.OnceFinalSplit != 1))
+    if ((current.zcoord > -1590) && (current.zcoord < -1400) && (current.xcoord < -500) && (current.xcoord > -20700) && (current.ycoord > -4100) && (current.ycoord < -4095) && (current.ycoord > -4200) && (current.inControl == 0) && (vars.OnceFinalSplit != 1) && (current.map == "Lab_BigTowerDone"))
     {
         vars.endsplit = 1;
     }
@@ -182,6 +189,11 @@ update
     {
         vars.starter = 1; 
     }
+
+if ((vars.OnceFinalSplit != 1))
+{
+    print(current.ycoord.ToString());
+}
 }
 
 start
