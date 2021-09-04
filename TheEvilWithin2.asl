@@ -1,6 +1,7 @@
 state("TEW2", "Current Patch")
 {
-    int Pause : 0x0; // just for rn to see what the mod wants
+    float ComputerLoad : 0x2ABFC1D; // 2 while loading
+    int Pause : 0x3734978; // just for rn to see what the mod wants
     int Loading : 0x246624E; // loading 0 
     int Chapter : 0x03712248, 0x5C;
     float x : 0x39CA190;
@@ -10,8 +11,9 @@ state("TEW2", "Current Patch")
 
 state("TEW2", "1.02")
 {
-    int Pause : 0x3637B00;
-    int Loading : 0x2369317;
+    int ComputerLoad : 0x3D6E634; // 0 while loading
+    int Pause : 0x3637B00; // 1 paused, 0 unpaused
+    int Loading : 0x23692D7; // 2369317 0 loading, 2816 while not
     int Chapter : 0x3615208, 0x5C;
     float x : 0x38CD190;
     float y : 0x38CD194;
@@ -25,7 +27,7 @@ startup
     settings.SetToolTip("end", "The end split for when you finish chapter 17. The opposite of start!");
     vars.Chapters = new Dictionary<string,string> 
 	    {
-            {"1","Chapter 1 - Into the Flame"},
+            {"starter","Chapter 1 - Into the Flame"},
             {"2","Chapter 2 - Something Not Quite Right"},
             {"3","Chapter 3 - Resonances"},
             {"4","Chapter 4 - Behind the Curtain"},
@@ -54,6 +56,8 @@ startup
             vars.doneMaps.Add(current.Chapter.ToString());
         });
 
+    settings.SetToolTip("starter", "This is used as the starter setting, disabling this also disables the original start command!");
+
     timer.OnStart += vars.onStart; 
 
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
@@ -77,9 +81,9 @@ init
 {
     switch (modules.First().ModuleMemorySize) 
     {
-        case  74637312: version = "Current Patch"; 
+        case  74637312 : version = "Current Patch"; 
             break;
-        case 73007104: version = "1.02"; 
+        case 73007104 : version = "1.02"; 
             break;
         default:        version = ""; 
             break;
@@ -87,6 +91,7 @@ init
 
     vars.doneMaps = new List<string>();
     vars.endsplit = 0;
+    vars.Loader = 0;
 }
 
 update
@@ -98,16 +103,21 @@ update
             vars.endsplit = 1;
         }
     }
+
+    if ((current.Loading == 0) || (current.Pause == 1) || (current.ComputerLoad == 0 && current.Loading != 0))
+    {
+        vars.Loader = 1;
+    }
+    else
+    {
+        vars.Loader = 0;
+    }
+
 }
 
 start
 {
-    if ((settings[current.Chapter.ToString()]) && (old.Chapter != current.Chapter) && (!vars.doneMaps.Contains(current.Chapter.ToString())))
-    {
-        vars.doneMaps.Clear();
-        vars.doneMaps.Add(current.Chapter.ToString());
-        return true;
-    }
+    return ((current.Chapter == 1) && (settings["starter"]) && (old.Chapter != current.Chapter) && (!vars.doneMaps.Contains(current.Chapter.ToString())));
 }
 
 split
@@ -127,8 +137,7 @@ split
 
 isLoading
 {
-    return ((current.Loading == 0) || 
-    (current.Pause == 1));
+    return (vars.Loader == 1);
 }
 
 reset
