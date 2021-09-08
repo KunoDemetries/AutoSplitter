@@ -103,8 +103,8 @@ update
             vars.endsplit = 1;
         }
     }
-
-    if ((current.Loading == 0) || (current.Pause == 1) || (current.ComputerLoad == 0 && current.Loading != 0))
+//|| (current.ComputerLoad == 0 && current.Loading != 0)
+    if ((current.Loading == 0) || (current.Pause == 1))
     {
         vars.Loader = 1;
     }
