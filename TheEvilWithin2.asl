@@ -13,7 +13,7 @@ state("TEW2", "1.02")
 {
     int ComputerLoad : 0x3D6E634; // 0 while loading
     int Pause : 0x3637B00; // 1 paused, 0 unpaused
-    int Loading : 0x23692D7; // 2369317 0 loading, 2816 while not
+    int Loading : 0x236D5B8; // 2369317 0 loading, 2816 while not
     int Chapter : 0x3615208, 0x5C;
     float x : 0x38CD190;
     float y : 0x38CD194;
