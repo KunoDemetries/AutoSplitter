@@ -56,7 +56,6 @@ startup
 
     vars.missions2 = new Dictionary<string,string> 
 		{ 
-			{"trainier", "S.S.D.D."}, 
 			{"roadkill", "Team Player"},
 			{"cliffhanger", "Cliffhanger"},
 			{"airport", "No Russian"},
