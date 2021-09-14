@@ -2,7 +2,7 @@
 state("MW2CR")
 {
 	string6 decide: 0xA9809F;
-    string50 map1 : 0x41758D1;
+    string50 map : 0x41758D1;
 	int loading1 : 0x4B894F0;
 }
 
@@ -127,7 +127,7 @@ start
 	if ((current.map == "trainer") && (current.loading1 != 0)) 
     {
     	vars.doneMaps.Clear();
-		vars.doneMaps.Add(current.map1);
+		vars.doneMaps.Add(current.map);
     	return true;
     }
 }
@@ -145,10 +145,9 @@ reset
 
 split
 {
-	if ((current.map1 != old.map1) && (settings[current.map1]) && (!vars.doneMaps.Contains(current.map))) 
+	if ((current.map != old.map) && (settings[current.map]) && (!vars.doneMaps.Contains(current.map))) 
 	{
 		vars.doneMaps.Add(old.map);
 		return true;	
 	}	
-
 }
