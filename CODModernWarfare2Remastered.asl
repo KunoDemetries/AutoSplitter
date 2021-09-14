@@ -56,6 +56,7 @@ startup
 
     vars.missions2 = new Dictionary<string,string> 
 		{ 
+			{"trainier", "S.S.D.D."}, 
 			{"roadkill", "Team Player"},
 			{"cliffhanger", "Cliffhanger"},
 			{"airport", "No Russian"},
@@ -146,7 +147,7 @@ split
 {
 	if ((current.map != old.map) && (settings[current.map]) && (!vars.doneMaps.Contains(current.map))) 
 	{
-		vars.doneMaps.Add(old.map);
+		vars.doneMaps.Add(current.map);
 		return true;	
 	}	
 }
