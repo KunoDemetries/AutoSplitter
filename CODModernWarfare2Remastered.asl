@@ -140,8 +140,7 @@ start
 
 isLoading
 {
-    return (current.map == "ui");
-    return (current.loading1 == 0);
+    return (current.map == "ui") || (current.loading1 == 0);
 }
  
 reset
