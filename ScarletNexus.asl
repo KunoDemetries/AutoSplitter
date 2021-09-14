@@ -1,4 +1,4 @@
-state("ScarletNexus-Win64-Shipping")
+state("ScarletNexus-Win64-Shipping", "V1.0.2")
 {
     byte Loader : 0x4A8C954; // Originally a byte
     int Chapter : 0x04FC56C0, 0x30, 0x2C0, 0x58, 0x410, 0x60, 0x398, 0x2BC;
@@ -7,12 +7,30 @@ state("ScarletNexus-Win64-Shipping")
     byte Character : 0x04FC56C0, 0x30, 0x260, 0x9D8; // Used to see if we're playing Yuito or Kasane
 }
 
+state("ScarletNexus-Win64-Shipping", "V1.0.3")
+{
+    byte Loader : 0x4A92424; // Originally a byte
+    int Chapter : 0x04FCB280, 0x30, 0x2C0, 0x58, 0x410, 0x60, 0x398, 0x2BC;
+    int Level : 0x04FCB280, 0x30, 0x2C0, 0x58, 0x410, 0x60, 0x398, 0x2A0;
+    int Section : 0x04FCB280, 0x30, 0x2C0, 0x58, 0x410, 0x60, 0x398, 0x29C;
+    byte Character : 0x04FCB280, 0x30, 0x260, 0x210; // Used to see if we're playing Yuito or Kasane
+}
+
 init
 {
     vars.FinalValueFemale = 0;
     vars.FinalValueMale = 0;
     vars.Name = "duck"; // IK this could not have anything in it, but I also like ducks so lol. I have to set the var to a string or it won't work because it can't convert a null to a string
     vars.doneMaps = new List<string>();
+
+    if (modules.First().ModuleMemorySize == 92475392) // I don't have the last update's module size, I forgot to to do it before the update
+    {
+		version = "V1.0.3";
+    }
+    else
+    {
+        version = "V1.0.2";
+    }
 }
 
 startup
@@ -178,7 +196,7 @@ update
 {
     vars.FinalValueMale = ((current.Chapter*100000 + (current.Level*100) + current.Section));
     vars.FinalValueFemale = ((current.Chapter*1000000 + (current.Level*100) + current.Section));
-    print(vars.FinalValueMale.ToString());
+    print(modules.First().ModuleMemorySize.ToString());
 }
 
 start
