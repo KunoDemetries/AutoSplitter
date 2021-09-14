@@ -105,6 +105,12 @@ startup
 
     timer.OnStart += vars.onStart; 
 
+   vars.onReset = (LiveSplit.Model.Input.EventHandlerT<LiveSplit.Model.TimerPhase>)((s, e) => 
+        {
+            vars.doneMaps.Clear(); // Needed because checkpoints bad in game 
+        });
+    timer.OnReset += vars.onReset; 
+
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
         {        
         var timingMessage = MessageBox.Show (
