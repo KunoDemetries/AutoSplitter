@@ -6,6 +6,11 @@ state("iw4sp")
     string100 SpecOpsCampMapID : 0x89C598;
 }
 
+init
+{
+	vars.doneMaps = new List<string>(); // Adding cause of SpecOps
+}
+
 startup 
 {
     settings.Add("acta", true, "All Acts");
@@ -24,7 +29,7 @@ startup
     var tB = (Func<string, string, string, Tuple<string, string, string>>) ((elmt1, elmt2, elmt3) => { return Tuple.Create(elmt1, elmt2, elmt3); });
     	var sB = new List<Tuple<string, string, string>> 
     	{
-			tB("act1","trainier", "S.S.D.D."), 
+			//tB("act1","trainier", "S.S.D.D."), 
 			tB("act1","roadkill", "Team Player"),
 			tB("act1","cliffhanger", "Cliffhanger"),
 			tB("act1","airport", "No Russian"),
@@ -69,6 +74,19 @@ startup
         };
     	foreach (var s in sB) settings.Add(s.Item2, true, s.Item3, s.Item1);
 
+	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
+        {
+            vars.doneMaps.Clear(); // Needed because checkpoints bad in game 
+            vars.doneMaps.Add(current.SpecOpsCampMapID); // Adding for the starting map because it's also bad
+        });
+        // subsequently fixed issues with certain splits as well, so double bonus points
+    timer.OnStart += vars.onStart; 
+
+       vars.onReset = (LiveSplit.Model.Input.EventHandlerT<LiveSplit.Model.TimerPhase>)((s, e) => 
+        {
+            vars.doneMaps.Clear(); // Needed because checkpoints bad in game 
+        });
+    timer.OnReset += vars.onReset; 
 
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
         {        
@@ -88,9 +106,9 @@ startup
 }
 
 split
-{
-	if ((current.SpecOpsCampMapID != old.SpecOpsCampMapID) && (settings[current.SpecOpsCampMapID]))
+{	if ((current.SpecOpsCampMapID != old.SpecOpsCampMapID) && (settings[current.SpecOpsCampMapID]) && (!vars.doneMaps.Contains(current.SpecOpsCampMapID)))
     {
+		vars.doneMaps.Add(current.SpecOpsCampMapID); 
         return true;
     }
 
@@ -102,7 +120,11 @@ split
 
 start
 {
-	return ((current.SpecOpsCampMapID == "trainer") && (current.Loader)) || ((current.SpecOpsCampMapID == "so_killspree_trainer") && (current.Loader));
+	if ((current.SpecOpsCampMapID == "trainer") && (current.Loader) || ((current.SpecOpsCampMapID == "so_killspree_trainer") && (current.Loader)))
+	{
+		vars.doneMaps.Add(current.SpecOpsCampMapID); 
+        return true;
+	}
 }
  
 reset
