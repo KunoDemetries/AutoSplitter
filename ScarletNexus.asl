@@ -13,9 +13,22 @@ state("ScarletNexus-Win64-Shipping", "V1.0.3")
     int Chapter : 0x04FCB280, 0x30, 0x2C0, 0x58, 0x410, 0x60, 0x398, 0x2BC;
     int Level : 0x04FCB280, 0x30, 0x2C0, 0x58, 0x410, 0x60, 0x398, 0x2A0;
     int Section : 0x04FCB280, 0x30, 0x2C0, 0x58, 0x410, 0x60, 0x398, 0x29C;
-    byte Character : 0x04FCB280, 0x30, 0x260, 0x210; // Used to see if we're playing Yuito or Kasane
+    byte Character : 0x04FCB280, 0x30, 0x260, 0x210;
 }
 
+state("ScarletNexus-Win64-Shipping", "V1.0.3.1") // it's not 1.0.4 as that's a future update, but they didn't mention the numbers for this one so 
+{
+    byte Loader : 0x4B3F154; // Originally a byte
+    int Chapter : 0x05079EB0, 0x30, 0x2C0, 0x58, 0x410, 0x60, 0x398, 0x2BC;
+    int Level : 0x05079EB0, 0x30, 0x2C0, 0x58, 0x410, 0x60, 0x398, 0x2A0;
+    int Section : 0x05079EB0, 0x30, 0x2C0, 0x58, 0x410, 0x60, 0x398, 0x29C;
+    byte Character : 0x05079EB0, 0x30, 0x260, 0x9e8; 
+}
+
+/*
+To find Chap,L,S BP_ui_Scene_Minimap_C LV_MainPersistantDeferred
+To find 
+*/
 init
 {
     vars.FinalValueFemale = 0;
@@ -23,13 +36,14 @@ init
     vars.Name = "duck"; // IK this could not have anything in it, but I also like ducks so lol. I have to set the var to a string or it won't work because it can't convert a null to a string
     vars.doneMaps = new List<string>();
 
-    if (modules.First().ModuleMemorySize == 92475392) // I don't have the last update's module size, I forgot to to do it before the update
+    switch (modules.First().ModuleMemorySize) 
     {
-		version = "V1.0.3";
-    }
-    else
-    {
-        version = "V1.0.2";
+        case  92475392: version = "V1.0.3";
+            break;
+        case    93237248: version = "V1.0.3.1"; 
+            break;
+        default:        version = "V1.0.2"; 
+            break;
     }
 }
 
@@ -171,14 +185,19 @@ startup
         {
             vars.doneMaps.Clear(); // Needed because checkpoints bad in game 
             vars.doneMaps.Add(vars.FinalValueMale.ToString());
-        if (current.Character == 5)
-        {
-            vars.Name = "Yuito";
-        }
-        else
-        {
-            vars.Name = "Kasane";
-        }
+            switch ((int)current.Character) 
+            {
+                case  5: vars.Name = "Yuito";
+                    break;
+                case    0: vars.Name = "Kasane"; 
+                    break;
+                case   174: vars.Name = "Yuito"; 
+                    break;
+                case    170: vars.Name = "Kasane"; 
+                    break;
+                default:        vars.Name = "duck"; 
+                    break;
+            }
         });
     timer.OnStart += vars.onStart; 
 
@@ -197,19 +216,26 @@ update
     vars.FinalValueMale = ((current.Chapter*100000 + (current.Level*100) + current.Section));
     vars.FinalValueFemale = ((current.Chapter*1000000 + (current.Level*100) + current.Section));
     print(modules.First().ModuleMemorySize.ToString());
+    print(vars.Name.ToString());
+    print(((int)current.Character).ToString());
 }
 
 start
 {
     if ((vars.FinalValueMale == 102) && (current.Loader == 5))
     {
-        if (current.Character == 5)
+        switch ((int)current.Character) 
         {
-            vars.Name = "Yuito";
-        }
-        else
-        {
-            vars.Name = "Kasane";
+            case  5: vars.Name = "Yuito";
+                break;
+            case    0: vars.Name = "Kasane"; 
+                break;
+            case   174: vars.Name = "Yuito"; 
+                break;
+            case    170: vars.Name = "Kasane"; 
+                break;
+            default:        vars.Name = "duck"; 
+                break;
         }
         return true;
     }
