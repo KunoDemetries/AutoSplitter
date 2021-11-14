@@ -3,14 +3,16 @@ state("SniperElite4_DX11")
 {
     string16 map : 0xEB0BEB;
     float loading1 : 0xCFCAF0;
-    float islandload : 0xC15A90; 
+    float islandload : 0xC15A90;
+    int endscene : 0xB67E60;
 }
 
 state("SniperElite4_DX12") 
 {
 	string16 map :  0xE5A2AB;
 	float loading1 : 0xE55958;
-	float islandload : 0xB683E0; 
+	float islandload : 0xB683E0;
+	int endscene : 0xAA5E98;
 }
 
 startup
@@ -73,7 +75,7 @@ start
 
 split
 {
-	if ((current.map != old.map) && (settings[current.map]) && (!vars.doneMaps.Contains(current.map)))
+	if ((current.map != old.map) && (settings[current.map]) && (!vars.doneMaps.Contains(current.map)) || ((current.endscene == 1)) && ((current.map == "Fortress")))
 	{
 		vars.doneMaps.Add(current.map);
 		return true;		
