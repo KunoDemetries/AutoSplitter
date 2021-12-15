@@ -3,6 +3,7 @@ state("SniperElite4_DX11")
 {
     string16 map : 0xEB0BEB;
     float loading1 : 0xCFCAF0;
+    byte loading : 0xBE1F37;
     float islandload : 0xC15A90;
     int endscene : 0xB67E60;
 }
@@ -11,6 +12,7 @@ state("SniperElite4_DX12")
 {
 	string16 map :  0xE5A2AB;
 	float loading1 : 0xE55958;
+	byte loading : 0xB2007F;
 	float islandload : 0xB683E0;
 	int endscene : 0xAA5E98;
 }
@@ -66,7 +68,7 @@ init
 
 start
 {
-	if ((current.map == "Island") && (current.loading1 != 0))
+	if ((current.map == "Island") && (current.loading != 1) && (current.loading1 != 0))
 	{
 		vars.doneMaps.Clear();
 		return true;		
@@ -89,8 +91,7 @@ reset
 
 isLoading
 {
-	return ((current.loading1 == 0)) ||
-  	((current.islandload == 0));
+	return ((current.loading == 1));
 }
 
 exit 
