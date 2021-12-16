@@ -11,7 +11,7 @@ state("SniperElite4_DX11")
 state("SniperElite4_DX12") 
 {
 	string16 map :  0xE5A2AB;
-	float loading1 : 0xE55958;
+	byte loading1 : 0xB669FC;
 	byte loading : 0xB2007F;
 	float islandload : 0xB683E0;
 	int endscene : 0xAA5E98;
@@ -29,7 +29,7 @@ startup
     	    {"Monte_Cassino", "Abrunza Monastery"},
     		{"Coastal_Facility", "Magazzeno Facility"},
     	    {"Forest", "Giovi Fiorini Mansion"},
-    	    {"Fortress", "allagra Fortress"},
+    	    {"Fortress", "Allagra Fortress"},
 		};
 		foreach (var Tag in vars.missions)
 		{
