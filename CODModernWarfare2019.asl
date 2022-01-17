@@ -1,4 +1,7 @@
-// Still broken as up update 1.30.10
+/*
+Because of the frequence of the game being updates this is now a stump until either warzone dies, or the game has a campaign only mode.
+
+*/
 state("ModernWarfare")
 {
     string100 map : 0xDE83FA1;
