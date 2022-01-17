@@ -1,14 +1,13 @@
-// The ASL has to work for coop and solo Any%, so this is gonna get annoying fast lol
 state("CoDWaW") 
 {
-    string50 map : 0x5592B8; 
-    int loading1 : 0x3172284;
-    int squares1 : 0x14ED874;
-    int Seen : 0x14E742C;
+    string50 CurrentLevelName : 0x5592B8; 
+    bool Loader : 0x3172284; // Originally an int
+    int HasControlLevelMak : 0x14ED874; //Used to start the timer at the beginning of Mak once you gain control
 }
 
-startup {
-	settings.Add("act0", true, "Missions");
+startup 
+{
+	settings.Add("WAW", true, "All Missions");
 		
 	vars.missions = new Dictionary<string,string> 
 		{ 
@@ -29,31 +28,25 @@ startup {
 		};
     	foreach (var Tag in vars.missions) 
 		{
-   			settings.Add(Tag.Key, true, Tag.Value, "act0");
+   			settings.Add(Tag.Key, true, Tag.Value, "WAW");
   		}
 
-      	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
-        {
-        vars.doneMaps.Clear();
-        });
-
-    timer.OnStart += vars.onStart; 
-
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
-        {        
-        var timingMessage = MessageBox.Show (
-               "This game uses Time without Loads (Game Time) as the main timing method.\n"+
-                "LiveSplit is currently set to show Real Time (RTA).\n"+
-                "Would you like to set the timing method to Game Time? This will make verification easier",
-                "LiveSplit | Call of Duty: World at War",
-               MessageBoxButtons.YesNo,MessageBoxIcon.Question
-            );
+    {        
+    	var timingMessage = MessageBox.Show 
+		(
+    	    "This game uses Time without Loads (Game Time) as the main timing method.\n"+
+    	    "LiveSplit is currently set to show Real Time (RTA).\n"+
+    	    "Would you like to set the timing method to Game Time? This will make verification easier",
+    	    "LiveSplit | Call of Duty: World at War",
+    	   MessageBoxButtons.YesNo,MessageBoxIcon.Question
+    	);
         
-            if (timingMessage == DialogResult.Yes)
-            {
-                timer.CurrentTimingMethod = TimingMethod.GameTime;
-            }
-        }	
+    	if (timingMessage == DialogResult.Yes)
+    	{
+    	    timer.CurrentTimingMethod = TimingMethod.GameTime;
+    	}
+    }	
 }
 
 init 
@@ -63,34 +56,38 @@ init
 
 start
 {
-    if ((current.map == "mak") && (current.squares1 == 16384)) 
+    if ((current.CurrentLevelName == "mak") && (current.HasControlLevelMak == 16384)) 
 	{
         vars.doneMaps.Clear(); 
         return true;
     }
 }
 
-isLoading
+onStart
 {
-    return (current.loading1 == 0) ||
-    ((current.map == "see1") && (current.Seen == 0)); // Because the level TLTB has the old timing method using the code seen to have the old method
+	vars.doneMaps.Clear();
 }
 
-reset 
+isLoading
 {
-	return (current.map == "ui");
+    return (!current.Loader);
 }
 
 split
 {
-    if ((current.map != old.map) && (settings[current.map]) && (!vars.doneMaps.Contains(current.map)))
+    if ((current.CurrentLevelName != old.CurrentLevelName) && (settings[current.CurrentLevelName]) && (!vars.doneMaps.Contains(current.CurrentLevelName)))
 	{
-        vars.doneMaps.Add(current.map);
+        vars.doneMaps.Add(current.CurrentLevelName);
 		return true;
 	}			
 }
 
-exit 
+reset 
 {
-    timer.OnStart -= vars.onStart;
+	return (current.CurrentLevelName == "ui");
+}
+
+onReset
+{
+	vars.doneMaps.Clear();
 }
