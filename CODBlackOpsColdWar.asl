@@ -1,5 +1,10 @@
 // Created by KunoDemetries#6969 
 // For vers 1.10.5
+
+/*
+	Because of the anti-cheat I have retired from updating the BOCW ASL, until the game is offically "dead" in future years this will be a stump. 
+
+*/
 state("BlackOpsColdWar")
 {
     int loading1 : 0xF5F3C70; // It seems static addresses for things like loads and
