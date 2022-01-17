@@ -1,8 +1,8 @@
 state("iw6sp64_ship")
 {
-    string50 map : 0x5816540;
-    int loading1 : 0x6024EA0;
-    int loading2 : 0x774853C;
+    string50 CurrentLevelName : 0x5816540;
+    int Loader : 0x6024EA0;
+    int Loader2 : 0x774853C;
 }
 
 startup
@@ -53,20 +53,20 @@ startup
 
 start
 {
-	return ((current.map == "prologue") && (current.loading2 == 0));
+	return ((current.CurrentLevelName == "prologue") && (current.Loader2 == 0));
 }
 
 split
 {
-	return ((current.map != old.map) && (settings[current.map]));
+	return ((current.CurrentLevelName != old.CurrentLevelName) && (settings[current.CurrentLevelName]));
 }
 
 isLoading
 {
-    return ((current.loading1 == 0) && (current.loading2  == 1));
+    return ((current.Loader == 0) && (current.Loader2  == 1));
 }
 
 reset
 {
-    return (current.map == null);
+    return (current.CurrentLevelName == null);
 }
