@@ -111,14 +111,6 @@ startup
         };
     	foreach (var s in sB) settings.Add(s.Item2, true, s.Item3, s.Item1);
 
-    vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
-        {
-            vars.doneMaps.Clear(); // Needed because checkpoints bad in game 
-            vars.doneMaps.Add(current.Splitter.ToString()); // Adding for the starting map because it's also bad
-        });
-        // subsequently fixed issues with certain splits as well, so double bonus points
-    timer.OnStart += vars.onStart; 
-
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
         {        
         var timingMessage = MessageBox.Show (
@@ -136,14 +128,15 @@ startup
         }
 }
 
-update
-{
-    print(current.Splitter.ToString());
-}
-
 start
 {
     return ((old.Loader == 1) && (current.Loader == 0) && (settings[current.Splitter.ToString()]));
+}
+
+onStart
+{
+    vars.doneMaps.Clear(); // Needed because checkpoints bad in game 
+    vars.doneMaps.Add(current.Splitter.ToString()); // Adding for the starting map because it's also bad
 }
 
 split 
@@ -158,9 +151,4 @@ split
 isLoading 
 {
     return (current.Loader == 1);
-}
-
-shutdown 
-{
-    timer.OnStart -= vars.onStart;
 }
