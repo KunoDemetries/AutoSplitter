@@ -1,7 +1,7 @@
 state("iw7_ship")
 {
-	string100 map1 : 0x21E5F3C;
-	byte loading1 : 0x5D65B77;
+	string100 CurrentLevelName : 0x21E5F3C;
+	byte Loader : 0x5D65B77;
 }
 
 startup
@@ -39,13 +39,6 @@ startup
 		settings.Add(Tag.Key, true, Tag.Value, "missions");
     };
 
-    vars.onStart = (EventHandler)((s, e) => // Because of a lack of a start function clearing doneMaps like this
-        {
-
-            vars.doneMaps.Clear();
-        });
-    timer.OnStart += vars.onStart; 
-
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
         {        
         var timingMessage = MessageBox.Show (
@@ -68,21 +61,21 @@ init
 	vars.doneMaps = new List<string>(); // Like most newer cods you can enter old levels while still playing the game, so gotta have doneMaps 
 }
 
+onStart
+{
+    vars.doneMaps.Clear();
+}
+
 split
 {
-  if ((current.map1 != old.map1) && (settings[current.map1]) && (!vars.doneMaps.Contains(old.map1)))
+	if ((current.CurrentLevelName != old.CurrentLevelName) && (settings[current.CurrentLevelName]) && (!vars.doneMaps.Contains(old.CurrentLevelName)))
     {
-	    vars.doneMaps.Add(old.map1);
-		  return true;
-	  }
+	    vars.doneMaps.Add(old.CurrentLevelName);
+		return true;
+	}
 }
 
 isLoading
 {
-	return (current.loading1 == 0);
-}
-
-exit 
-{
-    timer.OnStart -= vars.onStart;
+	return (current.Loader == 0);
 }
