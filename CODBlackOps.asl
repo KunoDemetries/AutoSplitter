@@ -1,12 +1,12 @@
 state("BlackOps")
 {
-	string35 map : 0x21033E8; // Doesn't work for langagues other than English (idk why)
-	long loading1: 0x2AEA4B0;	// Changed based on timing method changes by community vote
+	string35 currentlevelName : 0x21033E8; // Doesn't work for langagues other than English (idk why)
+	long Loader : 0x2AEA4B0;	// Changed based on timing method changes by community vote
 }
 
 startup 
 {
-	settings.Add("missions", true, "Missions"); // Decided to add this just so it's like all the other ones
+	settings.Add("missions", true, "All Missions"); // Decided to add this just so it's like all the other ones
 
 	vars.missions = new Dictionary<string,string> 
 	{ 
@@ -31,30 +31,22 @@ startup
 			settings.Add(Tag.Key, true, Tag.Value, "missions");
     	};
 
-
-	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts (especially if manual start is used/ main start is disabled)
-        {
-		vars.USDDtime = false;
-        });
-	// Really helpful especially if runners for whatever reason have livesplit reset on USDD  
-    timer.OnStart += vars.onStart; 
-
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime)  
-        {        
-        var timingMessage = MessageBox.Show (
-               "This game uses Time without Loads (Game Time) as the main timing method.\n"+
-                "LiveSplit is currently set to show Real Time (RTA).\n"+
-                "Would you like to set the timing method to Game Time? This will make verification easier",
-                "LiveSplit | Call of Duty: Black Ops",
-               MessageBoxButtons.YesNo,MessageBoxIcon.Question
-            );
+    {        
+    	var timingMessage = MessageBox.Show 
+		(
+        	"This game uses Time without Loads (Game Time) as the main timing method.\n"+
+            "LiveSplit is currently set to show Real Time (RTA).\n"+
+            "Would you like to set the timing method to Game Time? This will make verification easier",
+            "LiveSplit | Call of Duty: Black Ops",
+           MessageBoxButtons.YesNo,MessageBoxIcon.Question
+        );
         
-            if (timingMessage == DialogResult.Yes)
-            {
-                timer.CurrentTimingMethod = TimingMethod.GameTime;
-			}
-        }	
-	// I just like to give the customization for this just because forcing it to IGT no matter what seems like a shit thing to do
+        if (timingMessage == DialogResult.Yes)
+        {
+            timer.CurrentTimingMethod = TimingMethod.GameTime;
+		}
+    }	
 }
 
 init
@@ -70,31 +62,32 @@ update
 
 start
 {
-    if ((current.map == "cuba") && (current.loading1 != 0)) 
-	{
-		vars.USDDtime = false;
-        return true;
-    }
+    return ((current.currentlevelName == "cuba") && (current.Loader != 0));
+}
+
+onStart
+{
+	vars.USDDtime = false;
 }
 
 isLoading
 {
-	return (current.loading1 == 0) ||
-	(current.map == "pentagon") || // Adding this because of the new timing method changed based on community vote
-	(current.map == "frontend"); // Adding this just in case it because of the fact that sometimes frontend leaks during the crashed helicopter scenes (thanks 3arc)
+	return (current.Loader == 0) ||
+	(current.currentlevelName == "pentagon") || // Adding this because of the new timing method changed based on community vote
+	(current.currentlevelName == "frontend"); // Adding this just in case it because of the fact that sometimes frontend leaks during the crashed helicopter scenes (thanks 3arc)
 }
 
 
 reset
 {
-	return ((current.map == "frontend") && (old.map != "pentagon")); // Adding the old.map thing just because of new timing rules, prolly runners don't want to reset when leaving USDD 
+	return ((current.currentlevelName == "frontend") && (old.currentlevelName != "pentagon")); // Adding the old.map thing just because of new timing rules, prolly runners don't want to reset when leaving USDD 
 }
 
 split
 {
-    if ((settings[current.map]) && (current.map != old.map)) // If setting is true, and on a different map 
+    if ((settings[current.currentlevelName]) && (current.currentlevelName != old.currentlevelName)) // If setting is true, and on a different map 
   	{
-		if (current.map == "pentagon") // if were on USDD
+		if (current.currentlevelName == "pentagon") // if were on USDD
 		{
 			vars.USDDtime = true; // adds game time of 4:55
 			return true;
@@ -103,7 +96,6 @@ split
 		{
 			return true;
 		}
-
 	}
 }			
 
@@ -114,9 +106,4 @@ gameTime
 		vars.USDDtime = false;				
 		return vars.currentTime.Add(new TimeSpan (0, 4, 55));	//Time taken from the mean of most of the submitted any% runs
 	}
-}
-
-exit 
-{
-    timer.OnStart -= vars.onStart;
 }
