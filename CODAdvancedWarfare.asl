@@ -2,13 +2,18 @@
 // Addresses found by Klooger#1867
 state("s1_sp64_ship")
 {
-	int loading1: 0xF6109DC;
-	string50 map: 0x30740B6;
+	bool Loader : 0xF6109DC;  //Originally an int
+	string50 CurrentLevelName : 0x30740B6;
+}
+
+init
+{
+	vars.doneMaps = new List<string>(); //Used for not splitting twice just in cause the game crashes
 }
 
 startup 
 {
-	settings.Add("missions", true, "Missions");
+	settings.Add("missions", true, "All Missions");
 
 	vars.missions = new Dictionary<string,string> 
 	{ 
@@ -51,20 +56,29 @@ startup
 
 start
 {
-	return ((current.map == "seoul") && (current.loading1 == 0));
+	return ((current.CurrentLevelName == "seoul") && (!current.Loader));
+}
+
+onStart
+{
+	vars.doneMaps.Clear();
 }
 
 split
 {
-	return ((current.map != old.map) && (settings[(current.map)]));
+	if ((current.CurrentLevelName != old.CurrentLevelName) && (settings[(current.CurrentLevelName)]) && (!vars.doneMaps.Contains(current.CurrentLevelName)))
+	{
+		vars.doneMaps.Add(current.CurrentLevelName);
+		return true;
+	}
 }
  
 reset
 {
-	return (current.map == "ui");
+	return (current.CurrentLevelName == "ui");
 }
 
 isLoading
 {
-	return (current.loading1 == 1);
+	return (current.Loader);
 }
