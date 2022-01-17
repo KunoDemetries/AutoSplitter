@@ -1,7 +1,7 @@
 state("blackops3") 
 {
-	int loading1 : 0x19E00000;
-	string111 map : 0x156E5086;
+	int Loader : 0x19E00000;
+	string70 CurrentLevelName : 0x156E5086;
 }
 
 startup
@@ -45,15 +45,15 @@ startup
 
 start
 {
-	return ((current.map1 == "logue") && (current.loading1 != 0));
+	return ((current.CurrentLevelName == "logue") && (current.Loader != 0));
 }
 
 split
 {
-	return ((current.map != old.map) && (settings[current.map]));
+	return ((current.CurrentLevelName != old.map) && (settings[current.CurrentLevelName]));
 }
 
 isLoading
 {
-	return (current.loading1 == 0);
+	return (current.Loader == 0);
 }
