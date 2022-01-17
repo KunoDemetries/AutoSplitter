@@ -1,9 +1,9 @@
 state("t6sp")
 {
-	string21 map : 0xF4E62C; // Regular splitter map
-	int loading1 :0x3D83614;
-	string24 map2 : 0xC18138; // Used to remove certain sections of the games for loads that the usual load remover counts as a load
-	int exit : 0x2578DF0; // Exit split ae end split
+	string21 CurrentLevelName : 0xF4E62C; // Regular splitter map
+	int Loader :0x3D83614;
+	string24 CurrentPlayAreaName : 0xC18138; 
+	int EndSplit : 0x2578DF0; 
 }
 
 startup
@@ -59,16 +59,16 @@ startup
 
 start
 {
-    return ((current.map == "angola.all.sabs") && (current.loading1 != 0)); // Starts closer now because of a new loading value
+    return ((current.CurrentLevelName == "angola.all.sabs") && (current.Loader != 0)); // Starts closer now because of a new loading value
 }
 
 isLoading
 {
-    if (current.map2 != "nicaragua_gump_josefina") // No matter what address I used, it always turns true in the middle of joesefina's cutscene mid level
+    if (current.CurrentPlayAreaName != "nicaragua_gump_josefina") // No matter what address I used, it always turns true in the middle of joesefina's cutscene mid level
 	{
-		if ((current.loading1 == 0) || 
-		((current.map2 == "su_rts_mp_dockside")) || // Training course level that map1 doesn't switch to most of the time
-		(vars.missions1A.Contains(current.map))) 
+		if ((current.Loader == 0) || 
+		((current.CurrentPlayAreaName == "su_rts_mp_dockside")) || // Training course level that map1 doesn't switch to most of the time
+		(vars.missions1A.Contains(current.CurrentLevelName))) 
         {
             return true;
         }
@@ -81,7 +81,7 @@ isLoading
 
 split
 {
-    return ((current.map != old.map) && (settings[current.map]));
+    return ((current.CurrentLevelName != old.CurrentLevelName) && (settings[current.CurrentLevelName]));
 
-	return ((current.map2 == "haiti_gump_endings") && (current.exit != 0)); // Used as end split once decision is made	
+	return ((current.CurrentPlayAreaName == "haiti_gump_endings") && (current.EndSplit != 0)); // Used as end split once decision is made	
 }
