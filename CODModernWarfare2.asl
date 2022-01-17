@@ -74,20 +74,6 @@ startup
         };
     	foreach (var s in sB) settings.Add(s.Item2, true, s.Item3, s.Item1);
 
-	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
-        {
-            vars.doneMaps.Clear(); // Needed because checkpoints bad in game 
-            vars.doneMaps.Add(current.SpecOpsCampMapID); // Adding for the starting map because it's also bad
-        });
-        // subsequently fixed issues with certain splits as well, so double bonus points
-    timer.OnStart += vars.onStart; 
-
-       vars.onReset = (LiveSplit.Model.Input.EventHandlerT<LiveSplit.Model.TimerPhase>)((s, e) => 
-        {
-            vars.doneMaps.Clear(); // Needed because checkpoints bad in game 
-        });
-    timer.OnReset += vars.onReset; 
-
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
         {        
         var timingMessage = MessageBox.Show (
@@ -120,11 +106,13 @@ split
 
 start
 {
-	if ((current.SpecOpsCampMapID == "trainer") && (current.Loader) || ((current.SpecOpsCampMapID == "so_killspree_trainer") && (current.Loader)))
-	{
-		vars.doneMaps.Add(current.SpecOpsCampMapID); 
-        return true;
-	}
+	return ((current.SpecOpsCampMapID == "trainer") && (current.Loader) || ((current.SpecOpsCampMapID == "so_killspree_trainer") && (current.Loader)));
+}
+
+onStart
+{
+	vars.doneMaps.Clear(); // Needed because checkpoints bad in game 
+    vars.doneMaps.Add(current.SpecOpsCampMapID); // Adding for the starting map because it's also bad
 }
  
 reset
@@ -132,12 +120,12 @@ reset
     return ((current.SpecOpsCampMapID == "ui") && (old.SpecOpsCampMapID != "ui"));
 }
 
+onReset
+{
+    vars.doneMaps.Clear(); // Needed because checkpoints bad in game 
+}
+
 isLoading
 {
 	return (!current.Loader);
-}
-
-shutdown
-{
-    timer.OnStart -= vars.TimerStart;
 }
