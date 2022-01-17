@@ -1,7 +1,7 @@
 state("s2_sp64_ship")
 {
-	string15 map : 0x6A122B4;
-    int loading1 : 0x2AB9B44;
+	string15 CurrentLevelName : 0x6A122B4;
+    int Loader : 0x2AB9B44;
 }
 
 startup 
@@ -27,15 +27,6 @@ startup
 		settings.Add(Tag.Key, true, Tag.Value, "missions");
     	};
 
-	
-    vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
-    {
-		vars.doneMaps.Clear();
-    });
-
-    timer.OnStart += vars.onStart; 
-
-
     if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
     {        
     	var timingMessage = MessageBox.Show (
@@ -51,7 +42,6 @@ startup
             timer.CurrentTimingMethod = TimingMethod.GameTime;
         }
     }
-
 }
  
 init
@@ -61,28 +51,24 @@ init
 
 start
 {
-	if ((current.map == "normandy") && (current.map != "transport_ship"))
-	{
-		vars.doneMaps.Clear();
-		return true;
-	}
+	return ((current.CurrentLevelName == "normandy") && (current.CurrentLevelName != "transport_ship"));
+}
+
+onStart
+{
+	vars.doneMaps.Clear();
 }
 
 split
 {
-	if ((current.map != old.map) && (settings[current.map]) && (!vars.doneMaps.Contains(current.map))) 
+	if ((current.CurrentLevelName != old.CurrentLevelName) && (settings[current.CurrentLevelName]) && (!vars.doneMaps.Contains(current.CurrentLevelName))) 
 	{
-		vars.doneMaps.Add(old.map);
+		vars.doneMaps.Add(old.CurrentLevelName);
 		return true;	
 	}
 }
 
 isLoading
 {
-	return (current.loading1 == 0);	
-}
-
-exit 
-{
-    timer.OnStart -= vars.onStart;
+	return (current.Loader == 0);	
 }
