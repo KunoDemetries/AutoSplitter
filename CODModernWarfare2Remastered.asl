@@ -2,30 +2,29 @@
 state("MW2CR")
 {
 	string6 decide: 0xA9809F;
-    string50 map : 0x41758D1;
-	int loading1 : 0x4B894F0;
+    string50 CurrentMapName : 0x41758D1;
+	int Loader : 0x4B894F0;
 }
 
 state("MW2CR", "Default")
 {
-	string50 map : 0x42187F6;
-	byte loading1 : 0x6509784;
-	string6 decide: 0xA9809F;
+	string50 CurrentMapName : 0x42187F6;
+	byte Loader : 0x6509784;
+	string6 decide : 0xA9809F;
 }
 
 state("MW2CR", "1.1.12")
 {
-	string50 map : 0x41758D1;
-	int loading1 : 0x4B894F0;
-	string6 decide: 0x11BAC56C;
+	string50 CurrentMapName : 0x41758D1;
+	int Loader : 0x4B894F0;
+	string6 decide : 0x11BAC56C;
 }
 
 state("MW2CR", "1.1.13")
 {
-	string50 map : 0x41767F6;
-	byte loading1 : 0x4B8A4F0;
+	string50 CurrentMapName : 0x41767F6;
+	byte Loader : 0x4B8A4F0;
 }
-
 
 init
 {
@@ -49,71 +48,39 @@ init
 
 startup 
 {
-    settings.Add("acta", true, "All Acts");    
+    settings.Add("acta", true, "All Acts");
     settings.Add("act1", true, "Act 1", "acta");
     settings.Add("act2", true, "Act 2", "acta");
     settings.Add("act3", true, "Act 3", "acta");
 
-    vars.missions2 = new Dictionary<string,string> 
-		{ 
-			//{"trainier", "S.S.D.D."}, 
-			{"roadkill", "Team Player"},
-			{"cliffhanger", "Cliffhanger"},
-			{"airport", "No Russian"},
-			{"favela", "Takedown"},
-    	};
- 		foreach (var Tag in vars.missions2)
-		{
-			settings.Add(Tag.Key, true, Tag.Value, "act1");
-    	};
-
-    vars.missions3 = new Dictionary<string,string> 
-		{ 
-			{"invasion", "Wolverines"},
-			{"favela_escape", "The Hornets Nest"},
-			{"arcadia", "Exodus"},
-			{"oilrig", "The Only Easy Day Was Yesterday"},
-			{"gulag", "The Gulag"},
-			{"dcburning", "Of Their Own Accord"},
-    	};
- 		foreach (var Tag in vars.missions3)
-		{
-			settings.Add(Tag.Key, true, Tag.Value, "act2");
-    	};
-        
-    vars.missions4 = new Dictionary<string,string> 
-		{ 
-			{"contingency", "Contingency"},
-			{"dcemp", "Second Sun"}, 
-			{"dc_whitehouse", "Whiskey Hotel"},
-			{"estate", "Loose Ends"},
-			{"boneyard", "The Enemy of My Enemy"},
-			{"af_caves", "Just Like Old Times"},
-			{"af_chase", "Endgame"},
-			{"ending", "End"},
-    	};    
- 		foreach (var Tag in vars.missions4)
-		{
-			settings.Add(Tag.Key, true, Tag.Value, "act3");
-    	};
-
-      	vars.onStart = (EventHandler)((s, e) => // (taken from Gelly) using this just in case someone has autostart/reset off
-        {
-    		vars.doneMaps.Clear();
-			vars.doneMaps.Add(current.map);
-        });
-
-    timer.OnStart += vars.onStart; 
-
-   vars.onReset = (LiveSplit.Model.Input.EventHandlerT<LiveSplit.Model.TimerPhase>)((s, e) => 
-        {
-            vars.doneMaps.Clear(); // Needed because checkpoints bad in game 
-        });
-    timer.OnReset += vars.onReset; 
+    var tB = (Func<string, string, string, Tuple<string, string, string>>) ((elmt1, elmt2, elmt3) => { return Tuple.Create(elmt1, elmt2, elmt3); });
+    	var sB = new List<Tuple<string, string, string>> 
+    	{
+			//tB("act1","trainier", "S.S.D.D."), 
+			tB("act1","roadkill", "Team Player"),
+			tB("act1","cliffhanger", "Cliffhanger"),
+			tB("act1","airport", "No Russian"),
+			tB("act1","favela", "Takedown"),
+			tB("act2","invasion", "Wolverines"),
+			tB("act2","favela_escape", "The Hornets Nest"),
+			tB("act2","arcadia", "Exodus"),
+			tB("act2","oilrig", "The Only Easy Day Was Yesterday"),
+			tB("act2","gulag", "The Gulag"),
+			tB("act2","dcburning", "Of Their Own Accord"),
+			tB("act3","contingency", "Contingency"),
+			tB("act3","dcemp", "Second Sun"), 
+			tB("act3","dc_whitehouse", "Whiskey Hotel"),
+			tB("act3","estate", "Loose Ends"),
+			tB("act3","boneyard", "The Enemy of My Enemy"),
+			tB("act3","af_caves", "Just Like Old Times"),
+			tB("act3","af_chase", "Endgame"),
+			tB("act3","ending", "End"),
+        };
+    	foreach (var s in sB) settings.Add(s.Item2, true, s.Item3, s.Item1);
 
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
         {        
-        var timingMessage = MessageBox.Show (
+        	var timingMessage = MessageBox.Show (
                "This game uses Time without Loads (Game Time) as the main timing method.\n"+
                 "LiveSplit is currently set to show Real Time (RTA).\n"+
                 "Would you like to set the timing method to Game Time? This will make verification easier",
@@ -130,29 +97,35 @@ startup
 
 start
 {
-	if ((current.map == "trainer") && (current.loading1 != 0)) 
-    {
-    	vars.doneMaps.Clear();
-		vars.doneMaps.Add(current.map);
-    	return true;
-    }
+	return ((current.CurrentMapName == "trainer") && (current.loading1 != 0));
+}
+
+onStart
+{
+    vars.doneMaps.Clear();
+	vars.doneMaps.Add(current.CurrentMapName);
 }
 
 isLoading
 {
-    return (current.map == "ui") || (current.loading1 == 0);
+    return (current.CurrentMapName == "ui") || (current.Loader == 0);
 }
  
 reset
 {
-    return ((current.map == "ui") && (old.map != "ui"));
+    return ((current.CurrentMapName == "ui") && (old.CurrentMapName != "ui"));
+}
+
+onReset
+{
+	vars.doneMaps.Clear();
 }
 
 split
 {
-	if ((current.map != old.map) && (settings[current.map]) && (!vars.doneMaps.Contains(current.map))) 
+	if ((current.CurrentMapName != old.CurrentMapName) && (settings[current.CurrentMapName]) && (!vars.doneMaps.Contains(current.CurrentMapName))) 
 	{
-		vars.doneMaps.Add(current.map);
+		vars.doneMaps.Add(current.CurrentMapName);
 		return true;	
 	}	
 }
