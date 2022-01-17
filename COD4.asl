@@ -1,156 +1,143 @@
 //original script by KunoDemetries
 //cleaned up and some extra features by rythin
 
-state("iw3sp") {
-  	int loading1:	0x10B1100;
-	string20 map:	0x6C3140;
-	int boi:	0xCDE4C8;
+state("iw3sp") 
+{
+  	int Loader :	0x10B1100;
+	string20 CurrentLevelName :	0x6C3140;
+	int EndSplit :	0xCDE4C8;
 }
 
-startup {
-        settings.Add("act0", true, "Prologue");
-        settings.Add("act1", true, "Act 1");
-        settings.Add("act2", true, "Act 2");
-        settings.Add("act3", true, "Act 3");
+startup 
+{
+	settings.Add("CoD4", true, "Call of Duty 4");
+    settings.Add("act0", true, "Prologue", "CoD4");
+    settings.Add("act1", true, "Act 1", "CoD4");
+    settings.Add("act2", true, "Act 2", "CoD4");
+    settings.Add("act3", true, "Act 3", "CoD4");
 
-        vars.missions1 = new Dictionary<string,string> { 
-		{"killhouse", "F.N.G."},
-		{"cargoship", "Crew Expendable"}, 
-		{"coup", "The Coup"},
-        };
-		
-        foreach (var Tag in vars.missions1) {
-		settings.Add(Tag.Key, true, Tag.Value, "act0");
-        };
+	var tB = (Func<string, string, string, Tuple<string, string, string>>) ((elmt1, elmt2, elmt3) => { return Tuple.Create(elmt1, elmt2, elmt3); });
+    var sB = new List<Tuple<string, string, string>> 
+	{
+		tB("act0","killhouse", "F.N.G."),
+		tB("act0","cargoship", "Crew Expendable"), 
+		tB("act0","coup", "The Coup"),
+		tB("act1","blackout", "Blackout"),
+		tB("act1","armada", "Charlie Dont Surf"),
+		tB("act1","bog_a", "The Bog"),
+		tB("act1","hunted", "Hunted"),	
+		tB("act1","ac130", "Death From Above"),
+		tB("act1","bog_b", "War Pig"),	
+		tB("act1","airlift", "Shock and Awe"),
+		tB("act1","aftermath", "Aftermath"),
+		tB("act2","village_assault", "Safe House"),
+		tB("act2","scoutsniper", "All Ghillied Up"), 
+		tB("act2","sniperescape", "One Shot, One Kill"),
+		tB("act2","village_defend", "Heat"),
+		tB("act2","ambush", "The Sins of the Father"),
+		tB("act3","icbm", "Ultimatum"),
+		tB("act3","launchfacility_a", "All In"),
+		tB("act3","launchfacility_b", "No Fighting in The War Room"),
+		tB("act3","jeepride", "Game Over"),
+    };
+        foreach (var s in sB) settings.Add(s.Item2, true, s.Item3, s.Item1);
 
-        vars.missions2 = new Dictionary<string,string> { 
-		{"blackout", "Blackout"},
-		{"armada", "Charlie Dont Surf"},
-		{"bog_a", "The Bog"},
-		{"hunted", "Hunted"},	
-		{"ac130", "Death From Above"},
-		{"bog_b", "War Pig"},	
-		{"airlift", "Shock and Awe"},
-		{"aftermath", "Aftermath"},
-        };
-
-        foreach (var Tag in vars.missions2) {
-		settings.Add(Tag.Key, true, Tag.Value, "act1");
-        };
-
-        vars.missions3 = new Dictionary<string,string> { 
-		{"village_assault", "Safe House"},
-		{"scoutsniper", "All Ghillied Up"}, 
-		{"sniperescape", "One Shot, One Kill"},
-		{"village_defend", "Heat"},
-		{"ambush", "The Sins of the Father"},
-        };
-		
-        foreach (var Tag in vars.missions3) {
-		settings.Add(Tag.Key, true, Tag.Value, "act2");
-        };
-        
-        vars.missions4 = new Dictionary<string,string> { 
-		{"icbm", "Ultimatum"},
-		{"launchfacility_a", "All In"},
-		{"launchfacility_b", "No Fighting in The War Room"},
-		{"jeepride", "Game Over"},
-	};
-        
-        foreach (var Tag in vars.missions4) {
-		settings.Add(Tag.Key, true, Tag.Value, "act3");
-        };
-	    
-	    refreshRate = 30;
-
-    
-  	vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
-        {
-		vars.doneMaps.Clear();		//clear the doneMaps list
-		vars.coupOffset = false;
-        });
-
-    timer.OnStart += vars.onStart; 
+	refreshRate = 30;
 
 	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
-        {        
-        var timingMessage = MessageBox.Show (
-               "This game uses Time without Loads (Game Time) as the main timing method.\n"+
-                "LiveSplit is currently set to show Real Time (RTA).\n"+
-                "Would you like to set the timing method to Game Time? This will make verification easier",
-                "LiveSplit | Call of Duty 4: Modern Warfare",
-               MessageBoxButtons.YesNo,MessageBoxIcon.Question
-            );
+    {        
+        var timingMessage = MessageBox.Show 
+		(
+            "This game uses Time without Loads (Game Time) as the main timing method.\n"+
+            "LiveSplit is currently set to show Real Time (RTA).\n"+
+            "Would you like to set the timing method to Game Time? This will make verification easier",
+            "LiveSplit | Call of Duty 4: Modern Warfare",
+            MessageBoxButtons.YesNo,MessageBoxIcon.Question
+        );
         
-            if (timingMessage == DialogResult.Yes)
-            {
-                timer.CurrentTimingMethod = TimingMethod.GameTime;
-            }
+        if (timingMessage == DialogResult.Yes)
+        {
+            timer.CurrentTimingMethod = TimingMethod.GameTime;
         }
-
     }
+}
 
-init {
+init 
+{
 	vars.doneMaps = new List<string>(); // Actually needed because intel%
 	vars.coupOffset = false;
 	vars.currentTime = new TimeSpan(0, 0, 0);	//TimeSpan object used to add a timer offset after The Coup
 }
 
-update {
+update 
+{
 	vars.currentTime = timer.CurrentTime.GameTime;	//keep the variable updated with the current time on the timer
 }
 
-start {
+start 
+{
 	//changed start condition to happen only after loading in rather than any time in the load
-	if (current.map == "killhouse" && current.loading1 != 0 && old.loading1 == 0) {
-		vars.doneMaps.Clear();		//clear the doneMaps list
-		vars.coupOffset = false;	//set offset to false just in case it somehow stays on
-		return true;				//start the timer
-    }
+	return (current.CurrentLevelName == "killhouse" && current.Loader != 0 && old.Loader == 0);
 }
 
-split {
+onStart
+{
+	vars.doneMaps.Clear();		//clear the doneMaps list
+	vars.coupOffset = false;
+}
 
-	if (current.map != old.map) {					//on map change
-		if (current.map == "coup") {				//if the last map was The Coup. kuno note: Changed to do it on coup and not after it's skipped ae into the next level 
+split 
+{
+	if ((current.CurrentLevelName != old.CurrentLevelName) && (!vars.doneMaps.Contains(current.CurrentLevelName)))
+	{					//on map change
+		if (current.CurrentLevelName == "coup") 
+		{				//if the last map was The Coup. kuno note: Changed to do it on coup and not after it's skipped ie into the next level 
 			vars.currentTime = timer.CurrentTime.GameTime;	//set a variable to the value of current time
 			vars.coupOffset = true;				//add 4:44 to the timer
-			if (settings["coup"]) {				//if the split for The Coup is enabled
-				vars.doneMaps.Add(old.map);		//add the last map to done splits list
+			if (settings["coup"]) 
+			{				//if the split for The Coup is enabled
+				vars.doneMaps.Add(old.CurrentLevelName);		//add the last map to done splits list
 				return true;				//split
 			}
-		}
-			
-		else {						//if map is NOT The Coup
-			if (settings[current.map]) {		//if setting for last map is enabled
-				vars.doneMaps.Add(old.map);	//add the last map to done splits list
+		}	
+		else 
+		{						//if map is NOT The Coup
+			if (settings[current.CurrentLevelName]) 
+			{		//if setting for last map is enabled
+				vars.doneMaps.Add(old.CurrentLevelName);	//add the last map to done splits list
 				return true;			//split
 			}
-		}
-		
-	}
-
-	//this is kuno's code idk what it does but i assume its the final split
-	//would explain the lack of setting for this one
-	if (current.map == "jeepride" && current.boi == 139512) {
+		}	
+	}	
+	//Endsplit for the game
+	if (current.CurrentLevelName == "jeepride" && current.EndSplit == 139512) 
+	{
 		return true;
 	}
 }   
  
-reset {
-	//kuno's condition, seems sketchy but whatever i dont run this game if it works for yall thats good lol
-	return (current.map == "ui" && old.map != "coup");
+reset 
+{
+	return (current.CurrentLevelName == "ui" && old.CurrentLevelName != "coup");
 }
 
-gameTime {
-	if (vars.coupOffset == true) {					//when offset gets set to true
+onReset
+{
+	vars.doneMaps.Clear();
+}
+
+gameTime 
+{
+	if (vars.coupOffset == true) 
+	{					//when offset gets set to true
 		vars.coupOffset = false;				//set it back to false
 		return vars.currentTime.Add(new TimeSpan (0, 4, 44));	//set the timer to current timer time + 284s (4m44s)
 	}
 }
 
-isLoading {
-	return (current.loading1 == 0) || (current.map == "coup");
+isLoading 
+{
+	return (current.Loader == 0) || (current.CurrentLevelName == "coup");
 }
 
 exit 
