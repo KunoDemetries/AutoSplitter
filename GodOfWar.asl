@@ -16,7 +16,7 @@ state("GoW", "Epic 1.0.3")
     int Loader : 0x22576C8;
 }
 
-state("GoW", "Epic 1.0.4")
+state("GoW", "Epic 1.0.4") // Also works for 1.0.5 on epic
 {
     string80 CurrentObjective : 0x2236380;
     int Loader : 0x2259948;
@@ -32,6 +32,12 @@ state("GoW", "Steam 1.0.6.1")
 {
     string80 CurrentObjective : 0x2238FE0;
     int Loader : 0x225C5B0; 
+}
+
+state("GoW", "Steam 1.0.7")
+{
+    string80 CurrentObjective : 0x2237FE0;
+    int Loader : 0x225B5B0; 
 }
 
 init
@@ -51,6 +57,8 @@ init
         case    85020672: version = "Steam v1.0.2"; 
             break;
         case    85032960: version = "Steam 1.0.6.1";
+            break;
+        case    85028864: version = "Steam 1.0.7";
             break;
         default:        version = ""; 
             break;
