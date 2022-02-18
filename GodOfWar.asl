@@ -1,43 +1,50 @@
 state("GoW", "Epic 1.0.1") // Stating the game's .exe name, and the launcher and version number
 {
-    string80 CurrentObjective : 0x2232080; // Found by doing a string scan of the current objective playing (IS STATIC) Search any value in the startup than move the value backwards to add the realm name (super important it has to be done like this or the string will not read correctly in longer string names)
+    string100 CurrentObjective : 0x2232080; // Found by doing a string scan of the current objective playing (IS STATIC) Search any value in the startup than move the value backwards to add the realm name (super important it has to be done like this or the string will not read correctly in longer string names)
     int Loader : 0x2255648; // 257 during loads, 256 during cutscene loads, 0 during everything else (This value is somewhat hard if you don't have a NG+ save)
 }
 
 state("GoW", "Epic 1.0.2")
 {
-    string80 CurrentObjective : 0x2233080; 
+    string100 CurrentObjective : 0x2233080; 
     int Loader : 0x2256648;
 }
 
 state("GoW", "Epic 1.0.3")
 {
-    string80 CurrentObjective : 0x2234100;
+    string100 CurrentObjective : 0x2234100;
     int Loader : 0x22576C8;
 }
 
 state("GoW", "Epic 1.0.4") // Also works for 1.0.5 on epic
 {
-    string80 CurrentObjective : 0x2236380;
+    string100 CurrentObjective : 0x2236380;
     int Loader : 0x2259948;
 }
 
 state("GoW", "Steam 1.0.2")
 {
-    string80 CurrentObjective : 0x2235CE0;
+    string100 CurrentObjective : 0x2235CE0;
     int Loader : 0x22592A8; 
 }
 
 state("GoW", "Steam 1.0.6.1")
 {
-    string80 CurrentObjective : 0x2238FE0;
+    string100 CurrentObjective : 0x2238FE0;
     int Loader : 0x225C5B0; 
 }
 
+/*  Nulling this out because the mdoulesize is the same and the difference between the versions are so insignificant we would never downpatch to 1.0.7
 state("GoW", "Steam 1.0.7")
 {
-    string80 CurrentObjective : 0x2237FE0;
+    string100 CurrentObjective : 0x2237FE0;
     int Loader : 0x225B5B0; 
+}
+*/
+state("GoW", "Steam 1.0.8")
+{
+    string100 CurrentObjective : 0x2238060;
+    int Loader : 0x225B630; 
 }
 
 init
@@ -58,7 +65,7 @@ init
             break;
         case    85032960: version = "Steam 1.0.6.1";
             break;
-        case    85028864: version = "Steam 1.0.7";
+        case    85028864: version = "Steam 1.0.8";
             break;
         default:        version = ""; 
             break;
@@ -104,24 +111,24 @@ startup
         tB("TMT", "Midgard - Wildwoods - Defeat Dauði Kaupmaðr", "Defeat Dauði Kaupmaðr"),
         tB("TMT", "Midgard - Wildwoods - Return to the house", "Return to the house"),
         tB("TMT", "Midgard - Wildwoods - Defeat the Stranger", "Defeat the Stranger"),
-        tB("PTTM", "The River Pass - Journey to the Mountain", "Journey to the Mountain"),
+        tB("PTTM", "Midgard - Wildwoods - Journey to the Mountain", "Journey to the Mountain"),
         tB("PTTM", "The River Pass - Continue towards the mountain", "Continue towards the mountain"),
-        tB("PTTM", "The River Pass - Escape the ruins", "Escape the ruins"),
+        tB("PTTM", "Midgard - The River Pass - Escape the ruins", "Escape the ruins"),
         tB("PTTM", "The River Pass - Fight off the Reavers", "Fight off the Reavers"),
         //tB("PTTM","Escape the ruins","Escape the ruins"),   In the event of a mission appearing again, I'm just counting it as it wasn't finished originally as it'd be annoying figuring something out for duplicates
-        tB("PTTM", "The River Pass - Throw your ax at the trees", "Throw your ax at the trees"),
+        tB("PTTM", "The River Pass - Throw your axe at the trees", "Throw your axe at the trees"),
         tB("PTTM", "The River Pass - Proceed through the gate to the mountain", "Proceed through the gate to the mountain"),
-        tB("PTTM", "The River Pass - Hunt with Atreus", "Hunt with Atreus (again)"),
-        tB("PTTM", "Sanctuary Grove - Follow the Witch", "Follow the Witch"),
-        tB("PTTM", "Sanctuary Grove - Collect the white-petaled flower", "Collect the white-petaled flower"),
-        tB("PTTM", "The River Pass - Get to the boat", "Get to the boat"),
-        tB("PTTM", "The River Pass -Boat towards daylight ", "Boat towards daylight"),
-        tB("PTTM", "Shores of Nine - Dock at the bridge", "Dock at the bridge"),
+        tB("PTTM", "Midgard - The River Pass - Hunt with Atreus", "Hunt with Atreus (again)"),
+        tB("PTTM", "Midgard - Sanctuary Grove - Follow the Witch", "Follow the Witch"),
+        tB("PTTM", "The River Pass - Collect the white", "Collect the white-petaled flower"),
+        tB("PTTM", "Midgard - The River Pass - Get to the boat", "Get to the boat"),
+        tB("PTTM", "Shores of Nine - Boat towards daylight", "Boat towards daylight"),
+        tB("PTTM", "Midgard - Shores of Nine - Dock at the bridge", "Dock at the bridge"),
         tB("PTTM", "Shores of Nine - Investigate the temple and bridge", "Investigate the temple and bridge"),
-        tB("PTTM", "Brok’s Shop - Make your way to the Tower", "Make your way to the Tower"),
+        tB("PTTM", "Shores of Nine - Make your way to the Tower", "Make your way to the Tower"),
         tB("PTTM", "Shores of Nine - Pass through the tower and caves", "Pass through the tower and caves"),
         tB("PTTM", "Foothills - Continue towards the mountain", "Continue towards the mountain (Foothills)"),
-        tB("ARB", "Foothills - Follow the Witch", "Follow the Witch (Foothills)"),
+        tB("ARB", "Midgard - Foothills - Follow the Witch", "Follow the Witch (Foothills)"),
         tB("TLOA", "Realm Travel Room - Travel to Alfheim", "Travel to Alfheim"),
         tB("TLOA", "Týr’s Bridge - Find a way to the Light", "Find a way to the Light"),
         tB("TLOA", "Lake of Light - Get to the Ringed Temple", "Get to the Ringed Temple"),
@@ -133,37 +140,37 @@ startup
         tB("TLOA", "The Dusk Veil - Investigate the hive", "Investigate the hive"),
         tB("TLOA", "The Dusk Veil - Destroy the hive and claim the Light", "Destroy the hive and claim the Light"),
         tB("TLOA", "Lake of Light - Find a way out of the temple", "Find a way out of the temple"),
-        tB("TLOA", "Lake of Light - Return to the boat", "Return to the boat"),
+        tB("TLOA", "Alfheim - Lake of Light - Return to the boat", "Return to the boat"),
         tB("TLOA", "Lake of Light - Use the sand bowl lift", "Use the sand bowl lift"),
         tB("TLOA", "Lake of Light - Return to Týr’s Temple", "Return to Týr’s Temple"),
         tB("TLOA", "Lake of Light - Realm travel back to Midgard", "Realm travel back to Midgard"),
         tB("TLOA", "Realm Travel Room - Return to the Mountain", "Return to the Mountain"),
         tB("TLOA", "Shores of Nine - Go back through the tower", "Go back through the tower"),
-        tB("ITM", "Foothills - Ascend the mountain", "Ascend the mountain"),
+        tB("ITM", "Midgard - Foothills - Ascend the mountain", "Ascend the mountain"),
         tB("ITM", "The Mountain - Traverse the dark caves", "Traverse the dark caves"),
         tB("ITM", "The Mountain - Ascend the Cave Shaft", "Ascend the Cave Shaft"),
-        tB("ITM", "The Mountain - Free the chain", "Free the chain"),
-        tB("ITM", "The Mountain - Find a way to ascend", "Find a way to ascend"),
-        tB("ITM", "The Mountain - Reach the summit", "Reach the summit"),
+        tB("ITM", "Midgard - The Mountain - Free the chain", "Free the chain"),
+        tB("ITM", "Midgard - The Mountain - Find a way to ascend", "Find a way to ascend"),
+        tB("ITM", "Midgard - The Mountain - Reach the summit", "Reach the summit"),
         tB("AND", "The Summit - Take Mimir’s head to the Witch", "Take Mimir’s head to the Witch"),
         tB("AND", "Shores of Nine - Return to the Witch’s Cave", "Return to the Witch’s Cave"),
         tB("AND", "The River Pass - Talk to the Witch in her house", "Talk to the Witch in her house"),
-        tB("AND", "The River Pass - Return to the boat", "Return to the boat"),
+        tB("AND", "Midgard - The River Pass - Return to the boat", "Return to the boat"),
         tB("AND", "The River Pass - Go to the Serpent’s horn", "Go to the Serpent’s horn"),
         tB("TMC", "Shores of Nine - Follow Mimir’s instructions to the chisel", "Follow Mimir’s instructions to the chisel"),
         tB("TMC", "Northern Dock - Investigate the dead Giant", "Investigate the dead Giant"),
         tB("TMC", "Thamur’s Corpse - Retrieve a piece of the chisel", "Retrieve a piece of the chisel"),
         tB("TMC", "Thamur’s Corpse - Find a way to break the ice", "Find a way to break the ice"),
-        tB("TMC", "Thamur’s Corpse - Talk to Sindri", "Talk to Sindri"),
+        tB("TMC", "Midgard - Thamur’s Corpse - Talk to Sindri", "Talk to Sindri"),
         tB("TMC", "Thamur’s Corpse - Find a way to the hammer", "Find a way to the hammer"),
         tB("TMC", "Thamur’s Corpse - Make your way up the hammer", "Make your way up the hammer"),
-        tB("TMC", "Thamur’s Corpse - Release the strap", "Release the strap"),
-        tB("TMC", "The Hammer Head - Find a way to the hammer’s head", "Find a way to the hammer’s head"),
+        tB("TMC", "Midgard - Thamur’s Corpse - Release the strap", "Release the strap"),
+        tB("TMC", "The Hammer Head - Find a way to the hammer’s head", "Find a way to the hammer’s head"), // where I was last
         tB("TMC", "Thamur’s Corpse - Make your way to the chisel", "Make your way to the chisel"),
-        tB("BTL", "The Giant’s Chisel - Return to the boat", "Return to the boat"),
+        tB("BTL", "Midgard - Northern Dock - Return to the boat", "Return to the boat"),
         tB("BTL", "Northern Dock - Return to the Lake of Nine", "Return to the Lake of Nine"),
-        tB("BTL", "Shores of Nine - Go to Týr’s Vault", "Go to Týr’s Vault"),
-        tB("BTL", "Týr’s Vault - Ask Freya for help", "Ask Freya for help"),
+        tB("BTL", "Midgard - Shores of Nine - Go to Týr’s Vault", "Go to Týr’s Vault"),
+        tB("BTL", "Midgard - Týr’s Vault - Ask Freya for help", "Ask Freya for help"),
         tB("TS", "The River Pass - Use Freya’s boat to return home", "Use Freya’s boat to return home"),
         tB("TS", "Wildwoods - Return to the Realm Travel Room", "Return to the Realm Travel Room"),
         tB("TS", "Realm Travel Room - Reach the Bridge Keeper", "Reach the Bridge Keeper"),
@@ -173,21 +180,21 @@ startup
         tB("TBlR", "The River Pass - Enter the boat", "Enter the boat"),
         tB("TBlR", "Shores of Nine - Return to Týr’s Vault", "Return to Týr’s Vault"),
         tB("TBlR", "Týr’s Vault - Retrieve the Black Rune", "Retrieve the Black Rune"),
-        tB("TBlR", "Týr’s Vault - Escape the trap", "Escape the trap"),
-        tB("TBlR", "Týr’s Vault - Exit Týr’s Vault", "Exit Týr’s Vault"),
+        tB("TBlR", "Midgard - Týr’s Vault - Escape the trap", "Escape the trap"),
+        tB("TBlR", "Midgard - Týr’s Vault - Exit Týr’s Vault", "Exit Týr’s Vault"),
         tB("RTTS", "Shores of Nine - Journey back to the mountain", "Journey back to the mountain"),
         tB("RTTS", "The Mountain - Find a new path up to the summit", "Find a new path up to the summit"),
         tB("RTTS", "The Mountain - Continue towards the summit", "Continue towards the summit"),
         tB("RTTS", "The Summit - Open the bridge to Jötunheim", "Open the bridge to Jötunheim"),
-        tB("RTTS", "The Summit - Catch Baldur", "Catch Baldur"),
+        tB("RTTS", "Midgard - The Summit - Catch Baldur", "Catch Baldur"),
         tB("EFH", "Helheim Landing - Find a way out of Helheim", "Find a way out of Helheim"),
-        tB("EFH", "Helheim Landing - Use the ship", "Use the ship"),
-        tB("EFH", "Helheim Landing - Escape Helheim", "Escape Helheim"),
+        tB("EFH", "Helheim - Helheim Landing - Use the ship", "Use the ship"),
+        tB("EFH", "Helheim - Helheim Landing - Escape Helheim", "Escape Helheim"),
         tB("APTJ", "Secret Chamber of Odin - Realm travel back to Midgard", "Realm travel back to Midgard"),
         tB("APTJ", "Realm Travel Room - Show Týr’s key plans to Brok", "Show Týr’s key plans to Brok"),
         tB("APTJ", "Brok’s Shop - Locate Týr’s mysterious door", "Locate Týr’s mysterious door"),
         tB("APTJ", "The Hall of Týr - Explore Týr’s hidden chamber", "Explore Týr’s hidden chamber"),
-        tB("APTJ", "The Hall of Týr - Break the chains", "Break the chains"),
+        tB("APTJ", "Midgard - The Hall of Týr - Break the chains", "Break the chains"),
         tB("APTJ", "The Hall of Týr - Go back up and flip the temple", "Go back up and flip the temple"),
         tB("BTR", "Realm Travel Room - Explore the Realm Between Realms", "Explore the Realm Between Realms"),
         tB("BTR", "Realm Travel Room - Take the Unity Stone to the precipice", "Take the Unity Stone to the precipice"),
@@ -196,7 +203,7 @@ startup
         tB("JIR", "Realm Travel Room - Talk to Brok and Sindri", "Talk to Brok and Sindri"),
         tB("JIR", "Shores of Nine - Boat into the Serpent’s mouth", "Boat into the Serpent’s mouth"),
         tB("JIR", "Belly of the Beast - Find Mimir’s eye", "Find Mimir’s eye"),
-        tB("JIR", "Thamur’s Corpse - Defeat Baldur", "Defeat Baldur"),
+        tB("JIR", "Midgard - Thamur’s Corpse - Defeat Baldur", "Defeat Baldur"),
         tB("MA", "Thamur’s Corpse - Return to the Realm Travel Room", "Return to the Realm Travel Room"),
         tB("MA", "Jötunheim - Find Jötunheim’s highest peak", "Find Jötunheim’s highest peak"),
         tB("MA", "Jötunheim - Scatter her ashes", "Scatter her ashes"),
@@ -224,7 +231,7 @@ update
 {
     int ObjectiveLength = current.CurrentObjective.Length;
 
-    if(ObjectiveLength > 45) // I have to add this as the last few objectives only have location - objective name, most likely due to the fact the realm has nothing in it
+    if (ObjectiveLength > 45) // I have to add this as the last few objectives only have location - objective name, most likely due to the fact the realm has nothing in it
     {
         if (settings["SOC"])  // To conserve creating 6 different variables, I'm just under the assumption the user of the ASL wouldn't tick the setting e/d during the run.
         {
