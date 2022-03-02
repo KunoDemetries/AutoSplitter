@@ -8,46 +8,36 @@
                         aiden#2345 on discord
 */
 state("OLGame", "Patch2, 64bit") {
-  int isLoading: 0x01FFBCC8, 0x118; // Generic Loading string
+  bool isLoading: 0x01FFBCC8, 0x118; // Generic Loading string
   float xcoord: 0x02020F38, 0x278, 0x40, 0x454, 0x80;
   float zcoord: 0x2020F38, 0x278, 0x40, 0x454, 0x84;
   float ycoord: 0x2020F38, 0x278, 0x40, 0x454, 0x88;
-  string100 map: 0x02006F00, 0x6F4, 0x40, 0xAB4, 0x80, 0x0; // Current Checkpoint
-  int inControl: 0x02020F38, 0x248, 0x60, 0x30, 0x278, 0x54; // In control == 1
+  string50 map: 0x02006F00, 0x6F4, 0x40, 0xAB4, 0x80, 0x0; // Current Checkpoint
+  bool inControl: 0x02020F38, 0x248, 0x60, 0x30, 0x278, 0x54; // In control == 1
 }
 
 state("OLGame", "Patch2, 32bit") {
-  int isLoading: "OLGame.exe", 0x017E5B30, 0xD8;
+  bool isLoading: "OLGame.exe", 0x017E5B30, 0xD8;
   float xcoord: "OLGame.exe", 0x017E7764, 0x1D4, 0x38C, 0x78, 0x4, 0x50;
   float zcoord: "OLGame.exe", 0x017E7764, 0x1D4, 0x38C, 0x78, 0x4, 0x54;
   float ycoord: "OLGame.exe", 0x017E7764, 0x1D4, 0x38C, 0x78, 0x4, 0x58;
-  string100 map: "OLGame.exe", 0x0178C598, 0x7D4, 0x58, 0x0;
-  int inControl: "OLGame.exe", 0x017E7764, 0x1D4, 0x38C, 0x1F4, 0x68, 0x60;
+  string50 map: "OLGame.exe", 0x0178C598, 0x7D4, 0x58, 0x0;
+  bool inControl: "OLGame.exe", 0x017E7764, 0x1D4, 0x38C, 0x1F4, 0x68, 0x60;
 }
 
 init {
   vars.doneMaps = new List < string > (); // Test to see if we split for a setting already
-  vars.starter = 0; // Used for the starting check just so everything can just stay in Update
-  vars.endsplit = 0; // Used to do the final split
-  vars.OnceFinalSplit = 0; // After the game finishes the end split returns true so Kuno added this to make it split once
+  vars.starter = false; // Used for the starting check just so everything can just stay in Update
+  vars.endsplit = false; // Used to do the final split
+  vars.OnceFinalSplit = false; // After the game finishes the end split returns true so Kuno added this to make it split once
   vars.mapcomparison = current.map; // For whatever reason map returns Null and livesplit likes to linger on it so this is the easiest fix without changing addresses for something minor
-  vars.Checker1 = 0;
-  vars.Checker2 = 0;
-  vars.Checker3 = 0;
-  vars.Checker4 = 0;
-  vars.Checker5 = 0;
-  vars.Checker6 = 0;
-  vars.Checker7 = 0;
-  vars.Checker8 = 0;
-  vars.Checker9 = 0;
-  vars.Checker10 = 0;
-  vars.Checker11 = 0;
-  vars.Checker12 = 0;
-  vars.Checker13 = 0;
-  vars.Checker14 = 0;
-  vars.Running = 0;
+  vars.Checker1 = false;
+  vars.Checker2 = false;
+  vars.Running = false;
   vars.cz = 0;
   vars.cx = 0;
+  vars.currentIL = "";
+
   // Checking the games memory size to determine version
   switch (modules.First().ModuleMemorySize) {
     case 35831808:
@@ -57,11 +47,30 @@ init {
       version = "Patch2, 32bit";
       break;
   }
+
+  vars.ILStartingListZ = new List < string > {
+    "Sewer_start", //z
+    "Male_Start", //z
+    "Courtyard_Start", //z
+    "Female_Start", // z
+    "Revisit_Soldier1", //z
+    "PrisonRevisit_Start", // z
+    "Courtyard2_Start", // Z
+  };
+
+  vars.ILStartingListX = new List < string > {
+    "Prison_Start", // x
+    "Lab_Start", // x
+    "Courtyard1_Start", // x
+    "Building2_Start", // x
+    "MaleRevisit_Start", // Xcoord
+  };
 }
 
 startup {
   vars.Stopwatch = new Stopwatch();
   vars.DelayTime = 0.005;
+
   settings.Add("OL", true, "Outlast"); // Grouping all the Outlast splits together
   settings.Add("adminblock", true, "Admin Block", "OL"); // Each Chapter is related to one of these
   settings.Add("prisonblock", true, "Prison Block", "OL");
@@ -79,11 +88,15 @@ startup {
   settings.Add("drying", true, "Drying Ground", "WB");
   settings.Add("vocation", true, "Vocational Block", "WB");
   settings.Add("exit", true, "Exit", "WB");
+
   settings.Add("il", false, "Start timing for ILs (Do not turn on for full game runs!)");
+
   //zeko's Code, booleans added by anti
-  var tB = (Func<string, string, string, bool, Tuple<string, string, string, bool>>) ((elmt1, elmt2, elmt3, elmt4) => { return Tuple.Create(elmt1, elmt2, elmt3, elmt4); });
-     var sB = new List<Tuple<string, string, string, bool>>
-     {
+  var tB = (Func < string, string, string, bool, Tuple < string, string, string, bool >> )((elmt1, elmt2, elmt3, elmt4) => {
+    return Tuple.Create(elmt1, elmt2, elmt3, elmt4);
+  });
+  var sB = new List < Tuple < string,
+    string, string, bool >> {
       tB("adminblock", "Admin_Garden", "Entering garden", false),
       tB("adminblock", "Admin_Explosion", "Entering asylum window", false),
       tB("adminblock", "Admin_Mezzanine", "Drop down from vent", false),
@@ -237,45 +250,9 @@ startup {
       tB("exit", "MaleRevisit_Start", "Start of Exit", true),
       tB("exit", "AdminBlock_Start", "Long hallway", true),
     };
-  foreach(var s in sB)
-    {
-      settings.Add(s.Item2, s.Item4, s.Item3, s.Item1);
-    }
-
-  vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
-    {
-      vars.Checker1 = 0;
-      vars.Checker2 = 0;
-      vars.Checker3 = 0;
-      vars.Checker4 = 0;
-      vars.Checker5 = 0;
-      vars.Checker6 = 0;
-      vars.Checker7 = 0;
-      vars.Checker8 = 0;
-      vars.Checker9 = 0;
-      vars.Checker10 = 0;
-      vars.Checker11 = 0;
-      vars.Checker12 = 0;
-      vars.Checker13 = 0;
-      vars.Checker14 = 0;
-      vars.starter = 0; // Generic starting split
-      vars.endsplit = 0; // generic end split
-      vars.OnceFinalSplit = 0; // So it doesn't split more than once for the end split
-      vars.doneMaps.Clear(); // Needed because checkpoints bad in game
-      vars.doneMaps.Add(current.map.ToString()); // Adding for the starting map because it's also bad
-      vars.Running = 1;
-      vars.cz = 0;
-      vars.cx = 0;
-    });
-  // subsequently fixed issues with certain splits as well, so double bonus points
-  timer.OnStart += vars.onStart;
-
-  vars.onReset = (LiveSplit.Model.Input.EventHandlerT < LiveSplit.Model.TimerPhase > )((s, e) => {
-    vars.doneMaps.Clear(); // Needed because checkpoints bad in game
-    vars.OnceFinalSplit = 0; // So it doesn't split more than once for the end split
-    vars.Running = 0;
-  });
-  timer.OnReset += vars.onReset;
+  foreach(var s in sB) {
+    settings.Add(s.Item2, s.Item4, s.Item3, s.Item1);
+  }
 
   if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
   {
@@ -295,191 +272,90 @@ startup {
 
 update {
   vars.mapcomparison = current.map;
-  if ((vars.Running == 0) && (current.zcoord.ToString("0.00") == "-40.00") && (current.ycoord.ToString("0.00") == "80.00")) //main menu
-    {
-      vars.Checker1 = 0;
-      vars.Checker2 = 0;
-      vars.Checker3 = 0;
-      vars.Checker4 = 0;
-      vars.Checker5 = 0;
-      vars.Checker6 = 0;
-      vars.Checker7 = 0;
-      vars.Checker8 = 0;
-      vars.Checker9 = 0;
-      vars.Checker10 = 0;
-      vars.Checker11 = 0;
-      vars.Checker12 = 0;
-      vars.Checker13 = 0;
-      vars.Checker14 = 0;
-    }
+  //coordinates are always -40 something and 80 something when in main menu on 64bit version's addresses, but on 32bit they are null
+  if ((current.zcoord.ToString("0.00") != "-40.00" && current.ycoord.ToString("0.00") != "80.00") && (current.zcoord.ToString() != "0" && current.ycoord.ToString() != "0")) {
 
-  // for outlast to be able to not have it endlessly start if you're resetting from the start of the game
-  if ((current.isLoading == 1) && (current.map == "Admin_Gates") && (vars.Running == 0) /*&& (current.xcoord < -16422.93)*/) {
-    vars.cx = current.xcoord;
-    vars.cz = current.zcoord;
-    vars.Checker1 = 1;
-  }
-  // for WB
-  if ((vars.starter == 0) /*&& (current.xcoord < 9544)*/ && (current.map == "Hospital_Free") && (old.isLoading == 1) && (vars.Running == 0)) {
-    vars.cx = current.xcoord;
-    vars.cz = current.zcoord;
-    vars.Checker2 = 1;
-  }
-  // For outlast to end split
-  if (Math.Abs(-4098.51 - current.ycoord) < 0.01 && (current.inControl == 0) && (vars.OnceFinalSplit != 1) && (current.map == "Lab_BigTowerDone")) {
-    vars.endsplit = 1;
-  }
-  // For whistleblower to end split
-  if ((Math.Abs(-550.00 - current.ycoord) < 0.01) && (current.inControl == 0) && (vars.OnceFinalSplit != 1) && (current.map == "AdminBlock_Start")) {
-    vars.endsplit = 1;
-  }
-  // outlast starter, ik it doesn't work if you start from new game
-  if ((vars.Checker1 == 1) && (current.xcoord != vars.cx || current.zcoord != vars.cz)) {
-    vars.starter = 1;
-  }
-  // For whistleblower starter
-  if ((vars.Checker2 == 1) && (current.xcoord != vars.cx || current.zcoord != vars.cz)) {
-    vars.starter = 1;
-  }
-
-  // IL start
-  if ((settings[("il")]) && (vars.Running == 0)) {
-
-    //Prison
-    if ((current.isLoading == 1) && (current.map == "Prison_Start") && (current.xcoord > 3700)) {
-      vars.Checker14 = 1;
-    }
-    if((vars.Checker14 == 1) && (current.xcoord < 3700) && (current.isLoading == 0) && (current.map == "Prison_Start")) {
-     vars.starter = 1;
-    }
-
-    //Sewer
-    if ((current.isLoading == 1) && (current.map == "Sewer_start")) {
-      vars.cz = current.zcoord;
-      vars.Checker3 = 1;
-    }
-    if((vars.Checker3 == 1) && (current.zcoord != vars.cz) && (current.map == "Sewer_start")) {
-     vars.starter = 1;
-     vars.Checker3 = 0;
-    }
-
-    //Male Ward
-    if ((current.isLoading == 1) && (current.map == "Male_Start")) {
-      vars.cz = current.zcoord;
-      vars.Checker4 = 1;
-    }
-    if((vars.Checker4 == 1) && (current.zcoord != vars.cz) && (current.map == "Male_Start")) {
-     vars.starter = 1;
-     vars.Checker4 = 0;
-    }
-
-    //Courtyard
-    if ((current.isLoading == 1) && (current.map == "Courtyard_Start")) {
-      vars.cz = current.zcoord;
-      vars.Checker5 = 1;
-    }
-    if((vars.Checker5 == 1) && (current.zcoord != vars.cz) && (current.map == "Courtyard_Start")) {
-     vars.starter = 1;
-     vars.Checker5 = 0;
-    }
-
-    //Female Ward
-    if ((current.isLoading == 1) && (current.map == "Female_Start")) {
-      vars.cz = current.zcoord;
-      vars.Checker6 = 1;
-    }
-    if((vars.Checker6 == 1) && (current.zcoord != vars.cz) && (current.map == "Female_Start")) {
-     vars.starter = 1;
-     vars.Checker6 = 0;
-    }
-
-    //Return to Admin
-    if ((current.isLoading == 1) && (current.map == "Revisit_Soldier1")) {
-      vars.cz = current.zcoord;
-      vars.Checker7 = 1;
-    }
-    if((vars.Checker7 == 1) && (current.zcoord != vars.cz) && (current.map == "Revisit_Soldier1")) {
-     vars.starter = 1;
-     vars.Checker7 = 0;
-    }
-
-    //Underground Lab
-    if ((current.isLoading == 1) && (current.map == "Lab_Start")) {
+    // for outlast to be able to not have it endlessly start if you're resetting from the start of the game
+    if ((current.isLoading) && (current.map == "Admin_Gates") && (!vars.Running)) {
       vars.cx = current.xcoord;
-      vars.Checker8 = 1;
-    }
-    if((vars.Checker8 == 1) && (current.xcoord != vars.cx) && (current.map == "Lab_Start")) {
-     vars.starter = 1;
-     vars.Checker8 = 0;
-    }
-
-    //Recreation Area
-    if ((current.isLoading == 1) && (current.map == "Courtyard1_Start")) {
-      vars.cx = current.xcoord;
-      vars.Checker9 = 1;
-    }
-    if((vars.Checker9 == 1) && (current.xcoord != vars.cx) && (current.map == "Courtyard1_Start")) {
-     vars.starter = 1;
-     vars.Checker9 = 0;
-    }
-
-    //Return to Prison
-    if ((current.isLoading == 1) && (current.map == "PrisonRevisit_Start")) {
       vars.cz = current.zcoord;
-      vars.Checker10 = 1;
+      vars.Checker1 = true;
     }
-    if((vars.Checker10 == 1) && (current.zcoord != vars.cz) && (current.map == "PrisonRevisit_Start")) {
-     vars.starter = 1;
-     vars.Checker10 = 0;
-    }
+    // for WB
 
-    //Drying Grounds
-    if ((current.isLoading == 1) && (current.map == "Courtyard2_Start")) {
+    if ((current.map == "Hospital_Free") && (current.isLoading) && (!vars.Running)) {
+      vars.cx = current.xcoord;
       vars.cz = current.zcoord;
-      vars.Checker11 = 1;
-    }
-    if((vars.Checker11 == 1) && (current.zcoord != vars.cz) && (current.map == "Courtyard2_Start")) {
-     vars.starter = 1;
-     vars.Checker11 = 0;
+      vars.Checker1 = true;
     }
 
-    //Vocational Block
-    if ((current.isLoading == 1) && (current.map == "Building2_Start")) {
-      vars.cx = current.xcoord;
-      vars.Checker12 = 1;
+    // For outlast to end split
+    if (Math.Abs(-4098.51 - current.ycoord) < 0.01 && (!current.inControl) && (!vars.OnceFinalSplit) && (current.map == "Lab_BigTowerDone")) {
+      vars.endsplit = true;
     }
-    if((vars.Checker12 == 1) && (current.xcoord != vars.cx) && (current.map == "Building2_Start")) {
-     vars.starter = 1;
-     vars.Checker12 = 0;
+    // For whistleblower to end split
+    if ((Math.Abs(-550.00 - current.ycoord) < 0.01) && (!current.inControl) && (!vars.OnceFinalSplit) && (current.map == "AdminBlock_Start")) {
+      vars.endsplit = true;
     }
 
-    //Exit
-    if ((current.isLoading == 1) && (current.map == "MaleRevisit_Start")) {
-      vars.cx = current.xcoord;
-      vars.Checker13 = 1;
+    // outlast starter, ik it doesn't work if you start from new game
+    if ((vars.Checker1) && (current.xcoord != vars.cx || current.zcoord != vars.cz) && (current.map == "Admin_Gates")) {
+      vars.starter = true;
     }
-    if((vars.Checker13 == 1) && (current.xcoord != vars.cx) && (current.map == "MaleRevisit_Start")) {
-     vars.starter = 1;
-     vars.Checker13 = 0;
+    // For whistleblower starter
+    if ((vars.Checker1) && (current.xcoord != vars.cx || current.zcoord != vars.cz) && (current.map == "Hospital_Free")) {
+      vars.starter = true;
     }
+
+    if ((settings[("il")]) && (!vars.Running)) {
+
+      if ((current.isLoading) && (vars.ILStartingListZ.Contains(current.map))) {
+        vars.cz = current.zcoord;
+        vars.Checker1 = true;
+        vars.currentIL = current.map;
+      }
+
+      if ((vars.Checker1) && (current.zcoord != vars.cz) && (current.map == vars.currentIL)) {
+        vars.starter = true;
+      }
+
+      if ((current.isLoading) && (vars.ILStartingListX.Contains(current.map))) {
+        vars.cx = current.xcoord;
+        vars.Checker2 = true;
+        vars.currentIL = current.map;
+      }
+
+      if ((vars.Checker2)) {
+        if ((current.xcoord != vars.cx) && (current.map == vars.currentIL)) {
+          vars.starter = true;
+        } else if (current.map == ("Prison_Start") && (!current.isLoading)) {
+          vars.starter = true;
+        }
+      }
+    }
+  } else {
+    vars.Checker1 = false;
+    vars.Checker2 = false;
+    vars.currentIL = "";
   }
-
-  /*if ((vars.OnceFinalSplit != 1)) {
-    print(current.ycoord.ToString());
-  }*/
 }
 
 start {
-  if (vars.starter == 1) {
-    vars.starter = 0;
-    vars.endsplit = 0;
-    vars.OnceFinalSplit = 0;
-    vars.Checker1 = 0;
-    vars.Checker2 = 0;
-    vars.doneMaps.Clear();
-    vars.doneMaps.Add(current.map.ToString());
-    return true;
-  }
+  return (vars.starter);
+}
+
+onStart {
+  vars.Checker1 = false;
+  vars.Checker2 = false;
+  vars.starter = false; // Generic starting split
+  vars.endsplit = false; // generic end split
+  vars.OnceFinalSplit = false; // So it doesn't split more than once for the end split
+  vars.doneMaps.Clear(); // Needed because checkpoints bad in game
+  vars.doneMaps.Add(current.map.ToString()); // Adding for the starting map because it's also bad
+  vars.Running = true;
+  vars.cz = 0;
+  vars.cx = 0;
+  vars.currentIL = "";
 }
 
 split {
@@ -488,42 +364,47 @@ split {
     return true;
   }
 
-  if ((vars.endsplit == 1) && (vars.OnceFinalSplit == 0)) {
-    vars.OnceFinalSplit = 1;
+  if ((vars.endsplit) && (!vars.OnceFinalSplit)) {
+    vars.OnceFinalSplit = true;
     vars.Stopwatch.Start();
-    if(current.map == "AdminBlock_Start")
-      {
-        vars.DelayTime = 0.08;
-      } else
-        {
-          vars.DelayTime = 0.07;
-        }
-  }
-  if (vars.Stopwatch.Elapsed.TotalSeconds >= vars.DelayTime)
-    {
-      vars.Stopwatch.Reset();
-      return true;
+    if (current.map == "AdminBlock_Start") {
+      vars.DelayTime = 0.10;
+    } else {
+      vars.DelayTime = 0.07;
     }
+  }
+
+  if (vars.Stopwatch.Elapsed.TotalSeconds >= vars.DelayTime) {
+    vars.Stopwatch.Reset();
+    return true;
+  }
 }
 
 reset {
-  if((current.isLoading == 1) && (current.map == "Admin_Gates" || current.map == "Hospital_Free"))
-    {
+  if ((current.isLoading) && (current.map == "Admin_Gates" || current.map == "Hospital_Free")) {
+    vars.doneMaps.Clear(); // Needed because checkpoints bad in game
+    vars.OnceFinalSplit = false; // So it doesn't split more than once for the end split
+    vars.Running = false;
+    return true;
+  }
+
+  if (settings[("il")]) {
+    if ((current.isLoading) && (vars.ILStartingListZ.Contains(current.map) || (vars.ILStartingListX.Contains(current.map)))) {
+      vars.doneMaps.Clear(); // Needed because checkpoints bad in game
+      vars.OnceFinalSplit = false; // So it doesn't split more than once for the end split
+      vars.Running = false;
       return true;
     }
-  if(settings[("il")])
-    {
-      if((current.isLoading == 1) && (current.map == "Prison_Start" || current.map == "Sewer_start" || current.map == "Male_Start" || current.map == "Courtyard_Start" || current.map == "Female_Start" || current.map == "Revisit_Soldier1" || current.map == "Lab_Start" || current.map == "Courtyard1_Start" || current.map == "PrisonRevisit_Start" || current.map == "Courtyard2_Start" || current.map == "Building2_Start" || current.map == "MaleRevisit_Start"))
-        {
-          return true;
-        }
-    }
+  }
+}
+
+onReset {
+  vars.doneMaps.Clear(); // Needed because checkpoints bad in game
+  vars.OnceFinalSplit = false; // So it doesn't split more than once for the end split
+  vars.Running = false;
+  vars.currentIL = "";
 }
 
 isLoading {
-  return (current.isLoading == 1);
-}
-
-shutdown {
-  timer.OnStart -= vars.onStart;
+  return (current.isLoading);
 }
