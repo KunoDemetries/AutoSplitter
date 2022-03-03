@@ -424,7 +424,6 @@ isLoading
     }
     else
     {
-        vars.Checker1 = false;
         return false; 
     }
 }
