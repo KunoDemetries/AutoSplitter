@@ -409,7 +409,6 @@ onReset
 {
     vars.doneMaps.Clear(); // Needed because checkpoints bad in game
     vars.OnceFinalSplit = 0; // So it doesn't split more than once for the end split
-    vars.Checker1 = false;
     vars.Running = 0; 
 }
 
@@ -424,6 +423,7 @@ isLoading
     }
     else
     {
+        vars.Checker1 = false;
         return false; 
     }
 }
