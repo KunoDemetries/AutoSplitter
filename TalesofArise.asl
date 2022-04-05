@@ -1,7 +1,13 @@
 state("Tales of Arise", "Steam 1.1.0.0")
 {
-    byte LoadingScreen : 0x42792FA;  //160 not / 132 loading
+    byte LoadingScreen : 0x42792FA;  //160 not / 32 loading
     string150 CurCutscene : 0x047C4220, 0x68, 0x20, 0x1F8;
+}
+
+state("Tales of Arise", "Steam 1.3.0.0")
+{
+    byte LoadingScreen : 0x3DC9E4A;  //160 not / 32 loading
+    string150 CurCutscene : 0x042C8DF0, 0x68, 0x20, 0x1F8;
 }
 
 init
@@ -12,6 +18,9 @@ init
     {
         case 85544960: 
             version = "Steam 1.1.0.0";
+        break;
+        case 77914112: 
+            version = "Steam 1.3.0.0";
         break;
     }
 }
@@ -28,7 +37,7 @@ start
 
 update
 {
-    print(current.LoadingScreen.ToString());
+    print(modules.First().ModuleMemorySize.ToString());
 }
 
 isLoading
