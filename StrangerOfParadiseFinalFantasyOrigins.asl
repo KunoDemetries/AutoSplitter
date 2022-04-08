@@ -2,10 +2,16 @@
 
 state("SOPFFO", "1.02 Epic")
 {
-    int Loader : 0x4234128; // not loading 1065353216
-    int Loader1 : 0x3918FE4; // just testing out a better value
+    int Loader1 : 0x3918FE4; // just testing out a better value  1 loading, 0 not
     string250 CurrentMapName : 0x04239E90, 0x20; //REG STRING
     string250 CurrentCutsceneName: 0x04276B58, 0x30, 0x50;  //UNICODE
+}
+
+state("SOPFFO", "1.03 Epic")
+{
+    int Loader1 : 0x3926FE4; //E000
+    string250 CurrentMapName : 0x042483F0, 0x20; // E560
+    string250 CurrentCutsceneName: 0x042850D8, 0x30, 0x50;  //E580
 }
 
 init
@@ -17,6 +23,9 @@ init
         case 75980800:
             version = "1.02 Epic";
         break;
+        case 76042240:
+            version = "1.03 Epic";
+        break;
         default:        
             version = "";
         break;
@@ -25,7 +34,7 @@ init
 
 startup
 {
-    settings.Add("SOPFFO", true, "Stranger of Paradise Final Fantasy Origins"); 
+    settings.Add("SOPFFO", true, "Stranger of Paradise: Final Fantasy Origins"); 
 
     vars.missions2 = new Dictionary<string,string> 
 	{ 	
@@ -57,16 +66,28 @@ startup
 	{
 		settings.Add(Tag.Key, true, Tag.Value, "SOPFFO");
     };
+
+	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
+    {        
+    	var timingMessage = MessageBox.Show 
+        (
+           "This game uses Time without Loads (Game Time) as the main timing method.\n"+
+            "LiveSplit is currently set to show Real Time (RTA).\n"+
+            "Would you like to set the timing method to Game Time? This will make verification easier",
+            "LiveSplit | Stranger of Paradise: Final Fantasy Origins",
+            MessageBoxButtons.YesNo,MessageBoxIcon.Question
+        );
+        
+        if (timingMessage == DialogResult.Yes)
+        {
+            timer.CurrentTimingMethod = TimingMethod.GameTime;
+        }
+    }	
 }
 
 start
 {
-    return (settings[current.CurrentMapName] && (current.Loader != 0) && (old.Loader == 0));
-}
-
-onStart
-{
-
+    return (settings[current.CurrentMapName] && (current.Loader1 != 1) && (old.Loader1 == 1));
 }
 
 split
@@ -80,7 +101,7 @@ split
 
 isLoading
 {
-    return (current.Loader1 == 1);
+    return ((current.Loader1 == 1) || (current.CurrentCutsceneName != null));
 }
 
 onReset
