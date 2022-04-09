@@ -22,6 +22,12 @@ state("GoW", "Epic 1.0.4") // Also works for 1.0.5 on epic
     int Loader : 0x2259948;
 }
 
+state("GoW", "Epic 1.0.11") 
+{
+    string100 CurrentObjective : 0x22BB870;
+    int Loader : 0x22DEE48;
+}
+
 state("GoW", "Steam 1.0.2")
 {
     string100 CurrentObjective : 0x2235CE0;
@@ -34,20 +40,20 @@ state("GoW", "Steam 1.0.6.1")
     int Loader : 0x225C5B0; 
 }
 
-/*  Nulling this out because the mdoulesize is the same and the difference between the versions are so insignificant we would never downpatch to 1.0.7
-state("GoW", "Steam 1.0.7")
-{
-    string100 CurrentObjective : 0x2237FE0;
-    int Loader : 0x225B5B0; 
-}
-*/
 state("GoW", "Steam 1.0.8")
 {
     string100 CurrentObjective : 0x2238060;
     int Loader : 0x225B630; 
 }
 
-init
+state("GoW", "Steam 1.0.11")
+{
+    string100 CurrentObjective : 0x22BE460;
+    int Loader : 0x22E1A28; 
+}
+
+init 
+
 {
 	vars.doneMaps = new List<string>(); //Used for not splitting twice just in cause the game crashes
 
@@ -61,11 +67,15 @@ init
             break;
         case    84819968: version = "Epic 1.0.4";
             break;
+        case    85364736: version = "Epic 1.0.11";
+            break;
         case    85020672: version = "Steam v1.0.2"; 
             break;
         case    85032960: version = "Steam 1.0.6.1";
             break;
         case    85028864: version = "Steam 1.0.8";
+            break;
+        case    85581824: version = "Steam 1.0.11";
             break;
         default:        version = ""; 
             break;
