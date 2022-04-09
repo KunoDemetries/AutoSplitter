@@ -92,7 +92,7 @@ start
 
 split
 {
-    if ((settings[current.CurrentMapName]) && (current.CurrentMapName != old.CurrentMapName) && (!vars.doneMaps.Contains(current.CurrentMapName)) || (current.CurrentCutsceneName == "movie/EV04_32.mp4"))
+    if ((settings[current.CurrentMapName]) && (current.CurrentMapName != old.CurrentMapName) && (!vars.doneMaps.Contains(current.CurrentMapName)) || (current.CurrentCutsceneName == "movie/EV04_33-EN.mp4"))
     {
         vars.doneMaps.Add(current.CurrentMapName);
         return true;
