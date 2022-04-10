@@ -97,18 +97,22 @@ startup
 
 start
 {
-	return ((current.CurrentMapName == "trainer") && (current.loading1 != 0));
+	return ((current.CurrentMapName == "trainer") && (current.Loader != 0));
+}
+
+update
+{
+        print(modules.First().ModuleMemorySize.ToString());
 }
 
 onStart
 {
-    vars.doneMaps.Clear();
 	vars.doneMaps.Add(current.CurrentMapName);
 }
 
 isLoading
 {
-    return (current.CurrentMapName == "ui") || (current.Loader == 0);
+    return (current.CurrentMapName == "ui") || (current.Loader == 0) || (current.CurrentMapName == "airport");
 }
  
 reset
