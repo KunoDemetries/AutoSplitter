@@ -1,4 +1,11 @@
-state("Playtime_Prototype4-Win64-Shipping")
+/* Pretty much a very straight forward ASL; I wish the int CurCheckpoint was consistent throughout the game. It somewhat dies towards checkpoint 10 and there is no other memory address I found.
+However; through the save file is pretty much the most "Won't break with update," thing I've made thus far so I can't complain. 
+
+Made by: Kuno Demetries
+Discord: Kuno Demetries#6969
+Linktree: https://linktr.ee/KunoDemetries
+*/
+state("Playtime_Prototype4-Win64-Shipping", "Steam Version 1.2")
 {
     int CurCheckpoint : 0x04D2EEE0, 0x118, 0x2E4; // Can be found by searching for .PersistentLevel.Chapter2_Gamemode_C and adding 0x2e4
     int GameLoaded : 0x04D2EEE0, 0x118, 0x2F8; // Can be found by searching for .PersistentLevel.Chapter2_Gamemode_C and adding 0x2F8
@@ -12,6 +19,14 @@ init
     vars.CurCheckpoint = null;
     vars.doneMaps = new List<string>();
     vars.Combination = "1423";
+   
+    switch (modules.First().ModuleMemorySize) 
+    {
+        case    85676032: version = "Steam Version 1.2";
+            break;
+        default:        version = "Steam Version 1.2"; 
+            break;
+    } 
 }
 
 startup
@@ -58,6 +73,22 @@ startup
 	    {
 	    	settings.Add(Tag.Key, true, Tag.Value, "chap");
         };
+
+    if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
+    {        
+    var timingMessage = MessageBox.Show (
+            "This game uses Time without Loads (Game Time) as the main timing method.\n"+
+            "LiveSplit is currently set to show Real Time (RTA).\n"+
+            "Would you like to set the timing method to Game Time? This will make verification easier",
+            "LiveSplit | POPPY PLAYTIME: CHAPTER 2",
+            MessageBoxButtons.YesNo,MessageBoxIcon.Question
+        );
+        
+        if (timingMessage == DialogResult.Yes)
+        {
+            timer.CurrentTimingMethod = TimingMethod.GameTime;
+        }
+    }
 
     vars.SetTextComponent = (Action<string, string>)((id, text) =>
     {
