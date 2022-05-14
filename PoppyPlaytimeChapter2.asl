@@ -115,23 +115,24 @@ update
     string CurTrain = null;
     string CurTrainHex = "00-54-72-61-69-6E-43-6F-64-65-56-61-72-69-61-74-69-6F-6E-49-6E-55-73-65-00-0C-00-00-00-49-6E-74-50-72-6F-70-65-72-74-79-00-04-00-00-00-00-00-00-00-00-";
     string CurCheckpointHex = "43-68-65-63-6B-70-6F-69-6E-74-00-0C-00-00-00-49-6E-74-50-72-6F-70-65-72-74-79-00-04-00-00-00-00-00-00-00-00-";
-    if (settings["Combo_Setting"]) 
+
+    if ((current.GameLoaded == 1))
     {
-        if ((current.GameLoaded == 1))
-        {
-            string logPath = Environment.GetEnvironmentVariable("AppData")+"\\..\\local\\Playtime_Prototype4\\Saved\\SaveGames\\Chap2Checkpoint.sav";
+        string logPath = Environment.GetEnvironmentVariable("AppData")+"\\..\\local\\Playtime_Prototype4\\Saved\\SaveGames\\Chap2Checkpoint.sav";
             
-            byte[] data = File.ReadAllBytes(logPath);
-            string hex = BitConverter.ToString(data);
+        byte[] data = File.ReadAllBytes(logPath);
+        string hex = BitConverter.ToString(data);
 
-            int traincode = hex.IndexOf(CurTrainHex);
-            int checkpoint = hex.IndexOf(CurCheckpointHex);
-            if ((traincode != -1) || (checkpoint != -1))
-            {
-                CurTrain = hex.Substring(traincode + CurTrainHex.Length, 2);
-                vars.CurCheckpoint = hex.Substring(checkpoint + CurCheckpointHex.Length, 2);
-            }
+        int traincode = hex.IndexOf(CurTrainHex);
+        int checkpoint = hex.IndexOf(CurCheckpointHex);
+        if ((traincode != -1) || (checkpoint != -1))
+        {
+            CurTrain = hex.Substring(traincode + CurTrainHex.Length, 2);
+            vars.CurCheckpoint = hex.Substring(checkpoint + CurCheckpointHex.Length, 2);
+        }
 
+        if (settings["Combo_Setting"]) 
+        {
             switch (CurTrain) 
             {
                 case "00" : vars.Combination = "1423"; 
@@ -157,8 +158,8 @@ update
                 default:  vars.Combination = "1423"; 
                     break;
             }
+            vars.SetTextComponent("Current Combination:", (vars.Combination.ToString())); 
         }
-        vars.SetTextComponent("Current Combination:", (vars.Combination.ToString())); 
     }
     print(vars.CurCheckpoint);
 }
@@ -168,7 +169,7 @@ start
     return ((current.CurCheckpoint == 0) && (current.GameLoaded == 1) && (current.X != 0));  //bad as it'll start everywhere but you know
 }
 
-onStart
+onReset
 {
     vars.doneMaps.Clear();
 }
@@ -181,7 +182,7 @@ split
         return true;
     }
 
-    return ((current.LeverPulled == 1) && ((int.Parse(vars.CurCheckpoint) >= 23)));
+    return ((current.LeverPulled == 1));
 }
 
 isLoading
