@@ -12,7 +12,7 @@ state("Playtime_Prototype4-Win64-Shipping", "Steam Version 1.2")
     int IsPaused : 0x04D2B5C8, 0x8A8; // search for a byte 1 paused/ 0 not
     float X : 0x04D2B580, 0x8, 0x8, 0x190, 0x22C; // cheat engine dumper -> player controller -> lastupdatedxvalue
     float StopLeverPulled : 0x04D2EEE0, 0x88, 0x98, 0x128, 0x98, 0x70, 0x2A0; // TrainStopLever_C TrainBlueprints.TrainBlueprints.PersistentLevel.TrainStopLever2
-    float GoLeverPulled : 0x04D2EEE0, 0x250, 0xDA0, 0x20, 0x28C; // TrainGoLever_C
+    float GoLeverPulled : 0x04D2EEE0, 0x250, 0xDB8, 0X20, 0X50, 0X28C; // TrainGoLever_C
 }
 
 init
