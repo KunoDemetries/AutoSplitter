@@ -118,11 +118,6 @@ update
     string CurTrainHex = "00-54-72-61-69-6E-43-6F-64-65-56-61-72-69-61-74-69-6F-6E-49-6E-55-73-65-00-0C-00-00-00-49-6E-74-50-72-6F-70-65-72-74-79-00-04-00-00-00-00-00-00-00-00-";
     string CurCheckpointHex = "43-68-65-63-6B-70-6F-69-6E-74-00-0C-00-00-00-49-6E-74-50-72-6F-70-65-72-74-79-00-04-00-00-00-00-00-00-00-00-";
 
-    if (current.GoLeverPulled > .01)
-    {
-        vars.TrainStarted = 1;
-    }
-
     if ((current.GameLoaded == 1))
     {
         string logPath = Environment.GetEnvironmentVariable("AppData")+"\\..\\local\\Playtime_Prototype4\\Saved\\SaveGames\\Chap2Checkpoint.sav";
@@ -169,6 +164,11 @@ update
         }
     }
     print(vars.TrainStarted.ToString());
+
+    if ((current.GoLeverPulled > .01) && (Int32.Parse(vars.CurCheckpoint) >= 1))
+    {
+        vars.TrainStarted = 1;
+    }
 }
 
 start
@@ -179,6 +179,7 @@ start
 onStart
 {
     vars.doneMaps.Add(vars.CurCheckpoint.ToString());
+    vars.TrainStarted = 0;
 }
 
 onReset
