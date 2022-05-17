@@ -11,7 +11,8 @@ state("Playtime_Prototype4-Win64-Shipping", "Steam Version 1.2")
     int GameLoaded : 0x04D2EEE0, 0x118, 0x2F8; // Can be found by searching for .PersistentLevel.Chapter2_Gamemode_C and adding 0x2F8
     int IsPaused : 0x04D2B5C8, 0x8A8; // search for a byte 1 paused/ 0 not
     float X : 0x04D2B580, 0x8, 0x8, 0x190, 0x22C; // cheat engine dumper -> player controller -> lastupdatedxvalue
-    float LeverPulled : 0x04D2EEE0, 0x260, 0x0, 0xA0, 0x5D8, 0x2A0; // TrainStopLever_C TrainBlueprints.TrainBlueprints.PersistentLevel.TrainStopLever2
+    float StopLeverPulled : 0x04D2EEE0, 0x88, 0x98, 0x128, 0x98, 0x70, 0x2A0; // TrainStopLever_C TrainBlueprints.TrainBlueprints.PersistentLevel.TrainStopLever2
+    float GoLeverPulled : 0x04D2EEE0, 0x250, 0xDA0, 0x20, 0x28C; // TrainGoLever_C
 }
 
 init
@@ -19,7 +20,8 @@ init
     vars.CurCheckpoint = null;
     vars.doneMaps = new List<string>();
     vars.Combination = "1423";
-   
+    vars.TrainStarted = 0;
+
     switch (modules.First().ModuleMemorySize) 
     {
         case    85676032: version = "Steam Version 1.2";
@@ -116,6 +118,11 @@ update
     string CurTrainHex = "00-54-72-61-69-6E-43-6F-64-65-56-61-72-69-61-74-69-6F-6E-49-6E-55-73-65-00-0C-00-00-00-49-6E-74-50-72-6F-70-65-72-74-79-00-04-00-00-00-00-00-00-00-00-";
     string CurCheckpointHex = "43-68-65-63-6B-70-6F-69-6E-74-00-0C-00-00-00-49-6E-74-50-72-6F-70-65-72-74-79-00-04-00-00-00-00-00-00-00-00-";
 
+    if (current.GoLeverPulled > .01)
+    {
+        vars.TrainStarted = 1;
+    }
+
     if ((current.GameLoaded == 1))
     {
         string logPath = Environment.GetEnvironmentVariable("AppData")+"\\..\\local\\Playtime_Prototype4\\Saved\\SaveGames\\Chap2Checkpoint.sav";
@@ -161,7 +168,7 @@ update
             vars.SetTextComponent("Current Combination:", (vars.Combination.ToString())); 
         }
     }
-    print(vars.CurCheckpoint);
+    print(vars.TrainStarted.ToString());
 }
 
 start
@@ -169,9 +176,15 @@ start
     return ((current.CurCheckpoint == 0) && (current.GameLoaded == 1) && (current.X != 0));  //bad as it'll start everywhere but you know
 }
 
+onStart
+{
+    vars.doneMaps.Add(vars.CurCheckpoint.ToString());
+}
+
 onReset
 {
     vars.doneMaps.Clear();
+    vars.TrainStarted = 0;
 }
 
 split
@@ -182,7 +195,11 @@ split
         return true;
     }
 
-    return ((current.LeverPulled == 1));
+    if ((current.StopLeverPulled == 1) && (vars.TrainStarted == 1)) 
+    {
+        vars.TrainStarted = 0;
+        return true;
+    }
 }
 
 isLoading
