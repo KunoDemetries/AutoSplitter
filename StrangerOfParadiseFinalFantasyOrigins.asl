@@ -4,14 +4,21 @@ state("SOPFFO", "1.02 Epic")
 {
     int Loader1 : 0x3918FE4; // just testing out a better value  1 loading, 0 not
     string250 CurrentMapName : 0x04239E90, 0x20; //REG STRING
-    string250 CurrentCutsceneName: 0x04276B58, 0x30, 0x50;  //UNICODE
+    string250 CurrentCutsceneName: 0x04276B58, 0x30, 0x50;  //UNICODE movie/
 }
 
 state("SOPFFO", "1.03 Epic")
 {
     int Loader1 : 0x3926FE4; //E000
     string250 CurrentMapName : 0x042483F0, 0x20; // E560
-    string250 CurrentCutsceneName: 0x042850D8, 0x30, 0x50;  //E580
+    string250 CurrentCutsceneName: 0x042850D8, 0x30, 0x50;  //E580, 3CCE8
+}
+
+state("SOPFFO", "1.04 Epic")
+{
+    int Loader1 : 0x392BFE4; //5000
+    string250 CurrentMapName : 0x0424D460, 0x20; //135D0
+    string250 CurrentCutsceneName: 0x0428A158, 0x30, 0x50;  //13600, 3CCF8
 }
 
 init
@@ -25,6 +32,9 @@ init
         break;
         case 76042240:
             version = "1.03 Epic";
+        break;
+        case 76062720:
+            version = "1.04 Epic";
         break;
         default:        
             version = "";
