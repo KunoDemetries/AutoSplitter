@@ -10,6 +10,12 @@ state("Tales of Arise", "Steam 1.3.0.0")
     string150 CurCutscene : 0x042C8DF0, 0x68, 0x20, 0x1F8;
 }
 
+state("Tales of Arise", "Steam 1.4.0.0")
+{
+    byte LoadingScreen : 0x3DC9E4A;  //160 not / 32 loading
+    string150 CurCutscene : 0x042C8DF0, 0x68, 0x20, 0x1F8;
+}
+
 init
 {
     vars.DoLoad = false;
@@ -22,6 +28,8 @@ init
         case 77914112: 
             version = "Steam 1.3.0.0";
         break;
+        case 77918208:
+            version = "Steam 1.4.0.0";
     }
 }
 
