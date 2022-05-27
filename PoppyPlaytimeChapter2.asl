@@ -15,6 +15,16 @@ state("Playtime_Prototype4-Win64-Shipping", "Steam Version 1.2")
     float GoLeverPulled : 0x04D2EEE0, 0x250, 0xDA0, 0x20, 0x28C; // TrainGoLever_C
 }
 
+state("Playtime_Prototype4-Win64-Shipping", "Steam Version 1.3")
+{
+    int CurCheckpoint : 0x04D2DEE0, 0x118, 0x2E4; // Can be found by searching for .PersistentLevel.Chapter2_Gamemode_C and adding 0x2e4
+    int GameLoaded : 0x04D2DEE0, 0x118, 0x2F8; // Can be found by searching for .PersistentLevel.Chapter2_Gamemode_C and adding 0x2F8
+    int IsPaused : 0x04D2A5C8, 0x8A8; // search for a byte 1 paused/ 0 not
+    float X : 0x04D2A580, 0x8, 0x8, 0x190, 0x22C; // cheat engine dumper -> player controller -> lastupdatedxvalue
+    float StopLeverPulled : 0x04D2DEE0, 0x88, 0x98, 0x128, 0x98, 0x70, 0x2A0; // TrainStopLever_C TrainBlueprints.TrainBlueprints.PersistentLevel.TrainStopLever2
+    float GoLeverPulled : 0x04D2DEE0, 0x250, 0xDA0, 0x20, 0x28C; // TrainGoLever_C
+}
+
 init
 {
     vars.CurCheckpoint = null;
@@ -25,6 +35,8 @@ init
     switch (modules.First().ModuleMemorySize) 
     {
         case    85676032: version = "Steam Version 1.2";
+            break;
+        case    85671936: version = "Steam Version 1.3";
             break;
         default:        version = "Steam Version 1.2"; 
             break;
@@ -163,7 +175,7 @@ update
             vars.SetTextComponent("Current Combination:", (vars.Combination.ToString())); 
         }
     }
-    print(vars.TrainStarted.ToString());
+    //print(traincode.ToString());
 
     if ((current.GoLeverPulled > .01) && (Int32.Parse(vars.CurCheckpoint) >= 1))
     {
