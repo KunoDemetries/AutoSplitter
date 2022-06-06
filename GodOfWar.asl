@@ -28,6 +28,12 @@ state("GoW", "Epic 1.0.11")
     int Loader : 0x22DEE48;
 }
 
+state("GoW", "Epic 1.0.12")
+{
+    string100 CurrentObjective : 0x22C3C00;
+    int Loader : 0x22E71D0;
+}
+
 state("GoW", "Steam 1.0.2")
 {
     string100 CurrentObjective : 0x2235CE0;
@@ -52,6 +58,12 @@ state("GoW", "Steam 1.0.11")
     int Loader : 0x22E1A28; 
 }
 
+state("GoW", "Steam 1.0.12")
+{
+    string100 CurrentObjective : 0x22C67E0;
+    int Loader : 0x22E9DB0; 
+}
+
 init 
 
 {
@@ -69,6 +81,8 @@ init
             break;
         case    85364736: version = "Epic 1.0.11";
             break;
+        case    85610496: version = "Epic 1.0.12";
+            break;
         case    85020672: version = "Steam v1.0.2"; 
             break;
         case    85032960: version = "Steam 1.0.6.1";
@@ -76,6 +90,8 @@ init
         case    85028864: version = "Steam 1.0.8";
             break;
         case    85581824: version = "Steam 1.0.11";
+            break;
+        case    85839872: version = "Steam 1.0.12";
             break;
         default:        version = ""; 
             break;
