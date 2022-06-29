@@ -1,7 +1,7 @@
 // Thanks Kuno for the help much <3
 state("sniper5_dx12", "Steam 1.1")
 {
-	string110 CurCutscene : 0x02637348, 0x8, 0x240, 0x0, 0x0;
+	string110 CurCutscene : 0x02637348, 0x8, 0x248, 0x0, 0x0;
 	string14 CurMap : 0x2FFFB1E;
 	int start : 0xE642FC;  // main menu 6, in game 12, loading 3, second cutscene is 8
 }
@@ -102,7 +102,7 @@ startup
         	"This game uses Time without Loads (Game Time) as the main timing method.\n"+
         	"LiveSplit is currently set to show Real Time (RTA).\n"+
         	"Would you like to set the timing method to Game Time? This will make verification easier",
-        	"LiveSplit | Sniper Elite 4",
+        	"LiveSplit | Sniper Elite 5",
         	MessageBoxButtons.YesNo,MessageBoxIcon.Question
         );
         
