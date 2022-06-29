@@ -125,7 +125,7 @@ onStart
 
 split
 {
-	if ((current.CurMap != old.CurMap) && (settings[current.CurMap]) && (!vars.doneMaps.Contains(current.CurMap)) || (vars.cutscenes.Contains(current.CurCutscene) && (old.CurCutscene == null) && (settings["ils"])))
+	if ((current.CurMap != old.CurMap) && (settings[current.CurMap]) && (!vars.doneMaps.Contains(current.CurMap)) || (vars.cutscenes.Contains(current.CurCutscene) && (old.CurCutscene == null) && (settings["ils"])) || (current.CurMap == "Chateau_Epilog") && (old.start == 12) && (current.start == 8))
 	{
 		vars.doneMaps.Add(current.CurMap);
 		return true;		
