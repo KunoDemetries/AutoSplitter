@@ -46,7 +46,7 @@ startup
         "Please make sure Easy Anti-Cheat is disabled.\n"
         + "If you run the autosplit with Easy Anti-Cheat on, there is a possibility you could be banned.\n"
         + "\n \n Click Yes if Easy Anti-Cheat is disabled."
-        + "\n \n Click No to find out how to disable Easy Anti-Cheat."
+        + "\n \n Click No to find out how to disable Easy Anti-Cheat.",
         "Sniper Elite 5",
         MessageBoxButtons.YesNo,
         MessageBoxIcon.Information);
