@@ -89,7 +89,7 @@ startup
 		@"sounds\cutscenes\m04_factory\cs_m04_exfiltrate_sfx.wav",
 		@"sounds\cutscenes\m05_guernsey\cs_m05_exfiltrate_sfx.wav",
 		@"sounds\cutscenes\m06_villages\cs_m06_exfiltrate_sfx.wav",
-		@"sounds\cutscenes\m07_researchbase\cs_m07_exfiltrate_sfx.wav",
+		@"sounds\cutscenes\m07_research_base\cs_m07_exfiltrate_sfx.wav",
 		@"sounds\cutscenes\m08_stnazaire\cs_m08_exfiltrate_sfx.wav",
 		@"sounds\cutscenes\m09_epilogue\cs_m09_mollerdead_sfx.wav",
 		@"sounds\cutscenes\m10_killhitler\cs_m10_exf_sfx.wav"
