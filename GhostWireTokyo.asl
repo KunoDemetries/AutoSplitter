@@ -215,9 +215,9 @@ onStart
 
 onReset
 {
-    /*vars.doneMaps.Clear();
+    vars.doneMaps.Clear();
     vars.allObjs.Clear();
-    vars.DoSplit = false; */
+    vars.DoSplit = false;
 }
 
 split
