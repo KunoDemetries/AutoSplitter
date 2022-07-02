@@ -1,14 +1,17 @@
-/*Original version made by the wonderful Meta
-Split structure created by Kuno Demetries
-
-*/
-state("GWT")
+/*state("GWT", "1.02")
 {
     // flips between 1 in game and 2 on loads
     int loadingNormal : 0x55211C0; 
     // 0 in game & 112 while Fast Travelling as well as a couple specific cutscene - these cutscenes are now removed on purpose since this issue wasn't discovered for a couple months.
     int loadingFT     : 0x57077D8; 
     string300 CurTextString : 0x057665F8, 0xC0, 0X28, 0X0;
+}
+*/
+state("GWT")
+{
+    int loadingNormal : 0x5411388;
+    int loadingFT : 0x570F818;
+    string300 CurTextString : 0x0576E640, 0xC0, 0X28, 0X0;
 }
 
 init 
@@ -56,7 +59,6 @@ startup
     refreshRate = 30;
     settings.Add("GT", true, "Ghostwire: Tokyo");
         settings.Add("CH1", true, "Chapter 1: Beginnings", "GT");
-        //    settings.Add("TV", true, "The Vanishing", "CH1"); 
             settings.Add("COS", true, "City of Shadows", "CH1");
         settings.Add("Chapter 2: Trouble", true, "Chapter 2: Trouble", "GT");
             settings.Add("K.K", true, "KK", "Chapter 2: Trouble");
@@ -75,7 +77,7 @@ startup
             settings.Add("F", true, "Family", "Chapter 5: Severance");
             settings.Add("TT", true, "Tokyo Tower", "Chapter 5: Severance");
         settings.Add("Chapter 6: Binding", true, "Chapter 6: Binding", "GT");
-           // settings.Add("M", true, "Mari", "Chapter 6: Binding");
+            settings.Add("M", true, "Mari", "Chapter 6: Binding");
             settings.Add("GTTU", true, "Gate to the Underworld", "Chapter 6: Binding");
             settings.Add("Far", true, "Farewells", "Chapter 6: Binding");
         settings.Add("In memory of Robert Altman", true, "End split", "GT");
@@ -213,9 +215,9 @@ onStart
 
 onReset
 {
-    vars.doneMaps.Clear();
+    /*vars.doneMaps.Clear();
     vars.allObjs.Clear();
-    vars.DoSplit = false;
+    vars.DoSplit = false; */
 }
 
 split
