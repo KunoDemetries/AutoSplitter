@@ -25,6 +25,23 @@ state("ScarletNexus-Win64-Shipping", "V1.0.3.1") // it's not 1.0.4 as that's a f
     byte Character : 0x05079EB0, 0x30, 0x260, 0x9e8; 
 }
 
+state("ScarletNexus-Win64-Shipping", "V1.0.3.2") // it's not 1.0.4 as that's a future update, but they didn't mention the numbers for this one so 
+{
+    byte Loader : 0x4B3F154; // Originally a byte
+    int Chapter : 0x05079EB0, 0x30, 0x2C0, 0x58, 0x410, 0x60, 0x398, 0x2BC;
+    int Level : 0x05079EB0, 0x30, 0x2C0, 0x58, 0x410, 0x60, 0x398, 0x2A0;
+    int Section : 0x05079EB0, 0x30, 0x2C0, 0x58, 0x410, 0x60, 0x398, 0x29C;
+    byte Character : 0x05079EB0, 0x30, 0x260, 0x9e8; 
+}
+
+state("ScarletNexus-Win64-Shipping", "V1.0.4.3")
+{
+    byte Loader : 0x4BB2A54; // Originally a byte
+    int Chapter : 0x050EFD70, 0x30, 0x2C0, 0x58, 0x410, 0x60, 0x398, 0x2BC;
+    int Level : 0x050EFD70, 0x30, 0x2C0, 0x58, 0x410, 0x60, 0x398, 0x2A0;
+    int Section : 0x050EFD70, 0x30, 0x2C0, 0x58, 0x410, 0x60, 0x398, 0x29C;
+    byte Character : 0x050EFD70, 0x30, 0x260, 0x9e8; 
+}
 /*
 To find Chap,L,S BP_ui_Scene_Minimap_C LV_MainPersistantDeferred
 To find 
@@ -41,6 +58,8 @@ init
         case  92475392: version = "V1.0.3";
             break;
         case    93237248: version = "V1.0.3.1"; 
+            break;
+        case 93995008 : version = "V1.0.4.3";
             break;
         default:        version = "V1.0.2"; 
             break;
@@ -181,71 +200,65 @@ startup
     };
     	foreach (var s in sB) settings.Add(s.Item2, true, s.Item3, s.Item1);
 
-    vars.onStart = (EventHandler)((s, e) => 
+    if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
+    {        
+    var timingMessage = MessageBox.Show (
+            "This game uses Time without Loads (Game Time) as the main timing method.\n"+
+            "LiveSplit is currently set to show Real Time (RTA).\n"+
+            "Would you like to set the timing method to Game Time? This will make verification easier",
+            "LiveSplit | Scarlet Nexus",
+            MessageBoxButtons.YesNo,MessageBoxIcon.Question
+        );
+        
+        if (timingMessage == DialogResult.Yes)
         {
-            vars.doneMaps.Clear(); // Needed because checkpoints bad in game 
-            vars.doneMaps.Add(vars.FinalValueMale.ToString());
-            switch ((int)current.Character) 
-            {
-                case  5: vars.Name = "Yuito";
-                    break;
-                case    0: vars.Name = "Kasane"; 
-                    break;
-                case   174: vars.Name = "Yuito"; 
-                    break;
-                case    170: vars.Name = "Kasane"; 
-                    break;
-                default:        vars.Name = "duck"; 
-                    break;
-            }
-        });
-    timer.OnStart += vars.onStart; 
-
-        vars.onReset = (LiveSplit.Model.Input.EventHandlerT<LiveSplit.Model.TimerPhase>)((s, e) => 
-        {
-            vars.doneMaps.Clear(); // Needed because checkpoints bad in game 
-        });
-    timer.OnReset += vars.onReset; 
+            timer.CurrentTimingMethod = TimingMethod.GameTime;
+        }
+    }
+   
 }
-
-//[11828] Cannot implicitly convert type 'System.EventHandler' to 'LiveSplit.Model.Input.EventHandlerT<LiveSplit.Model.TimerPhase>'
-
 
 update
 {
     vars.FinalValueMale = ((current.Chapter*100000 + (current.Level*100) + current.Section));
     vars.FinalValueFemale = ((current.Chapter*1000000 + (current.Level*100) + current.Section));
-    print(modules.First().ModuleMemorySize.ToString());
-    print(vars.Name.ToString());
-    print(((int)current.Character).ToString());
+    print(vars.Name);
 }
 
 start
 {
-    if ((vars.FinalValueMale == 102) && (current.Loader == 5))
+    return ((vars.FinalValueMale == 102) && (current.Loader == 5));
+}
+
+onStart
+{
+    vars.doneMaps.Clear(); // Needed because checkpoints bad in game 
+    vars.doneMaps.Add(vars.FinalValueMale.ToString());
+
+    switch ((int)current.Character) 
     {
-        switch ((int)current.Character) 
-        {
-            case  5: vars.Name = "Yuito";
-                break;
-            case    0: vars.Name = "Kasane"; 
-                break;
-            case   174: vars.Name = "Yuito"; 
-                break;
-            case    170: vars.Name = "Kasane"; 
-                break;
-            default:        vars.Name = "duck"; 
-                break;
-        }
-        return true;
+        case    5:  vars.Name = "Yuito";
+           break;
+        case    0:  vars.Name = "Kasane"; 
+            break;
+        case    174:    vars.Name = "Yuito"; 
+            break;
+        case    170:    vars.Name = "Kasane"; 
+            break;
+        case    18:    vars.Name = "Kasane"; 
+            break;
+        case    22:    vars.Name = "Yuito"; 
+            break;
+        default:    vars.Name = "duck"; 
+            break;
     }
 }
 
 split
 {
-    if(vars.Name == "Yuito")
+    if (vars.Name == "Yuito")
     {
-        if((settings[vars.FinalValueMale.ToString()]) && (current.Loader != 20) && (!vars.doneMaps.Contains(vars.FinalValueMale.ToString())))
+        if ((settings[vars.FinalValueMale.ToString()]) && (current.Loader != 20) && (!vars.doneMaps.Contains(vars.FinalValueMale.ToString())))
         {
             vars.doneMaps.Add(vars.FinalValueMale.ToString());
             return true;
@@ -253,7 +266,7 @@ split
     }
     else
     {
-        if((settings[vars.FinalValueFemale.ToString()]) && (current.Loader != 20) && (!vars.doneMaps.Contains(vars.FinalValueFemale.ToString())))
+        if ((settings[vars.FinalValueFemale.ToString()]) && (current.Loader != 20) && (!vars.doneMaps.Contains(vars.FinalValueFemale.ToString())))
         {
             vars.doneMaps.Add(vars.FinalValueFemale.ToString());
             return true;
@@ -264,4 +277,9 @@ split
 isLoading
 {
     return (current.Loader == 20);
+}
+
+onReset
+{
+    vars.doneMaps.Clear();
 }
