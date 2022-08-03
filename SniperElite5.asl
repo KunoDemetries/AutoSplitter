@@ -1,4 +1,11 @@
 // Thanks Kuno for the help much <3
+state("sniper5_dx12", "Steam 1.2")
+{
+	string110 CurCutscene : 0x02663370, 0x38, 0x248, 0x0, 0x0;
+	string14 CurMap : 0x302E3FE;
+	int start : 0xE7E2FC;	// main menu 6, in game 13, loading 3, second cutscene is 8, first 5
+}
+
 state("sniper5_dx12", "Steam 1.1")
 {
 	string110 CurCutscene : 0x02637348, 0x8, 0x248, 0x0, 0x0;
@@ -35,6 +42,9 @@ init
 	case 416047104 :
         version = "Steam 1.1";
         break;
+	case 417222656 :
+		version = "Steam 1.2";
+		break;
     }
 	vars.doneMaps = new List<string>(); // You get kicked to the main menu, so adding this just in case
 	timer.Run.Offset = TimeSpan.FromMilliseconds(-480);
@@ -58,6 +68,8 @@ startup
 		
 	settings.Add("ils", true, "Individual Levels");
 	settings.SetToolTip("ils", "Enable splits for ILs. Please uncheck Missions.");
+	settings.Add("survival", false, "Survival");
+	settings.SetToolTip("ils", "Enable splits for Survival. Please uncheck Missions and ILs.");
 	settings.Add("missions", false, "Missions");
 	settings.SetToolTip("missions", "Enable splits for Full Game. Please uncheck Individual Levels. \n Uncheck The Atlantic Wall or it will double split for Occupied Residence");
 
@@ -74,6 +86,7 @@ startup
 			{"StNazaire.asr", "Rubble And Ruin"},
 			{"Chateau_Epilog", "Loose Ends"},
 			{"DLC_KillHitler", "Wolf Mountain: DLC"},
+			{"DLC01_Dragoon.", "Landing Force"},
 		};
 		foreach (var Tag in vars.missions)
 		{
@@ -92,7 +105,8 @@ startup
 		@"sounds\cutscenes\m07_research_base\cs_m07_exfiltrate_sfx.wav",
 		@"sounds\cutscenes\m08_st_nazaire\cs_m08_sub_pen_explosion_sfx.wav",
 		@"sounds\cutscenes\m09_epilogue\cs_m09_mollerdead_sfx.wav",
-		@"sounds\cutscenes\m10_killhitler\cs_m10_exf_sfx.wav"
+		@"sounds\cutscenes\m10_killhitler\cs_m10_exf_sfx.wav",
+		@"sounds\cutscenes\intros_outros\cs_dlc01_outro_sfx.wav"
 	};
 
     if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
@@ -115,7 +129,7 @@ startup
 
 start
 {
-	return ((current.start == 12) && (settings[current.CurMap]) || (settings["ils"] && (current.start == 12)));
+	return ((current.start == 13) && (settings[current.CurMap]) || (settings["ils"] && (current.start == 13)) || (settings["survival"] && (current.start == 13)));
 }
 
 onStart
@@ -125,7 +139,7 @@ onStart
 
 split
 {
-	if ((current.CurMap != old.CurMap) && (settings[current.CurMap]) && (!vars.doneMaps.Contains(current.CurMap)) || (vars.cutscenes.Contains(current.CurCutscene) && (old.CurCutscene == null) && (settings["ils"])) || (current.CurMap == "Chateau_Epilog") && (old.start == 12) && (current.start == 8))
+	if ((current.CurMap != old.CurMap) && (settings[current.CurMap]) && (!vars.doneMaps.Contains(current.CurMap)) || (vars.cutscenes.Contains(current.CurCutscene) && (old.CurCutscene == null) && (settings["ils"])) ||  (settings["survival"]) && (old.start == 13) && (current.start == 8))
 	{
 		vars.doneMaps.Add(current.CurMap);
 		return true;		
