@@ -23,9 +23,16 @@ state("SOPFFO", "1.04 Epic")//20,480
 // I didn't forget to update the game, I'm just bad at telling what update we are on.
 state("SOPFFO", "1.11 Epic")
 {
-    int Loader1 : 0x3AC0604; //5000
-    string250 CurrentMapName : 0x04431C10, 0x20; 
-    string250 CurrentCutsceneName : 0x0446FF28, 0x30, 0x50;  
+    int Loader1 : 0x3AC0604; //194620
+    string250 CurrentMapName : 0x04431C10, 0x20; // 1E47B0
+    string250 CurrentCutsceneName : 0x0446FF28, 0x30, 0x50; // 1E5DD0. 1620
+}
+
+state("SOPFFO", "1.12 Epic")
+{
+    int Loader1 : 0x3AD9604; // 19000
+    string250 CurrentMapName : 0x0444AF70, 0x20; //19360
+    string250 CurrentCutsceneName : 0x04489288, 0x30, 0x50;  
 }
 
 init
@@ -45,6 +52,9 @@ init
         break;
         case 78143488: 
             version = "1.11 Epic";
+        break;
+        case 78368768:
+            version = "1.12 Epic";
         break;
         default:        
             version = "";
