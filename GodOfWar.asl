@@ -449,7 +449,8 @@ startup
     var timingMessage = MessageBox.Show (
             "This game uses Time without Loads (Game Time) as the main timing method.\n"+
             "LiveSplit is currently set to show Real Time (RTA).\n"+
-            "Would you like to set the timing method to Game Time? This will make verification easier",
+            "Would you like to set the timing method to Game Time? This will make verification easier.\n"+
+            "ASL coded by KunoDemetries, if you need to get in contact with reach out to me on my twitter @kunoDemetries",
             "LiveSplit | God of War (2018)",
             MessageBoxButtons.YesNo,MessageBoxIcon.Question
         );
