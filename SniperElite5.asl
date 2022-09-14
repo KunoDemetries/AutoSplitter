@@ -1,4 +1,11 @@
 // Thanks Kuno for the help much <3
+state("sniper5_dx12", "Steam 1.3")
+{
+	string110 CurCutscene : 0x12B8558D0, 0x38, 0x248, 0x0, 0x0;
+	string14 CurMap : 0x303C74E;
+	int start : 0xE88080;	// main menu 6, in game 13, loading 3, second cutscene is 8, first 5. E8C3EC
+}
+
 state("sniper5_dx12", "Steam 1.2")
 {
 	string110 CurCutscene : 0x02663370, 0x38, 0x248, 0x0, 0x0;
@@ -31,19 +38,22 @@ init
 	switch(modules.First().ModuleMemorySize)
     {
 	case 376324096 :
-        version = "Xbox Game Pass 1.0.0";
-        break;
+        	version = "Xbox Game Pass 1.0.0";
+        	break;
 	case 379846656 : 
 		version = "Xbox Game Pass 1.1";
 		break;
 	case 414150656 :
-        version = "Steam 1.0.0";
-        break;
+        	version = "Steam 1.0.0";
+        	break;
 	case 416047104 :
-        version = "Steam 1.1";
-        break;
+        	version = "Steam 1.1";
+        	break;
 	case 417222656 :
 		version = "Steam 1.2";
+		break;
+	case 406196224 :
+		version = "Steam 1.3";
 		break;
     }
 	vars.doneMaps = new List<string>(); // You get kicked to the main menu, so adding this just in case
