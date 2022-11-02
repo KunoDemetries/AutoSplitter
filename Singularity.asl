@@ -1,12 +1,3 @@
-/* This ASL is a testement as to why the saying "oh why does the ASL look like shit, why don't you find better addresses?"
-    I want to be brutally honest here, the game is coded in such a way that it literally is impossible to find any one address
-    that'll work without messing up passed Barslov's Lab; secondly, there are so many EMPTY functions within the game that I just feel like
-    it'd be so impossible to just "find one." I really think Acti took a dev team of 10 people, split it to 2 groups and told them "figure it out"
-    and figured it out they did because the game runs AMAZING, it plays AMAZING; but finding anything like you would find for a UE3 game is impossible.
-    They somehow made an engine I'm familiar with and turned it into this monstosicty that has the inability to run correctly 
-    without ductape and superglue holding it together
-    Genuinely, it may be me here but I used the exact same methods I used for ol1/ol2, ds3, ds2, The Beast Inside and other UE3/UE4 games.
-*/
 state("Singularity")
 {
     bool Loader : 0x17C6080; // 0 loading/1 not, btw as nobody puts it this is originally a byte 
