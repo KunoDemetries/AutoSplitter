@@ -1,10 +1,13 @@
 state("APlagueTaleRequiem_x64", "SteamRelease")
 {
-    byte Cutscene: 0x237CD48, 0x1080;
-    short isLoading: 0x285A1D8, 0x4F0;
-    byte Paused: 0x237CD80, 0x70;
-    string128 Chapter: 0x02366E88, 0x708, 0x2E8, 0x750, 0x0;
-    string128 Menu: 0x235348A;
+	bool Paused		: 0x237CD80, 0x70;
+    	byte Cutscene		: 0x237CD48, 0x1080;
+    	short isLoading		: 0x285A1D8, 0x4F0;
+	float X			: 0x237CD78, 0x378, 0xA190;
+	float Y			: 0x237CD78, 0x378, 0xA194;
+	float Z			: 0x237CD78, 0x378, 0xA198;
+   	string128 Chapter	: 0x02366E88, 0x708, 0x2E8, 0x750, 0x0;
+    	string128 Menu		: 0x235348A;
 }
 
 state("APlagueTaleRequiem_x64", "Steam 1.3")
@@ -21,11 +24,11 @@ state("APlagueTaleRequiem_x64", "Steam 1.3")
 
 state("APT2_WinStore.x64.Submission", "Xbox Game Pass 1.2.0")
 {
-    byte Cutscene: 0x23A6388, 0x1080;
-    short isLoading: 0x02883978, 0x4F0;
-    byte Paused: 0x23A63C0, 0x70;
-    string128 Chapter: 0x23904C8, 0x708, 0x2E8, 0x750, 0x0;
-    string128 Menu: 0x237CACA; // 29640
+	bool Paused: 0x23A63C0, 0x70;
+   	byte Cutscene: 0x23A6388, 0x1080;
+   	short isLoading: 0x02883978, 0x4F0;
+   	string128 Chapter: 0x23904C8, 0x708, 0x2E8, 0x750, 0x0;
+   	string128 Menu: 0x237CACA; // 29640
 }
 
 init
@@ -52,15 +55,18 @@ update
 
 start
 {
-    return current.Menu != "MENU" && current.Cutscene == 0 && current.isLoading == 256;
+    return current.Menu != "MENU" && current.Cutscene == 160 && current.isLoading == 256;
 }
 
 split
 {
-    return current.Chapter != old.Chapter;
+    	if(current.Chapter != old.Chapter && old.Menu != "MENU" || 
+	current.X < -253f && current.X > -254 && current.Y < -14f && current.Y > -15f && current.Z > 107f && current.Z < 108f && current.Cutscene == 128 && old.Cutscene == 160){
+		return true;
+	}
 }
 
 isLoading
 {
-    return current.Paused == 1 || current.Cutscene == 1 || current.Menu == "MENU" || current.isLoading == 128;
+    return current.Paused || current.Cutscene == 128 || current.Menu == "MENU" || current.isLoading == 128;
 }
