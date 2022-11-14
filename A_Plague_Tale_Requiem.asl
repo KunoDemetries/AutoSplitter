@@ -31,6 +31,18 @@ state("APT2_WinStore.x64.Submission", "Xbox Game Pass 1.2.0")
    	string128 Menu: 0x237CACA; // 29640
 }
 
+state("APT2_WinStore.x64.Submission", "Xbox Game Pass 1.3.0")
+{
+	bool Paused		: 0x23BC8F0, 0x70;				// fixed
+	byte Cutscene		: 0x23A73D0, 0x288;				// 128 cutscene, 160 no cutscene
+	short isLoading		: 0x289A8B8, 0x4F0;				// 297A0
+	float X			: 0x23BC8E8, 0x378, 0xA190;			//fixed 
+	float Y			: 0x23BC8E8, 0x378, 0xA194;			// fixed
+	float Z			: 0x23BC8E8, 0x378, 0xA198;			// Fixed
+	string128 Chapter	: 0x23A6918, 0x708, 0x2E8, 0x750, 0x0;		//fixed
+	string128 Menu		: 0x2392E4A; //29640
+}
+
 init
 {
     switch (modules.First().ModuleMemorySize)
@@ -44,13 +56,16 @@ init
 		case (44335104):
 		    version = "Xbox Game Pass 1.2.0";
 		    break;
+        case (44433408):
+            version = "Xbox Game Pass 1.3.0";
+            break;
 	}
 }
 
 update
 {
     // Uncomment debug information in the event of an update.
-    //print(modules.First().ModuleMemorySize.ToString());
+    print(modules.First().ModuleMemorySize.ToString());
 }
 
 start
