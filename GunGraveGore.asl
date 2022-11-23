@@ -41,7 +41,7 @@ init
     
     if(vars.FNamePool == IntPtr.Zero || vars.UWorld == IntPtr.Zero || vars.GameEngine == IntPtr.Zero)
     {
-        throw new Exception("FNamePool/UWorld/GameEngine not initialized - trying again");
+        throw new Exception("Loading/GameEngine not initialized - trying again");
     }
 
     vars.watchers = new MemoryWatcherList
