@@ -38,8 +38,9 @@ init
 
     vars.Loading = vars.GetStaticPointerFromSig("48 89 3d ?? ?? ?? ?? 48 89 3d ?? ?? ?? ?? 89 3d ?? ?? ?? ?? c7 05 ?? ?? ?? ?? ?? ?? ?? ?? c7 05 ?? ?? ?? ?? ?? ?? ?? ?? 89 3d ?? ?? ?? ?? 48 89 3d ?? ?? ?? ?? 89 3d ?? ?? ?? ?? 40", 0x3);
     vars.GameEngine = vars.GetStaticPointerFromSig("48 89 05 ?? ?? ?? ?? 48 85 c9 74 ?? e8 ?? ?? ?? ?? 48 8d 4d", 0x3);
-    
-    if (vars.Loading == IntPtr.Zero || vars.GameEngine == IntPtr.Zero)
+    vars.CutsceneP = vars.GetStaticPointerFromSig("f0 0f c1 05 ?? ?? ?? ?? ff c0 83 f8 ?? 75 ?? 48 8b 05", 0x4);
+
+    if (vars.Loading == IntPtr.Zero || vars.GameEngine == IntPtr.Zero || vars.CutsceneP == IntPtr.Zero)
     {
         throw new Exception("Loading/GameEngine not initialized - trying again");
     }
@@ -48,7 +49,7 @@ init
     {
         new StringWatcher(new DeepPointer(vars.GameEngine, 0x8B0, 0x0), 100) { Name = "CurMap"},
         new MemoryWatcher<byte>(new DeepPointer(vars.Loading - 0x3)) { Name = "Loader"},
-
+        new MemoryWatcher<byte>(new DeepPointer(vars.CutsceneP)) { Name = "CurCutscene"},
     };
 }
 
@@ -57,12 +58,13 @@ update
     vars.watchers.UpdateAll(game);
     current.CurMap = vars.watchers["CurMap"].Current;
     current.loading = vars.watchers["Loader"].Current;
-
+    current.CurCutscene = vars.watchers["CurCutscene"].Current;
+   // print(vars.watchers["CurCutscene"].Current.ToString());
 }
 
 start
 {
-    return ((!current.CurMap.Contains("TitleLevel")) && (current.loading == 0) && (old.loading != 0));
+    return ((!current.CurMap.Contains("TitleLevel")) && (current.loading == 0) && (current.CurCutscene == 0));
 }
 
 split
@@ -76,7 +78,7 @@ split
 
 isLoading
 {
-   return (current.loading != 0);
+   return ((current.loading != 0) || (current.CurCutscene == 1));
 }
 
 onReset
