@@ -42,6 +42,13 @@ state("SOPFFO", "1.23 Epic")
     string250 CurrentCutsceneName : 0x04791DC8, 0x30, 0x50;  
 }
 
+state("SOPFFO", "1.24 Epic")
+{
+    int Loader1 : 0x3DCC064; // 2F1A60
+    string250 CurrentMapName : 0x0474FD00, 0x20; //19360
+    string250 CurrentCutsceneName : 0x04792F18, 0x30, 0x50; 
+}
+
 init
 {
     vars.doneMaps = new List<string>(); 
@@ -65,6 +72,9 @@ init
         break;
         case 81690624:
             version = "1.23 Epic";
+        break;
+        case 81694720: 
+            version = "1.24 Epic";
         break;
         default:        
             version = "";
