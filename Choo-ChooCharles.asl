@@ -10,7 +10,7 @@ init
     vars.CurWeaponCount = 30;
     vars.doneMaps = new List<string>(); 
     vars.SaveFiles = new String[188]; 
-    vars.logPath = Environment.GetEnvironmentVariable("AppData")+"\\...\\Local\\Obscure\\Saved\\SaveGames\\";
+    vars.logPath = Environment.GetEnvironmentVariable("LocalAppData")+"\\Obscure\\Saved\\SaveGames\\";
 
     // Entire section down (of just init) credits to go Micrologist
 
@@ -32,9 +32,12 @@ init
     vars.GameEngine = vars.GetStaticPointerFromSig("48 89 05 ?? ?? ?? ?? 48 85 c9 74 ?? e8 ?? ?? ?? ?? 48 8d 4d", 0x3);
     vars.pBase = vars.GetStaticPointerFromSig("48 8b 1d ?? ?? ?? ?? 48 85 db 74 ?? 41 b0", 0x3);
 
+    print(vars.Loading.ToString("X"));
+    print(vars.GameEngine.ToString("X"));
+    print(vars.pBase.ToString("X"));
     if (vars.Loading == IntPtr.Zero || vars.GameEngine == IntPtr.Zero || vars.pBase == IntPtr.Zero)
     {
-        throw new Exception("Loading/GameEnginepBase/ not initialized - trying again");
+        throw new Exception("Loading/GameEngine/pBase/ not initialized - trying again");
     }
 
     vars.watchers = new MemoryWatcherList
@@ -126,6 +129,11 @@ update
 start
 {
     return ((current.CurMap.Contains("Maps")) && (current.loading == 1) && (old.loading == 0));
+}
+
+onStart
+{
+    vars.scanCooldown.Reset();
 }
 
 split
