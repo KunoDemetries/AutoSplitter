@@ -45,6 +45,7 @@ init
         new StringWatcher(new DeepPointer(vars.GameEngine, 0x8B0, 0x0), 100) { Name = "CurMap"},
         new MemoryWatcher<byte>(new DeepPointer(vars.Loading - 0x2)) { Name = "Loader"},
         new MemoryWatcher<byte>(new DeepPointer(vars.pBase, 0x30, 0xE8, 0x3A0, 0x200, 0x30, 0x20, 0x798)) {Name = "BossMode"}, // based on pos2
+        new MemoryWatcher<byte>(new DeepPointer(vars.pBase, 0x30, 0xE8, 0x2B8, 0x200, 0x30, 0x20, 0x758)) {Name = "PlayerMovement"}, // based on pos2
         new MemoryWatcher<byte>(new DeepPointer(vars.pBase, 0x30, 0xE8, 0x3A0, 0x200, 0x30, 0x20, 0x870)) {Name = "CharlieDead"}, // baed on something2
     };
 }
@@ -93,8 +94,10 @@ update
     current.loading = vars.watchers["Loader"].Current;
     current.BossMode = vars.watchers["BossMode"].Current;
     current.CharlieDead = vars.watchers["CharlieDead"].Current;
-    
-    if  (vars.scanCooldown.Elapsed.TotalMilliseconds >= 500) 
+    current.PlayerMovement = vars.watchers["PlayerMovement"].Current;
+   // print(current.PlayerMovement.ToString());
+
+    if  (vars.scanCooldown.Elapsed.TotalMilliseconds >= 500 && (current.PlayerMovement == 1) && (current.CurMap.Contains("Maps"))) 
     {
         vars.SaveFiles = Directory.GetFiles(vars.logPath);
 
@@ -184,6 +187,11 @@ split
 isLoading
 {
     return (current.loading == 0);
+}
+
+reset
+{
+    return (current.CurMap.Contains("MainMenu"));
 }
 
 onReset
