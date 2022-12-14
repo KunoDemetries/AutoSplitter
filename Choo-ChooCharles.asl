@@ -97,7 +97,7 @@ update
     current.PlayerMovement = vars.watchers["PlayerMovement"].Current;
    // print(current.PlayerMovement.ToString());
 
-    if  (vars.scanCooldown.Elapsed.TotalMilliseconds >= 500 && (current.PlayerMovement == 1) && (current.CurMap.Contains("Maps"))) 
+    if  ((vars.scanCooldown.Elapsed.TotalMilliseconds >= 500) && (current.PlayerMovement == 1) && (current.CurMap.Contains("Maps"))) 
     {
         vars.SaveFiles = Directory.GetFiles(vars.logPath);
 
@@ -132,11 +132,6 @@ update
 start
 {
     return ((current.CurMap.Contains("Maps")) && (current.loading == 1) && (old.loading == 0));
-}
-
-onStart
-{
-    vars.scanCooldown.Reset();
 }
 
 split
