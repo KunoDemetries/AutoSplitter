@@ -31,6 +31,7 @@ init
     vars.Loading = vars.GetStaticPointerFromSig("48 8d 0d ?? ?? ?? ?? e8 ?? ?? ?? ?? 48 8b 05 ?? ?? ?? ?? ff 05", 0x3);
     vars.GameEngine = vars.GetStaticPointerFromSig("48 89 05 ?? ?? ?? ?? 48 85 c9 74 ?? e8 ?? ?? ?? ?? 48 8d 4d", 0x3);
     vars.pBase = vars.GetStaticPointerFromSig("48 8b 1d ?? ?? ?? ?? 48 85 db 74 ?? 41 b0", 0x3);
+    vars.Transition = vars.GetStaticPointerFromSig("48 8b 0d ?? ?? ?? ?? 48 8d 53 ?? 0f 11 44 24", 03);
 
     print(vars.Loading.ToString("X"));
     print(vars.GameEngine.ToString("X"));
@@ -44,6 +45,7 @@ init
     {
         new StringWatcher(new DeepPointer(vars.GameEngine, 0x8B0, 0x0), 100) { Name = "CurMap"},
         new MemoryWatcher<byte>(new DeepPointer(vars.Loading - 0x2)) { Name = "Loader"},
+        new MemoryWatcher<byte>(new DeepPointer(vars.Transition, 0xB8)) { Name = "Transition"},
         new MemoryWatcher<byte>(new DeepPointer(vars.pBase, 0x30, 0xE8, 0x3A0, 0x200, 0x30, 0x20, 0x798)) {Name = "BossMode"}, // based on pos2
         new MemoryWatcher<byte>(new DeepPointer(vars.pBase, 0x30, 0xE8, 0x2B8, 0x200, 0x30, 0x20, 0x758)) {Name = "PlayerMovement"}, // based on pos2
         new MemoryWatcher<byte>(new DeepPointer(vars.pBase, 0x30, 0xE8, 0x3A0, 0x200, 0x30, 0x20, 0x870)) {Name = "CharlieDead"}, // baed on something2
@@ -95,6 +97,7 @@ update
     current.BossMode = vars.watchers["BossMode"].Current;
     current.CharlieDead = vars.watchers["CharlieDead"].Current;
     current.PlayerMovement = vars.watchers["PlayerMovement"].Current;
+    current.Transition = vars.watchers["Transition"].Current;
    // print(current.PlayerMovement.ToString());
 
     if  ((vars.scanCooldown.Elapsed.TotalMilliseconds >= 500) && (current.PlayerMovement == 1) && (current.CurMap.Contains("Maps"))) 
@@ -181,7 +184,7 @@ split
 
 isLoading
 {
-    return (current.loading == 0);
+    return (current.loading == 0 || current.Transition == 1 || current.Transition != 0);
 }
 
 reset
