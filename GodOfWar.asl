@@ -1,4 +1,4 @@
-state("GoW", "Epic 1.0.1") // Stating the game's .exe name, and the launcher and version number
+/*state("GoW", "Epic 1.0.1") // Stating the game's .exe name, and the launcher and version number
 {
     string100 CurrentObjective : 0x2232080; // Found by doing a string scan of the current objective playing (IS STATIC) Search any value in the startup than move the value backwards to add the realm name (super important it has to be done like this or the string will not read correctly in longer string names)
     int Loader : 0x2255648; // 257 during loads, 256 during cutscene loads, 0 during everything else (This value is somewhat hard if you don't have a NG+ save)
@@ -480,3 +480,4 @@ onReset
 {
     vars.doneMaps.Clear();
 }
+*/
