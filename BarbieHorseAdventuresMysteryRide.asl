@@ -51,7 +51,7 @@ start
 
 split
 {
-    if ((current.Minigame != vars.OldMinigame) && (!vars.doneMaps.Contains(vars.OldMinigame)) && (vars.OldMinigame.Contains("SUBGAMES")))
+    if ((current.Minigame != vars.OldMinigame) && (!vars.doneMaps.Contains(vars.OldMinigame)) && (vars.OldMinigame.Contains("SUBGAMES")) && (current.loading ==1))
     {
         vars.doneMaps.Add(vars.OldMinigame);
         return true;
