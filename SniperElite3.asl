@@ -1,7 +1,23 @@
-state("SniperElite3")
+state("SniperElite3", "Old")
 {
 	int loading1 : 0x00628040, 0x0;	
 	string40 map : 0xA37ECD;
+}
+
+state("SniperElite3", "Current Version")
+{
+    int loading1 : 0x846AEC;
+    string40 map : 0x792655;
+}
+
+init
+{
+    switch (modules.First().ModuleMemorySize)
+	{
+		case (9441280):
+			version = "Current Version";
+			break;
+	}
 }
 
 startup 
