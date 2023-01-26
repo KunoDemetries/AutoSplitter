@@ -1,4 +1,22 @@
 // Thanks Kuno for the help much <3
+state("sniper5_dx12", "Steam 1.6")
+{
+	//string110 CurCutscene : 0x02673020, 0x8, 0x248, 0x0, 0x0;
+	string110 CurCutscene : 0x0267BE30, 0x38, 0x248, 0x0, 0x0;
+	string14 CurMap : 0x303EEAE;
+	//int start : 0xE8A080;	// main menu 6, in game 13, loading 3, second cutscene is 8, first 5. E8C3EC
+	int start : 0xE8E3EC;	// main menu 6, in game 13, loading 3, second cutscene is 8, first 5. E8E3EC
+}
+
+state("sniper5_dx12", "Steam 1.5")
+{
+	//string110 CurCutscene : 0x02673020, 0x8, 0x248, 0x0, 0x0;
+	string110 CurCutscene : 0x02673010, 0x38, 0x248, 0x0, 0x0;
+	string14 CurMap : 0x303EEAE;
+	//int start : 0xE8A080;	// main menu 6, in game 13, loading 3, second cutscene is 8, first 5. E8C3EC
+	int start : 0xE8E3EC;	// main menu 6, in game 13, loading 3, second cutscene is 8, first 5. E8E3EC
+}
+
 state("sniper5_dx12", "Steam 1.3")
 {
 	//string110 CurCutscene : 0x026FDE68, 0x20, 0x248, 0x0, 0x0;
@@ -55,6 +73,12 @@ init
 		break;
 	case 406196224 :
 		version = "Steam 1.3";
+		break;
+	case 410013696 :
+		version = "Steam 1.5";
+		break;
+	case 425156608  :
+		version = "Steam 1.6";
 		break;
     }
 	vars.doneMaps = new List<string>(); // You get kicked to the main menu, so adding this just in case
@@ -118,6 +142,7 @@ startup
 		@"sounds\cutscenes\m09_epilogue\cs_m09_mollerdead_sfx.wav",
 		@"sounds\cutscenes\m10_killhitler\cs_m10_exf_sfx.wav",
 		@"sounds\cutscenes\intros_outros\cs_dlc01_outro_sfx.wav"
+		@"sounds\cutscenes\intros_outros\cs_dlc03_outro_sfx.wav"
 	};
 
     if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
