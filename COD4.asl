@@ -1,10 +1,21 @@
 //original script by KunoDemetries
 //cleaned up and some extra features by rythin
+//modified pointers for expanded memory .exe file and fixed end split condition -Surviv0r
 
-state("iw3sp") 
+
+state("iw3sp", "V1.0") // Steam Version
 {
   	int Loader :	0x10B1100;
 	string20 CurrentLevelName :	0x6C3140;
+	int EndSplit :	0xCDE4C8;
+}
+
+
+
+state("iw3sp", "V1.5") // Modified .exe to support more physical memory
+{
+  	int Loader :	0x1C75F4, 0x0;
+	string20 CurrentLevelName :	0x4EA64, 0x50C;
 	int EndSplit :	0xCDE4C8;
 }
 
@@ -67,6 +78,10 @@ init
 	vars.doneMaps = new List<string>(); // Actually needed because intel%
 	vars.coupOffset = false;
 	vars.currentTime = new TimeSpan(0, 0, 0);	//TimeSpan object used to add a timer offset after The Coup
+	if (modules.First().ModuleMemorySize == 0x1D03000)
+        version = "V1.0";
+    else if (modules.First().ModuleMemorySize == 0x1D00EC2)
+        version = "V1.5";
 }
 
 update 
@@ -110,7 +125,7 @@ split
 		}	
 	}	
 	//Endsplit for the game
-	if (current.CurrentLevelName == "jeepride" && current.EndSplit == 139512) 
+	if (current.CurrentLevelName == "jeepride" && current.EndSplit != 147865) 
 	{
 		return true;
 	}
@@ -137,7 +152,7 @@ gameTime
 
 isLoading 
 {
-	return (current.Loader == 0) || (current.CurrentLevelName == "coup");
+		return (current.Loader == 0) || (current.CurrentLevelName == "coup");
 }
 
 exit 
