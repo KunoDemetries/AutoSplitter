@@ -5,15 +5,17 @@
                         Splitter and logical changes made by Kuno Demetries
                         IL timing, auto reset, start/end timing adjustments and 32bit implementation by Anti
                         Additional checkpoint settings by Anti and Alexis
-                        aiden#2345 on discord
+                        aiden#0450 on discord
 */
 state("OLGame", "Patch2, 64bit") {
   bool isLoading: 0x01FFBCC8, 0x118; // Generic Loading string
   float xcoord: 0x02020F38, 0x278, 0x40, 0x454, 0x80;
-  float zcoord: 0x2020F38, 0x278, 0x40, 0x454, 0x84;
-  float ycoord: 0x2020F38, 0x278, 0x40, 0x454, 0x88;
+  float zcoord: 0x02020F38, 0x278, 0x40, 0x454, 0x84;
+  float ycoord: 0x02020F38, 0x278, 0x40, 0x454, 0x88;
+  int yaw: 0x02020F38, 0x248, 0x114, 0xC8, 0x464, 0x1E8, 0x40, 0x90;
   string100 map: 0x02006F00, 0x6F4, 0x40, 0xAB4, 0x80, 0x0; // Current Checkpoint
   bool inControl: 0x02020F38, 0x248, 0x60, 0x30, 0x278, 0x54; // In control == 1
+  bool ingame: "OLGame.exe", 0x0203BB4C; // Main menu = 0
 }
 
 state("OLGame", "Patch2, 32bit") {
@@ -21,8 +23,10 @@ state("OLGame", "Patch2, 32bit") {
   float xcoord: "OLGame.exe", 0x017E7764, 0x1D4, 0x38C, 0x78, 0x4, 0x50;
   float zcoord: "OLGame.exe", 0x017E7764, 0x1D4, 0x38C, 0x78, 0x4, 0x54;
   float ycoord: "OLGame.exe", 0x017E7764, 0x1D4, 0x38C, 0x78, 0x4, 0x58;
+  int yaw: "OLGame.exe", 0x017E7764, 0x124, 0x4, 0x1DC, 0xB04;
   string100 map: "OLGame.exe", 0x0178C598, 0x7D4, 0x58, 0x0;
   bool inControl: "OLGame.exe", 0x017E7764, 0x1D4, 0x38C, 0x1F4, 0x68, 0x60;
+  bool ingame: "OLGame.exe", 0x017F5D04;
 }
 
 init {
@@ -36,6 +40,7 @@ init {
   vars.Running = false;
   vars.cz = 0;
   vars.cx = 0;
+  vars.rot = 0;
   vars.currentIL = "";
 
   // Checking the games memory size to determine version
@@ -70,6 +75,7 @@ init {
 startup {
   vars.Stopwatch = new Stopwatch();
   vars.DelayTime = 0.005;
+  vars.black = false;
 
   settings.Add("OL", true, "Outlast"); // Grouping all the Outlast splits together
   settings.Add("adminblock", true, "Admin Block", "OL"); // Each Chapter is related to one of these
@@ -272,13 +278,13 @@ startup {
 
 update {
   vars.mapcomparison = current.map;
-  //coordinates are always -40 something and 80 something when in main menu on 64bit version's addresses, but on 32bit they are null
-  if ((current.zcoord.ToString("0.00") != "-40.00" && current.ycoord.ToString("0.00") != "80.00") && (current.zcoord.ToString() != "0" && current.ycoord.ToString() != "0")) {
+  if ((current.ingame)) {
 
     // for outlast to be able to not have it endlessly start if you're resetting from the start of the game
     if ((current.isLoading) && (current.map == "Admin_Gates") && (!vars.Running)) {
       vars.cx = current.xcoord;
       vars.cz = current.zcoord;
+	  vars.rot = current.yaw;
       vars.Checker1 = true;
     }
     // for WB
@@ -286,6 +292,7 @@ update {
     if ((current.map == "Hospital_Free") && (current.isLoading) && (!vars.Running)) {
       vars.cx = current.xcoord;
       vars.cz = current.zcoord;
+	  vars.rot = current.yaw;
       vars.Checker1 = true;
     }
 
@@ -299,11 +306,11 @@ update {
     }
 
     // outlast starter, ik it doesn't work if you start from new game
-    if ((vars.Checker1) && (current.xcoord != vars.cx || current.zcoord != vars.cz) && (current.map == "Admin_Gates")) {
+    if ((vars.Checker1) && (current.xcoord != vars.cx || current.zcoord != vars.cz || current.yaw != vars.rot) && (current.map == "Admin_Gates")) {
       vars.starter = true;
     }
     // For whistleblower starter
-    if ((vars.Checker1) && (current.xcoord != vars.cx || current.zcoord != vars.cz) && (current.map == "Hospital_Free")) {
+    if ((vars.Checker1) && (current.xcoord != vars.cx || current.zcoord != vars.cz || current.yaw != vars.rot) && (current.map == "Hospital_Free")) {
       vars.starter = true;
     }
 
@@ -311,22 +318,24 @@ update {
 
       if ((current.isLoading) && (vars.ILStartingListZ.Contains(current.map))) {
         vars.cz = current.zcoord;
+		vars.rot = current.yaw;
         vars.Checker1 = true;
         vars.currentIL = current.map;
       }
 
-      if ((vars.Checker1) && (current.zcoord != vars.cz) && (current.map == vars.currentIL)) {
+      if ((vars.Checker1) && (current.zcoord != vars.cz || current.yaw != vars.rot) && (current.map == vars.currentIL)) {
         vars.starter = true;
       }
 
       if ((current.isLoading) && (vars.ILStartingListX.Contains(current.map))) {
         vars.cx = current.xcoord;
+		vars.rot = current.yaw;
         vars.Checker2 = true;
         vars.currentIL = current.map;
       }
 
       if ((vars.Checker2)) {
-        if ((current.xcoord != vars.cx) && (current.map == vars.currentIL)) {
+        if ((current.xcoord != vars.cx || current.yaw != vars.rot) && (current.map == vars.currentIL)) {
           vars.starter = true;
         } else if (current.map == ("Prison_Start") && (!current.isLoading)) {
           vars.starter = true;
@@ -334,10 +343,21 @@ update {
       }
     }
   } else {
+    if((old.isLoading) && (!current.isLoading)) {
+	vars.Stopwatch.Start();
+	vars.DelayTime = 1.50;
+	vars.black = true;
+	}
+	
     vars.Checker1 = false;
     vars.Checker2 = false;
     vars.currentIL = "";
   }
+  
+  if ((vars.Stopwatch.Elapsed.TotalSeconds >= vars.DelayTime) || (current.isLoading)) {
+		vars.Stopwatch.Reset();
+		vars.black = false;	
+	}
 }
 
 start {
@@ -347,6 +367,7 @@ start {
 onStart {
   vars.Checker1 = false;
   vars.Checker2 = false;
+  vars.black = false;
   vars.starter = false; // Generic starting split
   vars.endsplit = false; // generic end split
   vars.OnceFinalSplit = false; // So it doesn't split more than once for the end split
@@ -406,5 +427,5 @@ onReset {
 }
 
 isLoading {
-  return (current.isLoading);
+  return (current.isLoading || vars.black);
 }
