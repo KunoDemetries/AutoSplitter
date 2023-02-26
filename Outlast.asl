@@ -74,7 +74,9 @@ init {
 
 startup {
   vars.Stopwatch = new Stopwatch();
+  vars.Stopwatch2 = new Stopwatch();
   vars.DelayTime = 0.005;
+  vars.DelayTime2 = 0.005;
   vars.black = false;
 
   settings.Add("OL", true, "Outlast"); // Grouping all the Outlast splits together
@@ -344,8 +346,8 @@ update {
     }
   } else {
     if((old.isLoading) && (!current.isLoading)) {
-	vars.Stopwatch.Start();
-	vars.DelayTime = 1.50;
+	vars.Stopwatch2.Start();
+	vars.DelayTime2 = 1.50;
 	vars.black = true;
 	}
 	
@@ -354,8 +356,8 @@ update {
     vars.currentIL = "";
   }
   
-  if ((vars.Stopwatch.Elapsed.TotalSeconds >= vars.DelayTime) || (current.isLoading)) {
-		vars.Stopwatch.Reset();
+  if ((vars.Stopwatch2.Elapsed.TotalSeconds >= vars.DelayTime2) || (current.isLoading)) {
+		vars.Stopwatch2.Reset();
 		vars.black = false;	
 	}
 }
