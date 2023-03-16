@@ -1,7 +1,7 @@
 //original script by KunoDemetries
 //cleaned up and some extra features by rythin
 //modified pointers for expanded memory .exe file and fixed end split condition -Surviv0r
-
+//fixed ending split for speedrun mod - Dev1ne
 
 state("iw3sp", "V1.0") // Steam Version
 {
@@ -126,6 +126,11 @@ split
 	}	
 	//Endsplit for the game
 	if (current.CurrentLevelName == "jeepride" && current.EndSplit != 147865) 
+	{
+		return true;
+	}
+	//Endsplit solution for speedrun mod
+	else if (old.CurrentLevelName == "jeepride" && current.CurrentLevelName == "ac130")
 	{
 		return true;
 	}
