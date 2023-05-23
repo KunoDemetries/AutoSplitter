@@ -25,48 +25,27 @@ init
     current.Minutes = 0;
     current.Seconds = 0;
     current.Time = 0;
-    // Unreal specific code thanks to micrologist 
-    //For whatever reason RB decided to fuck with the entire engine strucutre so these addresses need weird offsets
+    
+    //TY Ero for helping me fix this code here, it basically is setting up the offset and pattern scanner for UE4 games. Same concept from Micro
+   Func<int, string, IntPtr> scan = (offset, pattern) => {
+    var scn = new SignatureScanner(game, game.MainModule.BaseAddress, game.MainModule.ModuleMemorySize);
+    var pttern = new SigScanTarget(offset, pattern);
+    var ptr = scn.Scan(pttern);
+    return ptr + 0x4 + game.ReadValue<int>(ptr);
+    };
 
-    vars.MapPointerScanner = (Func<string, int, IntPtr>) ( (signature, instructionOffset) => {
-        var scanner = new SignatureScanner(game, modules.First().BaseAddress, (int)modules.First().ModuleMemorySize);
-        var pattern = new SigScanTarget(signature);
-        var location = scanner.Scan(pattern);
-        if (location == IntPtr.Zero) return IntPtr.Zero;
-        int offset = game.ReadValue<int>((IntPtr)location + instructionOffset);
-        return (IntPtr)location + offset + instructionOffset + 0xf4;
-    });
-
-    vars.GetStaticPointerFromSig = (Func<string, int, IntPtr>) ( (signature, instructionOffset) => {
-        var scanner = new SignatureScanner(game, modules.First().BaseAddress, (int)modules.First().ModuleMemorySize);
-        var pattern = new SigScanTarget(signature);
-        var location = scanner.Scan(pattern);
-        if (location == IntPtr.Zero) return IntPtr.Zero;
-        int offset = game.ReadValue<int>((IntPtr)location + instructionOffset);
-        return (IntPtr)location + offset + instructionOffset + 0x4;
-    });
-
-    vars.ScannerForLevelName = (Func<string, int, IntPtr>) ( (signature, instructionOffset) => {
-        var scanner = new SignatureScanner(game, modules.First().BaseAddress, (int)modules.First().ModuleMemorySize);
-        var pattern = new SigScanTarget(signature);
-        var location = scanner.Scan(pattern);
-        if (location == IntPtr.Zero) return IntPtr.Zero;
-        int offset = game.ReadValue<int>((IntPtr)location + instructionOffset);
-        return (IntPtr)location + offset + instructionOffset + 0x1DDC;
-    });
-
-    vars.CurMap = vars.MapPointerScanner("48 89 0D ?? ?? ?? ?? 48 89 0D ?? ?? ?? ?? 48 89 0D ?? ?? ?? ?? F3 ?? ?? 05 ?? ?? ?? ??", 0x3);
-    vars.LevelName = (vars.ScannerForLevelName("48 8B 1D ?? ?? ?? ?? 48 89 7C 24 38 8B 3D ?? ?? ?? ?? 85 FF 74 55", 0x3));
-    vars.FinalTime = (vars.GetStaticPointerFromSig("48 8D 15 ?? ?? ?? ?? 48 8B CB FF 90 ?? ?? ?? ?? 48 8B 8B ?? ?? ?? ??", 0x3));
-    vars.GameEngine = (vars.GetStaticPointerFromSig("48 8B 1D ?? ?? ?? ?? 48 85 DB 74 35 33 D2", 0x3));
-    vars.IGT = (vars.GetStaticPointerFromSig("48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B 0D ?? ?? ?? ?? 48 89 3C F1", 0x3));
+    vars.CurMap = scan(0x3, "48 89 0D ???????? 48 89 0D ???????? 48 89 0D ???????? F3 ?? ?? 05") + 0xF0;
+    vars.LevelName = scan(0x3, "48 8B 1D ???????? 48 89 7C 24 38 8B 3D ???????? 85 FF 74 55") + 0x1DD8;
+    vars.FinalTime = scan(0x3, "48 8D 15 ???????? 48 8B CB FF 90 ???????? 48 8B 8B");
+    vars.GWorld = scan(0x3, "48 8B 1D ???????? 48 85 DB 74 35 33 D2");
+    vars.IGT = scan(0x3, "48 8D 0D ???????? E8 ???????? 48 8B 0D ???????? 48 89 3C F1");
     print(vars.IGT.ToString("X"));
 
     vars.watchers = new MemoryWatcherList
     {
         new StringWatcher(new DeepPointer(vars.LevelName,0xC0, 0x18, 0x278, 0x288, 0x0, 0x108, 0x1A), 100) { Name = "CurLevelName"},
         new StringWatcher(new DeepPointer(vars.CurMap, 0xE30, 0x0, 0x50, 0x290, 0xD0, 0x30), 100) { Name = "CurMap"},
-        new MemoryWatcher<byte>(new DeepPointer(vars.GameEngine, 0x188, 0x230, 0x1D0, 0x2A8)) { Name = "Loading"},
+        new MemoryWatcher<byte>(new DeepPointer(vars.GWorld, 0x188, 0x230, 0x1D0, 0x2A8)) { Name = "Loading"},
         new MemoryWatcher<float>(new DeepPointer(vars.IGT, 0x18, 0x8, 0x4BC)) { Name = "IGT"},
     };
 
@@ -205,8 +184,6 @@ update
     {
         current.Time = 0;
     }
-
-    print(current.CurLevelName);
 }
 
 start
@@ -269,4 +246,9 @@ onReset
     vars.FinalSplitPerLevel.Clear();
     vars.totalGameTime = 0;
     vars.MapTimeResetter.Clear();
+    current.Seconds = 0;
+    current.Minutes = 0;
+    vars.watchers.ResetAll();
+    current.FinalTime = 0;
+    vars.IGTWatchers[vars.watchertouseforIGT.ToString()].Current = "1";
 }
