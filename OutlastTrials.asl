@@ -1,3 +1,12 @@
+/*
+    Created by KunoDemetries
+    With help debugging and testing from Symstery, Meta, and N3rd_Squared
+    This ASL is a big mess that may have a few minor that'll be patched out through testing. I shouldn't have to update the ASL in the future as it finds direct pointers to each address.
+    If any issues arise please contact myself or join the outlast community speedrun server here: https://discord.com/invite/ekHJZth8Cn
+
+    If you would like to donate, as this ASL took around 30 hours to code and debugm my links are here: https://linktr.ee/KunoDemetries 
+*/
+
 state("TOTClient-Win64-Shipping")
 {
 
@@ -74,7 +83,7 @@ init
 
 startup
 {
-    settings.Add("FSPL", false, "Split at the end of levels?");
+    settings.Add("FSPL", false, "Split at the end of each trial? (dont have below settings enabled or you'll have it split twice between trials)");
     settings.Add("OT", true, "Outlast Trials");
         settings.Add("P1", true, "Program 1 - Police Station", "OT");
         settings.Add("P2", true, "Program 2 - Fun Park", "OT");
