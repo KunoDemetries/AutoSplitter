@@ -144,7 +144,6 @@ update
             break;
     }
     current.FinalTime = vars.IGTWatchers[vars.watchertouseforIGT.ToString()].Current;
-
     
     if (current.FinalTime == null)
     {
@@ -156,14 +155,14 @@ update
         current.CurMap = "1";
     }
 
-    if (current.CurLevelName == null)
-    {
-        current.CurLevelName = "1";
-    }
-
     if (current.CurMap.Contains("Lobby") || current.CurMap.Contains("MainMenu"))
     {
         current.CurLevelName = "";
+    }
+
+    if (vars.watchers["CurLevelName"].Changed)
+    {
+        vars.IGTWatchers[vars.watchertouseforIGT.ToString()].Current = "0";
     }
 
     if (current.FinalTime.Contains(":") && (vars.LeveltimeUpdater == 0) && (!vars.MapTimeResetter.Contains(current.CurLevelName)) && (current.CurLevelName != "Content/Text/Ingame_General.uasset") && (current.CurLevelName != " ") && (current.CurLevelName != null) && (current.CurLevelName.Length > 4))
@@ -171,6 +170,7 @@ update
         vars.MapTimeResetter.Add(current.CurLevelName);
         current.Minutes = int.Parse(current.FinalTime.Split(':')[0]);
         current.Seconds = int.Parse(current.FinalTime.Split(':')[1]);
+        vars.IGTWatchers[vars.watchertouseforIGT.ToString()].Current = "0";
         vars.LeveltimeUpdater = 1;
         current.Time = 0;
     }
@@ -228,6 +228,7 @@ gameTime
         current.Time = 0;
         current.Seconds = 0;
         current.Minutes = 0;
+        vars.IGTWatchers[vars.watchertouseforIGT.ToString()].Current = "0";
         return TimeSpan.FromSeconds(vars.totalGameTime);
     }
     else
