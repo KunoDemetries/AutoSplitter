@@ -1,4 +1,11 @@
 // Thanks Kuno for the help much <3
+state("sniper5_dx12", "Steam 2.21")
+{
+	string110 CurCutscene : 0x02688EE8, 0x38, 0x248, 0x0, 0x0;
+	string14 CurMap : 0x30581EE;
+	int start : 0x273164C;	// main menu 5, in game 13, loading 3, second cutscene is 8, first 5. E8E3EC
+}
+
 state("sniper5_dx12", "Steam 1.6")
 {
 	//string110 CurCutscene : 0x02673020, 0x8, 0x248, 0x0, 0x0;
@@ -80,6 +87,9 @@ init
 	case 425156608  :
 		version = "Steam 1.6";
 		break;
+	case 426545152  :
+		version = "Steam 2.21";
+		break;
     }
 	vars.doneMaps = new List<string>(); // You get kicked to the main menu, so adding this just in case
 	timer.Run.Offset = TimeSpan.FromMilliseconds(-480);
@@ -122,6 +132,8 @@ startup
 			{"Chateau_Epilog", "Loose Ends"},
 			{"DLC_KillHitler", "Wolf Mountain: DLC"},
 			{"DLC01_Dragoon.", "Landing Force"},
+			{"DLC03_Overlord", "Conqueror"},
+			{"DLC02_Marathon", "Rough Landing"},
 		};
 		foreach (var Tag in vars.missions)
 		{
@@ -142,7 +154,7 @@ startup
 		@"sounds\cutscenes\m09_epilogue\cs_m09_mollerdead_sfx.wav",
 		@"sounds\cutscenes\m10_killhitler\cs_m10_exf_sfx.wav",
 		@"sounds\cutscenes\intros_outros\cs_dlc01_outro_sfx.wav"
-		@"sounds\cutscenes\intros_outros\cs_dlc03_outro_sfx.wav"
+		@"sounds\cutscenes\intros_outros\cs_dlc03_outro_sfx.wav" // Conqueror
 	};
 
     if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
@@ -175,7 +187,7 @@ onStart
 
 split
 {
-	if ((current.CurMap != old.CurMap) && (settings[current.CurMap]) && (!vars.doneMaps.Contains(current.CurMap)) || (vars.cutscenes.Contains(current.CurCutscene) && (old.CurCutscene == null) && (settings["ils"])) ||  (settings["survival"]) && (old.start == 13) && (current.start == 8) || (current.CurMap == "Chateau_Epilog") && (old.start == 13) && (current.start == 8))
+	if ((current.CurMap != old.CurMap) && (settings[current.CurMap]) && (!vars.doneMaps.Contains(current.CurMap)) || (vars.cutscenes.Contains(current.CurCutscene) && (old.CurCutscene == null) && (settings["ils"])) ||  (settings["survival"]) && (old.start == 13) && (current.start == 8) || (current.CurMap == "Chateau_Epilog") && (old.start == 13) && (current.start == 8) || (current.CurMap == "DLC02_Marathon") && (old.start == 13) && (current.start == 8))
 	{
 		vars.doneMaps.Add(current.CurMap);
 		return true;		
