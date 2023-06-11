@@ -153,7 +153,7 @@ startup
 		@"sounds\cutscenes\m08_st_nazaire\cs_m08_sub_pen_explosion_sfx.wav",
 		@"sounds\cutscenes\m09_epilogue\cs_m09_mollerdead_sfx.wav",
 		@"sounds\cutscenes\m10_killhitler\cs_m10_exf_sfx.wav",
-		@"sounds\cutscenes\intros_outros\cs_dlc01_outro_sfx.wav"
+		@"sounds\cutscenes\intros_outros\cs_dlc01_outro_sfx.wav",
 		@"sounds\cutscenes\intros_outros\cs_dlc03_outro_sfx.wav" // Conqueror
 	};
 
