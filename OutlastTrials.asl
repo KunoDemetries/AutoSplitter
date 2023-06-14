@@ -20,11 +20,29 @@ init
     vars.totalGameTime = 0;
     current.FinalTime = "/";
     vars.watchertouseforIGT = "/";
+    vars.runTimer = 0;
     vars.Spacer = 0;
     vars.LeveltimeUpdater = 0; // We need to only run the add. once per level (level name curLevel)
     current.Minutes = 0;
     current.Seconds = 0;
     current.Time = 0;
+
+    vars.Trials = new List<string>
+    {
+        "KILL THE SNITCH",
+        "CANCEL THE AUTOPSY",
+        "SABOTAGE THE LOCKDOWN",
+        "EXAM: KILL THE SNITCH",
+        "GRIND THE BAD APPLES",
+        "PUNISH THE MISCREANTS",
+        "OPEN THE GATES",
+        "EXAM: GRIND THE BAD APPLES",
+        "CLEANSE THE ORPHANS",
+        "FEED THE CHILDREN",
+        "FOSTER THE ORPHANS",
+        "EXAM: CLEANSE THE ORPHANS"
+    };
+
     
     //TY Ero for helping me fix this code here, it basically is setting up the offset and pattern scanner for UE4 games. Same concept from Micro
    Func<int, string, IntPtr> scan = (offset, pattern) => {
@@ -55,12 +73,13 @@ init
 
     vars.IGTWatchers = new MemoryWatcherList
     {
-        new StringWatcher(new DeepPointer(vars.FinalTime, 0x118, 0x20, 0x878, 0x128, 0x28, 0x0), 10) { Name = "PoliceStationLoad"},
-        new StringWatcher(new DeepPointer(vars.FinalTime, 0x78, 0x20, 0x878, 0x128, 0x28, 0x0), 10) { Name = "PoliceStationBasementLoad"},
-        new StringWatcher(new DeepPointer(vars.FinalTime, 0xE8, 0x20, 0x878, 0x128, 0x28, 0x0), 10) { Name = "FunParkLoad"},
-        new StringWatcher(new DeepPointer(vars.FinalTime, 0xB0, 0x20, 0x878, 0x128, 0x28, 0x0), 10) { Name = "FunParkBarnLoad"},
-        new StringWatcher(new DeepPointer(vars.FinalTime, 0x128, 0x20, 0x878, 0x128, 0x28, 0x0), 10) { Name = "OrphanageLoad"},
-        new StringWatcher(new DeepPointer(vars.FinalTime, 0xA8, 0x20, 0x878, 0x128, 0x28, 0x0), 10) { Name = "OrphanageServicesLoad"},
+        new StringWatcher(new DeepPointer(vars.FinalTime, 0x118, 0x20, 0x888, 0x128, 0x38, 0x0), 10) { Name = "PoliceStationLoad"},
+        new StringWatcher(new DeepPointer(vars.FinalTime, 0x70, 0x20, 0x888, 0x128, 0x38, 0x0), 10) { Name = "SabatogeLoad"},
+        new StringWatcher(new DeepPointer(vars.FinalTime, 0x78, 0x20, 0x888, 0x128, 0x38, 0x0), 10) { Name = "PoliceStationBasementLoad"},
+        new StringWatcher(new DeepPointer(vars.FinalTime, 0xE8, 0x20, 0x888, 0x128, 0x38, 0x0), 10) { Name = "FunParkLoad"},
+        new StringWatcher(new DeepPointer(vars.FinalTime, 0xB0, 0x20, 0x888, 0x128, 0x38, 0x0), 10) { Name = "FunParkBarnLoad"},
+        new StringWatcher(new DeepPointer(vars.FinalTime, 0x128, 0x20, 0x888, 0x128, 0x38, 0x0), 10) { Name = "OrphanageLoad"},
+        new StringWatcher(new DeepPointer(vars.FinalTime, 0xA8, 0x20, 0x888, 0x128, 0x38, 0x0), 10) { Name = "OrphanageServicesLoad"},
     };
 }
 
@@ -69,10 +88,21 @@ startup
     settings.Add("FSPL", false, "Split at the end of each trial? (dont have below settings enabled or you'll have it split twice between trials)");
     settings.Add("OT", true, "Outlast Trials");
         settings.Add("P1", true, "Program 1 - Police Station", "OT");
+            settings.Add("KTS", true, "KILL THE SNITCH", "P1");
+            settings.Add("CTA", true, "CANCEL THE AUTOPSY", "P1");
+            settings.Add("STL", true, "SABOTAGE THE LOCKDOWN", "P1");
+            settings.Add("EKTS", true, "EXAM: KILL THE SNITCH", "P1");
         settings.Add("P2", true, "Program 2 - Fun Park", "OT");
+            settings.Add("GTBA", true, "GRIND THE BAD APPLES", "P2");
+            settings.Add("PTM", true, "PUNISH THE MISCREANTS", "P2");
+            settings.Add("OTG", true, "OPEN THE GATES", "P2");
+            settings.Add("EGTBA", true, "EXAM: GRIND THE BAD APPLES", "P2");
         settings.Add("P3", true, "Program 3 - Orphanage", "OT");
+            settings.Add("CTO", true, "CLEANSE THE ORPHANS", "P3");
+            settings.Add("FTC", true, "FEED THE CHILDREN", "P3");
+            settings.Add("FTO", true, "FOSTER THE ORPHANS", "P3");
+            settings.Add("ECTO", true, "EXAM: CLEANSE THE ORPHANS", "P3");
         settings.Add("PX", true, "Program X - Police Station", "OT");
-
 
     var tB = (Func<string, string, string, Tuple<string, string, string>>) ((elmt1, elmt2, elmt3) => { return Tuple.Create(elmt1, elmt2, elmt3); });
     	var sB = new List<Tuple<string, string, string>>
@@ -124,7 +154,7 @@ update
             break;
         case "CANCEL THE AUTOPSY" : vars.watchertouseforIGT = "PoliceStationBasementLoad";
             break;
-        case "SABOTAGE THE LOCKDOWN" : vars.watchertouseforIGT = "PoliceStationBasementLoad";
+        case "SABOTAGE THE LOCKDOWN" : vars.watchertouseforIGT = "SabatogeLoad";
             break;
         case "EXAM: KILL THE SNITCH" : vars.watchertouseforIGT = "PoliceStationLoad";
             break;
@@ -144,11 +174,11 @@ update
             break;
         case "EXAM: CLEANSE THE ORPHANS" : vars.watchertouseforIGT = "OrphanageLoad";
             break;
-                default:        vars.watchertouseforIGT = "PoliceStationLoad"; 
+                default:        vars.watchertouseforIGT = "OrphanageLoad"; 
             break;
     }
     current.FinalTime = vars.IGTWatchers[vars.watchertouseforIGT.ToString()].Current;
-    
+    print (vars.watchertouseforIGT.ToString());
     if (current.FinalTime == null)
     {
         current.FinalTime = "1";
@@ -164,9 +194,16 @@ update
         current.CurLevelName = "";
     }
 
-    if (vars.watchers["CurLevelName"].Changed)
+
+    if (vars.Trials.Contains((string)vars.watchers["CurLevelName"].Current) || !current.CurMap.Contains("Lobby") && !current.CurMap.Contains("MainMenu") && !(current.CurLevelName == "Content/Text/Ingame_General.uasset"))
     {
-        vars.IGTWatchers[vars.watchertouseforIGT.ToString()].Current = "0";
+        vars.runTimer = 1;
+    }
+
+    if (current.Loading != 0 || current.CurMap.Contains("Lobby") || current.CurMap.Contains("MainMenu") || (current.CurLevelName == "Content/Text/Ingame_General.uasset") || current.FinalTime.Contains(":"))
+    {
+        vars.runTimer = 0;
+        current.Time = 0;
     }
 
     if (current.FinalTime.Contains(":") && (vars.LeveltimeUpdater == 0) && (!vars.MapTimeResetter.Contains(current.CurLevelName)) && (current.CurLevelName != "Content/Text/Ingame_General.uasset") && (current.CurLevelName != " ") && (current.CurLevelName != null) && (current.CurLevelName.Length > 4))
@@ -174,12 +211,12 @@ update
         vars.MapTimeResetter.Add(current.CurLevelName);
         current.Minutes = int.Parse(current.FinalTime.Split(':')[0]);
         current.Seconds = int.Parse(current.FinalTime.Split(':')[1]);
-        vars.IGTWatchers[vars.watchertouseforIGT.ToString()].Current = "0";
         vars.LeveltimeUpdater = 1;
         current.Time = 0;
+        vars.runTimer = 0;
     }
-    
-    if ((!current.CurMap.Contains("Lobby") && !current.CurMap.Contains("MainMenu") && (current.CurLevelName != "Content/Text/Ingame_General.uasset") && current.Loading == 0) && (!current.FinalTime.Contains(":")) && (!vars.MapTimeResetter.Contains(current.CurLevelName)))
+
+    if (vars.runTimer == 1)    
     {
         current.Time = (vars.watchers["IGT"].Current - vars.watchers["IGT"].Old);
         vars.IGTWatchers.UpdateAll(game);
@@ -192,7 +229,7 @@ update
 
 start
 {
-    return (settings[current.CurLevelName] && !vars.doneMaps.Contains(current.CurLevelName));
+    return (settings[current.CurLevelName] && !vars.doneMaps.Contains(current.CurLevelName) && current.Loading == 0 && (!current.FinalTime.Contains(":")));
 }
 
 onStart
@@ -218,21 +255,21 @@ split
 
 isLoading
 {
-    return (current.CurMap.Contains("Lobby") || (current.CurLevelName == "Content/Text/Ingame_General.uasset") || current.CurMap.Contains("MainMenu") || current.Loading != 0) || (current.FinalTime.Contains(":"));
+    return true;
 }
 
 gameTime
 {
     if ((vars.LeveltimeUpdater == 1))
     {
-        vars.MapTimeResetter.Add(current.CurLevelName);
         vars.totalGameTime = vars.totalGameTime + (current.Minutes * 60) + (current.Seconds);
-        vars.LeveltimeUpdater = 0;
         vars.Spacer = 0;
         current.Time = 0;
         current.Seconds = 0;
         current.Minutes = 0;
         vars.IGTWatchers[vars.watchertouseforIGT.ToString()].Current = "0";
+        vars.MapTimeResetter.Add(current.CurLevelName);
+        vars.LeveltimeUpdater = 0;
         return TimeSpan.FromSeconds(vars.totalGameTime);
     }
     else
