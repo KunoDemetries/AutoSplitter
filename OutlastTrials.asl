@@ -88,20 +88,8 @@ startup
     settings.Add("FSPL", false, "Split at the end of each trial? (dont have below settings enabled or you'll have it split twice between trials)");
     settings.Add("OT", true, "Outlast Trials");
         settings.Add("P1", true, "Program 1 - Police Station", "OT");
-            settings.Add("KTS", true, "KILL THE SNITCH", "P1");
-            settings.Add("CTA", true, "CANCEL THE AUTOPSY", "P1");
-            settings.Add("STL", true, "SABOTAGE THE LOCKDOWN", "P1");
-            settings.Add("EKTS", true, "EXAM: KILL THE SNITCH", "P1");
         settings.Add("P2", true, "Program 2 - Fun Park", "OT");
-            settings.Add("GTBA", true, "GRIND THE BAD APPLES", "P2");
-            settings.Add("PTM", true, "PUNISH THE MISCREANTS", "P2");
-            settings.Add("OTG", true, "OPEN THE GATES", "P2");
-            settings.Add("EGTBA", true, "EXAM: GRIND THE BAD APPLES", "P2");
         settings.Add("P3", true, "Program 3 - Orphanage", "OT");
-            settings.Add("CTO", true, "CLEANSE THE ORPHANS", "P3");
-            settings.Add("FTC", true, "FEED THE CHILDREN", "P3");
-            settings.Add("FTO", true, "FOSTER THE ORPHANS", "P3");
-            settings.Add("ECTO", true, "EXAM: CLEANSE THE ORPHANS", "P3");
         settings.Add("PX", true, "Program X - Police Station", "OT");
 
     var tB = (Func<string, string, string, Tuple<string, string, string>>) ((elmt1, elmt2, elmt3) => { return Tuple.Create(elmt1, elmt2, elmt3); });
