@@ -165,7 +165,7 @@ startup
 		@"sounds\cutscenes\m10_killhitler\cs_m10_exf_sfx.wav",
 		@"sounds\cutscenes\intros_outros\cs_dlc01_outro_sfx.wav",
 		@"sounds\cutscenes\intros_outros\cs_dlc03_outro_sfx.wav", // Conqueror
-		@"sounds\cutscenes\dlc04_poseidon\cs_dlc04_outro_sfx.wav", //Kraken Awakes
+		@"sounds\cutscenes\dlc04_poseidon\cs_dlc04_outro_sfx.wav" //Kraken Awakes
 	};
 
     if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
