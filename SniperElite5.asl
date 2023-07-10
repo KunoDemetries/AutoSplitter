@@ -164,7 +164,7 @@ startup
 		@"sounds\cutscenes\m09_epilogue\cs_m09_mollerdead_sfx.wav",
 		@"sounds\cutscenes\m10_killhitler\cs_m10_exf_sfx.wav",
 		@"sounds\cutscenes\intros_outros\cs_dlc01_outro_sfx.wav",
-		@"sounds\cutscenes\intros_outros\cs_dlc03_outro_sfx.wav" // Conqueror
+		@"sounds\cutscenes\intros_outros\cs_dlc03_outro_sfx.wav", // Conqueror
 		@"sounds\cutscenes\dlc04_poseidon\cs_dlc04_outro_sfx.wav", //Kraken Awakes
 	};
 
