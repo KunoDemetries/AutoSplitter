@@ -2,7 +2,7 @@
 state("sniper5_dx12", "Steam 2.30")
 {
 	string110 CurCutscene : 0x02688EE8, 0x38, 0x248, 0x0, 0x0;
-	string14 CurMap : 0x30581EE;
+	string14 CurMap : 0x30581DE;
 	int start : 0x273164C;	// main menu 5, in game 13, loading 3, second cutscene is 8, first 5. E8E3EC
 }
 state("sniper5_dx12", "Steam 2.21")
@@ -143,6 +143,7 @@ startup
 			{"DLC01_Dragoon.", "Landing Force"},
 			{"DLC03_Overlord", "Conqueror"},
 			{"DLC02_Marathon", "Rough Landing"},
+			{"DLC04_Poseidon", "Kraken Awakes"},
 		};
 		foreach (var Tag in vars.missions)
 		{
@@ -164,6 +165,7 @@ startup
 		@"sounds\cutscenes\m10_killhitler\cs_m10_exf_sfx.wav",
 		@"sounds\cutscenes\intros_outros\cs_dlc01_outro_sfx.wav",
 		@"sounds\cutscenes\intros_outros\cs_dlc03_outro_sfx.wav" // Conqueror
+		@"sounds\cutscenes\dlc04_poseidon\cs_dlc04_outro_sfx.wav", //Kraken Awakes
 	};
 
     if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
