@@ -13,7 +13,7 @@ state("deadrising3")
 
 init
 {
-	vars.doneMaps = new List<string>();
+    vars.doneMaps = new List<string>();
     vars.BossName = ".";
     vars.lastBoss = ".";
 } 
@@ -135,6 +135,7 @@ startup
         tB("Chapter07","Free Annie and Isabella","Free Annie and Isabella"),
         tB("Chapter08","Track Down Hemlock","Track Down Hemlock"),
         tB("Chapter08","Destroy 60 Harvest Drones","Destroy 60 Harvest Drones"),
+        tB("Chapter08","Hemlock","Defeat Hemlock"),
         tB("OB","Zhi","Zhi"),
         tB("OB","Darlene","Darlene"),
         tB("OB","Jherii","Jherii"),
