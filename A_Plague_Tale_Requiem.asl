@@ -45,6 +45,19 @@ state("APlagueTaleRequiem_x64", "Steam 1.4")
 	string128 Menu		: 0x236A08A;
 }
 
+state("APlagueTaleRequiem_x64", "Steam 1.5")
+{
+	bool Paused			: 0x23B6E30, 0x70;							
+	bool Crafting		: 0x27B2A08, 0x638, 0x1B8, 0xE8, 0x30;		
+	byte Cutscene		: 0x23A1760, 0x288;							
+	short isLoading		: 0x27B2A08, 0x4F0;							
+	float X				: 0x23B6E28, 0x378, 0xA170;					
+	float Y				: 0x23B6E28, 0x378, 0xA174;					
+	float Z				: 0x23B6E28, 0x378, 0xA178;					
+	string128 Chapter	: 0x23A0CA8, 0x708, 0x2E8, 0x750, 0x0;
+	string128 Menu		: 0x238C87A;								
+}
+
 state("APT2_WinStore.x64.Submission", "Xbox 1.0")
 {
 	bool Paused			: 0x23A63C0, 0x70;
@@ -137,6 +150,9 @@ init
                     break;
                 case (44457984):
                     version = "Steam 1.3";
+                    break;
+		case (43679744):
+                    version = "Steam 1.5";
                     break;
                 case (44335104):
                     version = "Xbox 1.0";
