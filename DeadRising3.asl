@@ -18,7 +18,6 @@ init
     vars.lastBoss = ".";
 } 
 
-
 startup
 {
     settings.Add("DS3", true, "Dead Rising 3");
@@ -160,6 +159,7 @@ startup
         tB("OBE","Track the President","Track the President"),
         tB("OBE","Eliminate the President's Forces","Eliminate the President's Forces"),
         tB("OBE","Secure the President","Secure the President"),
+        tB("OBE","DLC1END", "Split on Final Cutscene"),
         tB("FA","Investigate the Yacht","Investigate the Yacht"),
         //tB("FA","Find Supplies","Find Supplies"),
         tB("FA","Get to the Safe Zone in South Almuda","Get to the Safe Zone in South Almuda"),
@@ -182,6 +182,7 @@ startup
         tB("FA","Find the Lab Key","Find the Lab Key"),
         tB("FA","Clear Enemies from Lab","Clear Enemies from Lab"),
         tB("FA","Rescue the Trapped Survivors","Rescue the Trapped Survivors"),
+        tB("FA","DLC2END", "Split on Final Cutscene"),
         tB("CR","Get the Station Key","Get the Station Key"),
         tB("CR","Escape the Police Station","Escape the Police Station"),
         tB("CR","Get to Production Bridge","Get to Production Bridge"),
@@ -203,6 +204,7 @@ startup
         tB("CR","Get on the Rollerhawg","Get on the Rollerhawg"),
         //tB("CR","Get to Production Bridge","Get to Production Bridge"),
         tB("CR","Defeat Spider","Defeat Spider"),
+        tB("CR","DLC3END", "Split on Final Cutscene"),
         tB("TLA","Find the Collins Chemicals Van","Find the Collins Chemicals Van"),
         tB("TLA","Deliver the Zombrex Van to Cora","Deliver the Zombrex Van to Cora"),
         tB("TLA","Talk to Cora","Talk to Cora"),
@@ -233,6 +235,7 @@ startup
         tB("TLA","Gather the Illegals at the Comm Tower","Gather the Illegals at the Comm Tower"),
         tB("TLA","Pick up Nelson","Pick up Nelson"),
         tB("TLA","Escape the City","Escape the City"),
+        tB("TLA","DLC4END", "Split on Final Cutscene"),
         
     };
     foreach (var s in sB) settings.Add(s.Item2, false, s.Item3, s.Item1);
@@ -299,6 +302,7 @@ split
         return true;
     }
 
+    //Splits on interacting with the Plane during Chapter 7 for Ending D
     if (old.EnterPlane == 0 && current.EnterPlane == 3 && current.CurrentChapter == "Chapter07")
     {
         vars.doneMaps.Add("PLANE");
