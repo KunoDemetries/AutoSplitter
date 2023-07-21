@@ -13,7 +13,7 @@ state("deadrising3")
 
 init
 {
-	vars.doneMaps = new List<string>();
+    vars.doneMaps = new List<string>();
     vars.BossName = ".";
     vars.lastBoss = ".";
 } 
