@@ -305,6 +305,31 @@ split
         return settings["PLANE"];
     }
 
+    //Splits on the beginning of the DLC ending cutscenes
+    if (current.CurrentChapter == "Debug_Epi" && old.CurrentChapter != "Debug_Epi" && current.CurrentObjective == "Secure the President")
+    {
+        vars.doneMaps.Add("DLC1END");
+        return settings["DLC1END"];
+    }
+
+    if (current.CurrentChapter == "Debug_Epi" && old.CurrentChapter != "Debug_Epi" && current.CurrentObjective == "Rescue the Trapped Survivors")
+    {
+        vars.doneMaps.Add("DLC2END");
+        return settings["DLC2END"];
+    }
+
+    if (current.CurrentChapter == "Debug_Epi" && old.CurrentChapter != "Debug_Epi" && current.CurrentObjective == "Defeat Spider")
+    {
+        vars.doneMaps.Add("DLC3END");
+        return settings["DLC3END"];
+    }
+
+    if (current.CurrentChapter == "Debug_Epi" && old.CurrentChapter != "Debug_Epi" && current.CurrentObjective == "Escape the City")
+    {
+        vars.doneMaps.Add("DLC4END");
+        return settings["DLC4END"];
+    }
+
     //Splits on collecting a certain number of Frank West Statues
     if (current.FrankStatues!= old.FrankStatues && !vars.doneMaps.Contains(current.FrankStatues+"C"))
     {
