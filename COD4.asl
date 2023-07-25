@@ -5,18 +5,18 @@
 
 state("iw3sp", "V1.0") // Steam Version
 {
-  	int Loader :	0x10B1100
-	string20 CurrentLevelName :	0x6C3140
-	int EndSplit :	0xCDE4C8
+  	int Loader :	0x10B1100;
+	string20 CurrentLevelName :	0x6C3140;
+	int EndSplit :	0xCDE4C8;
 }
 
 
 
 state("iw3sp", "V1.5") // Modified .exe to support more physical memory
 {
-  	int Loader :	0x1C75F4, 0x0
-	string20 CurrentLevelName :	0x4EA64, 0x50C
-	int EndSplit :	0xCDE4C8
+  	int Loader :	0x1C75F4, 0x0;
+	string20 CurrentLevelName :	0x4EA64, 0x50C;
+	int EndSplit :	0xCDE4C8;
 }
 
 startup 
