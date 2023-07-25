@@ -5,9 +5,9 @@
 
 state("iw3sp", "V1.0") // Steam Version
 {
-  	int Loader :	0x10B1100;
-	string20 CurrentLevelName :	0x6C3140;
-	int EndSplit :	0xCDE4C8;
+  	int Loader :	0x10B1100
+	string20 CurrentLevelName :	0x6C3140
+	int EndSplit :	0xCDE4C8
 }
 
 
