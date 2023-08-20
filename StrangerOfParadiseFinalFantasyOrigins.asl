@@ -63,6 +63,13 @@ state("SOPFFO", "1.26 Epic")
     string250 CurrentCutsceneName : 0x048F5B48, 0x30, 0x50; 
 }
 
+state("SOPFFO", "1.32 Epic")
+{
+    int Loader1 : 0x3F149E4; // 2F1A60
+    string250 CurrentMapName : 0x048B27B8, 0x20, 0x20; //19360
+    string250 CurrentCutsceneName : 0x048F6B28, 0x30, 0x50;
+}
+
 init
 {
     vars.doneMaps = new List<string>(); 
@@ -94,7 +101,9 @@ init
             version = "1.25 Epic";
         break;
         case 83202048 :
-            version = "1.26 Epic";
+            //version = "1.26 Epic";
+            // 1.32 Epic is the same size as 1.26
+            version = "1.32 Epic";
         break;
         default:        
             version = "";
@@ -162,7 +171,7 @@ start
 
 split
 {
-    if ((settings[current.CurrentMapName]) && (current.CurrentMapName != old.CurrentMapName) && (!vars.doneMaps.Contains(current.CurrentMapName)) || (current.CurrentCutsceneName == "movie/EV04_33-EN.mp4"))
+    if ((settings[current.CurrentMapName]) && (current.CurrentMapName != old.CurrentMapName) && (!vars.doneMaps.Contains(current.CurrentMapName)) || (current.CurrentCutsceneName == "movie/EV04_33-EN.wmv" || current.CurrentCutsceneName == "movie/EV04_33-EN.mp4"))
     {
         vars.doneMaps.Add(current.CurrentMapName);
         return true;
