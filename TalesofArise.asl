@@ -18,8 +18,6 @@ state("Tales of Arise", "Steam 1.4.0.0")
 
 init
 {
-    vars.DoLoad = false;
-
     switch (modules.First().ModuleMemorySize) 
     {
         case 85544960: 
@@ -30,22 +28,13 @@ init
         break;
         case 77918208:
             version = "Steam 1.4.0.0";
+        break;
     }
-}
-
-startup
-{
-    //settings.Add("DL", false, "Do cutscene loading?");
 }
 
 start
 {
     return ((current.CurCutscene != old.CurCutscene) && (old.CurCutscene == @"\Arise\Content\Binaries\Movie\Composite\MV_MEP_010_00000.usm") && (current.CurCutscene == null) && (current.LoadingScreen == 160));
-}
-
-update
-{
-    print(modules.First().ModuleMemorySize.ToString());
 }
 
 isLoading
