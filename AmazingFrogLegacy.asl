@@ -1,43 +1,37 @@
-state("AmazingFrog") {}
-//General ASL setup from Ero, taken from his ANNO: Mutationem ASL
+state("AmazingFrog") 
+{
+    int Loading : "mono.dll", 0x0027CAE8, 0x0, 0x20, 0x118;
+    byte Loading2 : 0xC825B4;
+
+}
+
 startup
 {
-	vars.Log = (Action<object>)(output => print("[AmazingFrog] " + output));
-	vars.Unity = Assembly.Load(File.ReadAllBytes(@"Components\UnityASL.bin")).CreateInstance("UnityASL.Unity");
+
 }
 
 init
 {
-	vars.Unity.TryOnLoad = (Func<dynamic, bool>)(helper =>
-	{
-		var rm = helper.GetClass("Assembly-CSharp", "Fade");
-
-		vars.Unity.Make<bool>(rm.Static, rm["waitTime"]).Name = "loading";
-
-		return true;
-	});
-
-	vars.Unity.Load(game);
+    vars.doLoad = false;
 }
 
 update
 {
-	if (!vars.Unity.Loaded) return false;
+    if (current.Loading2 != 0 && current.Loading == 3)
+    {
+        vars.doLoad = true;
+        print("true");
+    }
 
-	vars.Unity.Update();
+    if (vars.doLoad == true && current.Loading2 == 0 && current.Loading == 0)
+    {
+        vars.doLoad = false;
+        print("false");
+    }
+   // print (current.Loading.ToString());
 }
 
 isLoading
 {
-	return !vars.Unity["loading"].Current;
-}
-
-exit
-{
-	vars.Unity.Reset();
-}
-
-shutdown
-{
-	vars.Unity.Reset();
+	return vars.doLoad;
 }
