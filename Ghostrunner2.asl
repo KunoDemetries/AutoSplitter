@@ -287,7 +287,6 @@ startup
     // Code written by Kuno / Meta
     settings.Add("Checkpoint", true, "Current Checkpoint", "Variable Information");
     settings.Add("Speed", true, "Current Speed", "Variable Information");
-
 }
 
 init
@@ -317,10 +316,7 @@ init
     var GNamePoolTrg = new SigScanTarget(3, "48 89 05 ?? ?? ?? ?? 48 83 c4 ?? c3") { OnFound = (p, s, ptr) => ptr + 0x4 + game.ReadValue<int>(ptr) };
     var GNamePool = scn.Scan(GNamePoolTrg);
 
-    print(gameEngine.ToString("X"));
-
-
-   // Throwing in case any base pointers can't be found (yet, hopefully)
+    // Throwing in case any base pointers can't be found (yet, hopefully)
     if(syncLoadCounterPtr == IntPtr.Zero || uWorld == IntPtr.Zero || gameEngine == IntPtr.Zero || fNamePool == IntPtr.Zero || GNamePool == IntPtr.Zero || PlayerController == IntPtr.Zero || EndLevel == IntPtr.Zero)
     {
         throw new Exception("One or more base pointers not found - retrying");
@@ -339,9 +335,13 @@ init
         new MemoryWatcher<int>(new DeepPointer(uWorld, 0x180, 0xF8)) {Name = "gissCount"},
 
         // Code written by Kuno / Meta
+            //End of level scene
         new MemoryWatcher<int>(new DeepPointer(EndLevel, 0x80)) {Name = "EndLevel"},
+            //Current velocity shown on the motorcycle in KMH
         new MemoryWatcher<float>(new DeepPointer(EndLevel + 0x1000, 0x20, 0x294)) {Name = "MotorcycleVelocity"},
+            //Typically only works on the last two end movies and the intro one (excludes the credits one)
         new MemoryWatcher<long>(new DeepPointer(Movie, 0x10, 0x20, 0x248, 0x0 + 0x3b8)) { Name = "curMovieName"},
+            //Current player x and y velocity not on the motorcycle, in UE4 units
         new MemoryWatcher<float>(new DeepPointer(PlayerController, 0x30, 0x250, 0x290, 0x140)) {Name = "xVel"},
         new MemoryWatcher<float>(new DeepPointer(PlayerController, 0x30, 0x250, 0x290, 0x144)) {Name = "yVel"},
     };
@@ -408,7 +408,7 @@ init
         }
     });
     vars.RefreshSubsystemCache(current);
-    // Diggity code
+    //End of code written by Diggity
 }
 
 update
@@ -432,9 +432,11 @@ update
     double hVel = Math.Floor(Math.Sqrt((xVel * xVel) + (yVel * yVel)) + 0.5f);
     current.CurrentSpeed = (float)hVel;
     current.MotorcycleSpeed = vars.Watchers["MotorcycleVelocity"].Current;
+    
+    //Code written by Kuno / Meta
     current.EndLoading = vars.Watchers["EndLevel"].Current;
-
-    // The movie address doesn't initialize until the movie actually starts playing, so doing this so it doesn't constantly throw an error message saying it's a nullptr
+    current.WorldNewCheckpoint = (current.world + current.checkpoint).Replace(" ", "");
+        // The movie address doesn't initialize until the movie actually starts playing, so doing this so it doesn't constantly throw an error message saying it's a nullptr
     try 
     {
         current.Movie = vars.ReadFName(vars.Watchers["curMovieName"].Current);
@@ -445,28 +447,30 @@ update
     }    
     
     // Code original written by Micrologist (until unstated)
-    // The game is considered to be loading if any scenes are loading synchronously
+        // The game is considered to be loading if any scenes are loading synchronously
     current.loading = vars.Watchers["syncLoadCount"].Current > 0;
-    // Get the current world name as string, only if *UWorld isnt null
+        // Get the current world name as string, only if *UWorld isnt null
     var worldFName = vars.Watchers["worldFName"].Current;
     current.world = worldFName != 0x0 ? vars.ReadFName(worldFName) : old.world;
-
-    // Get the Name of the current target for the CameraManager
+        // Get the Name of the current target for the CameraManager
     current.camTarget = vars.ReadFName(vars.Watchers["camViewTargetFName"].Current);
+    // End of code original written by Micrologist
 
+    //Code written by Kuno / Meta
+        //There is a weird space between when the end level screen appears vs when loading starts, so we're checking if we're on an endloading screen then setting doload to true
     if (vars.DoLoad == false && current.EndLoading == 1)
     {
         print("DOLOAD");
         vars.DoLoad = true;
     }
-
+        // After the above if is ran and do load is enabled, we check if we're currently loading (which doesn't equal 0 when loading) and disable it as the syncloadcount should be actively removing them anyway
     if (vars.DoLoad == true && vars.Watchers["syncLoadCount"].Current != 0)
     {
         vars.DoLoad = false;
     }
 
-
-        if(settings["Camera"]) 
+        //All of these settings are added to have the user be able to see the current camera, map, checkpoint names are and the current player speed
+    if(settings["Camera"]) 
     {
         vars.SetTextComponent("Camera Target:",current.camTarget.ToString());
         if (old.camTarget != current.camTarget) print("Camera Target:" + current.camTarget.ToString());
@@ -477,14 +481,14 @@ update
         vars.SetTextComponent("Map:",current.world.ToString());
         if (old.world != current.world) print("Map:" + current.world.ToString());
     }
-    // Code original written by Micrologist
 
-    //Code written by Kuno / Meta
     if(settings["Checkpoint"]) 
     {
         vars.SetTextComponent("Checkpoint:",current.checkpoint.ToString());
         if (old.world != current.world) print("Checkpoint:" + current.checkpoint.ToString());
     }
+    
+        //The way the game handles player velocity is changed when on the motorcycle so we're just checking to see if we're moving on the bike and the camera target is the motorcycle
     if (settings["Speed"])
     {
         if (current.MotorcycleSpeed != 0 && current.camTarget == "BP_MotorcycleVehicle")
@@ -497,9 +501,6 @@ update
             vars.SetTextComponent("Speed:",current.CurrentSpeed.ToString("0000.00"));
         }
     }
-
-    current.CheckPointWorldOldNew = (current.world + current.checkpoint).Replace(" ", "");
-    //print(current.CheckPointWorldOldNew);
 }
 
 isLoading
@@ -510,7 +511,7 @@ isLoading
 
 start
 {
-    // written by Kuno / Meta
+    // written by Kuno / Meta, Used for generic starting for full game runs
     if (current.world == "00_01_world" && old.camTarget == "CS1_CineCameraActor" && current.camTarget == "CS1_01_Opening")
     {
         print("Normal Start");
@@ -518,13 +519,14 @@ start
         return true;
     }
 
-    // Code assistance by Ero, written by Kuno / Meta
+    // Code assistance by Ero, written by Kuno / Meta. In a try statement due to the vars.ILStartCamTargets throwing some errors if the current world doesn't equal one in the index
     if (settings["ILMode"])
     {
         try 
         {
             var targets = vars.ILStartCamTargets[current.world];
 
+            //Check one is checking if we're inbetween two camera regions, check two is for certain levels without cutscenes. Can anyone hear me is the only one with an issue being able to work with both so we just excluded it from the second check
             if (old.camTarget == targets.Item1 && current.camTarget == targets.Item2 || old.camTarget == targets.Item1 && old.loading != current.loading && current.world != "03_01_world")
             {
                 vars.Checkpoint.Reset();
@@ -546,23 +548,27 @@ onStart
 
 split
 {
+    //Split if the current world is enabled, and not inside of our donemaps list
     if (settings[current.world] && (!vars.doneMaps.Contains(current.world)))
     {
         vars.doneMaps.Add(current.world);
         return true;
     }
 
-    if (settings[current.CheckPointWorldOldNew] && (!vars.doneMaps.Contains(current.CheckPointWorldOldNew)))
+    //Split if the current world we're in and the checkpoint we just reached is in settings, and not in our donemaps (also used for done checkpoints)
+    if (settings[current.WorldNewCheckpoint] && (!vars.doneMaps.Contains(current.WorldNewCheckpoint)))
     {
-        vars.doneMaps.Add(current.CheckPointWorldOldNew);
+        vars.doneMaps.Add(current.WorldNewCheckpoint);
         return true;
     }
 
+    //There is a hub section we return to a few times throughout the game, this is a generic check nothing major
     if (settings["Hub Splits"] && (current.world == "HUB_Blockout" && old.world != "HUB_Blockout"))
     {
         return true;
     }
 
+    //End time for full game runs is on the ending movie, DMGvol helped us find the current.Movie playing and we're just checking if we reached it. Alongside, if we already endsplitted just in case so it doesn't split a billion times if the runner wasn't on their end split (for whatever reason)
     if (current.Movie == "UI.Video.Outro" && vars.EndSplit == false)
     {
         vars.EndSplit = true;
@@ -572,11 +578,13 @@ split
 
 onReset
 {
+    //Clearing out donemaps, and setting endsplit back to false
     vars.doneMaps.Clear();
     vars.EndSplit = false;
 }
 
 exit
 {
+    //Just in case the game crashes we'll have the time paused until the user loads into the mainmenu
 	timer.IsGameTimePaused = true;
 }
