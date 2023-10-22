@@ -217,23 +217,22 @@ startup
         tB("03_02_world","03_02_worldBP_CheckpointTrigger4","Green Trees Phase II"),
         //Elevator Maintenance
         tB("03_03_World","03_03_WorldBP_CheckpointTrigger23","Arena I"),
-        tB("03_03_World","03_03_WorldBP_CheckpointTrigger27","Interior I"),
-        tB("03_03_World","03_03_WorldBP_CheckpointTrigger31","Exterior I"),
-        tB("03_03_World","03_03_WorldBP_CheckpointTrigger2","Rail Grinding I"),
-        tB("03_03_World","03_03_WorldBP_CheckpointTrigger25","Arena II"),
+        tB("03_03_World","03_03_WorldBP_CheckpointTrigger27","Interior I[Restricted Route]"),
+        tB("03_03_World","03_03_WorldBP_CheckpointTrigger31","Exterior I[Restricted Route]"),
+        tB("03_03_World","03_03_WorldBP_CheckpointTrigger2","Rail Grinding I[Restricted Route]"),
+        tB("03_03_World","03_03_WorldBP_CheckpointTrigger25","Arena II[Restricted Route]"),
         tB("03_03_World","03_03_WorldBP_CheckpointTrigger10","Rail Grinding II"),
-        tB("03_03_World","03_03_WorldBP_CheckpointTrigger28","Exterior II"),
         tB("03_03_World","03_03_WorldBP_CheckpointTrigger18","Rail Grinding III"),
-        tB("03_03_World","03_03_WorldBP_CheckpointTrigger37","Exterior III"),
-        tB("03_03_World","03_03_WorldBP_CheckpointTrigger26","Arena III"),
+        tB("03_03_World","03_03_WorldBP_CheckpointTrigger37","Exterior III[Restricted Route]"),
+        tB("03_03_World","03_03_WorldBP_CheckpointTrigger26","Arena III[Restricted Route]"),
         //Too Close To The Sun
         tB("03_04_World","03_04_WorldBP_CheckpointTrigger14","Flying I (Glider Intro)"),
         tB("03_04_World","03_04_WorldBP_CheckpointTrigger18","Flying II (Air Bounce / OOB Skip)"),
-        tB("03_04_World","03_04_WorldBP_CheckpointTrigger30","Flying III (Grapple Wall + Chook) [Restricted Route]"),
+        tB("03_04_World","03_04_WorldBP_CheckpointTrigger30","Flying III (Grapple Wall + Chook)[Restricted Route]"),
         tB("03_04_World","03_04_WorldBP_CheckpointTrigger10","Flying IV (Rail Grinding + Fans I)"),
         tB("03_04_World","03_04_WorldBP_CheckpointTrigger27","Arena I"),
         tB("03_04_World","03_04_WorldBP_CheckpointTrigger16","Flying V (Big Tube I)"),
-        tB("03_04_World","03_04_WorldBP_CheckpointTrigger25","Arena II [Restricted Route]"),
+        tB("03_04_World","03_04_WorldBP_CheckpointTrigger25","Arena II[Restricted Route]"),
         tB("03_04_World","03_04_WorldBP_CheckpointTrigger23","Flying VI (Tempest Grapples)[Restricted Route]"),
         tB("03_04_World","03_04_WorldBP_CheckpointTrigger22","Hell Hallway / Biter's Hallway"),
         tB("03_04_World","03_04_WorldBP_CheckpointTrigger","Flying VII (Shuriken Gaps)"),
@@ -247,7 +246,7 @@ startup
         //tB("03_05_World","03_05_WorldBP_CheckpointTriggerPlaterReactor","Mitra Phase IV"), literally the only time this method breaks bruh lol
         tB("03_05_World","03_05_WorldBP_CheckpointTriggerVR2Start","Mitra Phase IV & V"),
     };
-    foreach (var s in sB) settings.Add(s.Item2, true, s.Item3, s.Item1);   
+    foreach (var s in sB) settings.Add(s.Item2, false, s.Item3, s.Item1);   
 
     // Code assistance by Ero, written by Kuno / Meta
     vars.ILStartCamTargets = new Dictionary<string, Tuple<string, string>>
@@ -266,7 +265,8 @@ startup
         { "02_07_world", Tuple.Create("01_Opening_02_07", "BP_PlayerCharacter_C") },
         { "03_01_world", Tuple.Create("CS2_CineCameraActor1", "BP_MotorcycleVehicle") },
         { "03_02_world", Tuple.Create("BP_CinematicCamera", "BP_PlayerCharacter_C") },
-        { "03_03_World", Tuple.Create("BP_CinematicCamera", "BP_PlayerCharacter_C") },
+        { "03_03_World", Tuple.Create("BP_PlayerCharacter_C", "-") },
+        //{ "03_03_World", Tuple.Create("BP_CinematicCamera", "BP_PlayerCharacter_C") },
         { "03_04_World", Tuple.Create("BP_CinematicCamera", "BP_PlayerCharacter_C") },
         { "03_05_World", Tuple.Create("CS4_Mitra_Intro", "BP_PlayerCharacter_C") },
         // ...
