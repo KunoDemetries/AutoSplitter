@@ -93,7 +93,7 @@ startup
         //Setting The Stage
         tB("01_01_World","01_01_WorldBP_CheckpointTrigger4","Pipes Section"),
         tB("01_01_World","01_01_WorldBP_CheckpointTrigger34","Water Room"),
-        tB("01_01_World","01_01_WorldBP_CheckpointTrigger3","Single Barrel Blowup Checkpoint (Restricted Route)"),
+        tB("01_01_World","01_01_WorldBP_CheckpointTrigger3","Single Barrel Blowup Checkpoint [Restricted Route]"),
         tB("01_01_World","01_01_WorldBP_CheckpointTrigger28","Flux Skip"),
         tB("01_01_World","01_01_WorldBP_CheckpointTrigger_Cybervoid","Final Arena Complete"),
         tB("01_01_World","01_01_WorldBP_CheckpointTrigger_Cybervoid2","Cybervoid I"),
@@ -126,9 +126,9 @@ startup
         tB("01_04_world","01_04_worldBP_CheckpointTrigger7","Rahu V"),
         tB("01_04_world","01_04_worldBP_CheckpointTrigger8","Rahu VI"),
         //A Price To Be Paid
-        tB("02_01_WORLD","02_01_WORLDBP_CheckpointTrigger12","Laser Guy Intro Arena (Restricted Route)"),
-        tB("02_01_WORLD","02_01_WORLDBP_CheckpointTrigger7","Grapple Walls (Restricted Route)"),
-        tB("02_01_WORLD","02_01_WORLDBP_CheckpointTrigger21","Hostiles Bossfight Halfway Complete (Restricted Route)"), //?????
+        tB("02_01_WORLD","02_01_WORLDBP_CheckpointTrigger12","Laser Guy Intro Arena [Restricted Route]"),
+        tB("02_01_WORLD","02_01_WORLDBP_CheckpointTrigger7","Grapple Walls [Restricted Route]"),
+        tB("02_01_WORLD","02_01_WORLDBP_CheckpointTrigger21","Hostiles Bossfight Halfway Complete [Restricted Route]"), //?????
         //Licking The Wounds
         tB("VSL_01_World","VSL_01_WorldBP_CheckpointTrigger31","Arena I"),
         tB("VSL_01_World","VSL_01_WorldBP_CheckpointTrigger8","Right Side Skip"),
@@ -193,7 +193,7 @@ startup
         tB("02_07_world","02_07_worldBP_CheckpointTriggerMovable20","Colour Puzzle II"),
         tB("02_07_world","02_07_worldBP_CheckpointTriggerMovable10","Fight & Cutscene II"),
         tB("02_07_world","02_07_worldBP_CheckpointTriggerMovable24","Platforming II"),
-        tB("02_07_world","02_07_world4BP_CheckpointTriggerMovable27","Colour Puzzle III"),
+        tB("02_07_world","02_07_worldBP_CheckpointTriggerMovable27","Colour Puzzle III"),
         tB("02_07_world","02_07_worldBP_CheckpointTriggerMovable13","Fight & Cutscene III"),
         tB("02_07_world","02_07_worldBP_CheckpointTriggerMovable30","Platforming III"),
         tB("02_07_world","02_07_worldBP_CheckpointTriggerMovable32","Colour Puzzle IV"),
@@ -215,7 +215,6 @@ startup
         tB("03_02_world","03_02_worldBP_CheckpointTrigger5","Green Trees Phase I"),
         tB("03_02_world","03_02_worldBP_CheckpointTrigger6","Dismantler Phase II"),
         tB("03_02_world","03_02_worldBP_CheckpointTrigger4","Green Trees Phase II"),
-        tB("03_02_world","03_02_worldBP_CheckpointTrigger3","Dismantler Phase III + GreenTrees Phase III"),
         //Elevator Maintenance
         tB("03_03_World","03_03_WorldBP_CheckpointTrigger23","Arena I"),
         tB("03_03_World","03_03_WorldBP_CheckpointTrigger27","Interior I"),
@@ -228,26 +227,25 @@ startup
         tB("03_03_World","03_03_WorldBP_CheckpointTrigger37","Exterior III"),
         tB("03_03_World","03_03_WorldBP_CheckpointTrigger26","Arena III"),
         //Too Close To The Sun
-        tB("03_04_World","03_04_WorldBP_CheckpointTrigger14","Flying I"),
-        tB("03_04_World","03_04_WorldBP_CheckpointTrigger18","Flying II"),
-        tB("03_04_World","03_04_WorldBP_CheckpointTrigger12","Flying III"),
-        tB("03_04_World","03_04_WorldBP_CheckpointTrigger30","Platforming"),
-        tB("03_04_World","03_04_WorldBP_CheckpointTrigger10","Flying IV"),
+        tB("03_04_World","03_04_WorldBP_CheckpointTrigger14","Flying I (Glider Intro)"),
+        tB("03_04_World","03_04_WorldBP_CheckpointTrigger18","Flying II (Air Bounce / OOB Skip)"),
+        tB("03_04_World","03_04_WorldBP_CheckpointTrigger30","Flying III (Grapple Wall + Chook) [Restricted Route]"),
+        tB("03_04_World","03_04_WorldBP_CheckpointTrigger10","Flying IV (Rail Grinding + Fans I)"),
         tB("03_04_World","03_04_WorldBP_CheckpointTrigger27","Arena I"),
-        tB("03_04_World","03_04_WorldBP_CheckpointTrigger16","Flying V"),
-        tB("03_04_World","03_04_WorldBP_CheckpointTrigger25","Arena II"),
-        tB("03_04_World","03_04_WorldBP_CheckpointTrigger23","Flying VI"),
-        tB("03_04_World","03_04_WorldBP_CheckpointTrigger22","Hell Hallway"),
-        tB("03_04_World","03_04_WorldBP_CheckpointTrigger","Flying VII"),
+        tB("03_04_World","03_04_WorldBP_CheckpointTrigger16","Flying V (Big Tube I)"),
+        tB("03_04_World","03_04_WorldBP_CheckpointTrigger25","Arena II [Restricted Route]"),
+        tB("03_04_World","03_04_WorldBP_CheckpointTrigger23","Flying VI (Tempest Grapples)[Restricted Route]"),
+        tB("03_04_World","03_04_WorldBP_CheckpointTrigger22","Hell Hallway / Biter's Hallway"),
+        tB("03_04_World","03_04_WorldBP_CheckpointTrigger","Flying VII (Shuriken Gaps)"),
         tB("03_04_World","03_04_WorldBP_CheckpointTrigger24","Arena III"),
-        tB("03_04_World","03_04_WorldBP_CheckpointTrigger34","Exterior"),
-        tB("03_04_World","03_04_WorldBP_CheckpointTrigger38","Arena IV"),
+        tB("03_04_World","03_04_WorldBP_CheckpointTrigger34","Flying VIII (Big Tube II) [Restricted Route]"),
+        tB("03_04_World","03_04_WorldBP_CheckpointTrigger38","Arena IV [Restricted Route]"),
         //The Monolith of Inhumanity
         tB("03_05_World","03_05_WorldBP_CheckpointTrigger5","Mitra Phase I"),
         tB("03_05_World","03_05_WorldBP_CheckpointTriggerPlaterReactor","Mitra Phase II"),
         tB("03_05_World","03_05_WorldBP_CheckpointTriggerVR1Start","Mitra Phase III"),
-        //tB("03_05_World","03_05_WorldBP_CheckpointTriggerPlaterReactor","Mitra Phase IV"),
-        tB("03_05_World","03_05_WorldBP_CheckpointTriggerVR2Start","Mitra Phase V"),
+        //tB("03_05_World","03_05_WorldBP_CheckpointTriggerPlaterReactor","Mitra Phase IV"), literally the only time this method breaks bruh lol
+        tB("03_05_World","03_05_WorldBP_CheckpointTriggerVR2Start","Mitra Phase IV & V"),
     };
     foreach (var s in sB) settings.Add(s.Item2, true, s.Item3, s.Item1);   
 
@@ -587,4 +585,5 @@ exit
 {
     //Just in case the game crashes we'll have the time paused until the user loads into the mainmenu
 	timer.IsGameTimePaused = true;
+    vars.Checkpoint.Reset();
 }
