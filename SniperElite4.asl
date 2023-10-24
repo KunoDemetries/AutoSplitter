@@ -4,6 +4,7 @@ state("SniperElite4_DX11")
     string16 map : 0xEB0BEB;
     float loading1 : 0xCFCAF0;
     byte loading : 0xBE1F37;
+	byte fades : 0xC1555B;
     float islandload : 0xC15A90;
     int endscene : 0xB67E60;
 }
@@ -13,6 +14,7 @@ state("SniperElite4_DX12")
 	string16 map :  0xE5A2AB;
 	byte loading1 : 0xB669FC;
 	byte loading : 0xB2007F;
+	byte fades : 0xB65D4D;
 	float islandload : 0xB683E0;
 	int endscene : 0xAA5E98;
 }
@@ -91,7 +93,7 @@ reset
 
 isLoading
 {
-	return ((current.loading == 1));
+	return ((current.loading == 1) || (current.fades == 1));
 }
 
 exit 
