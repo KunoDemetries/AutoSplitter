@@ -10,7 +10,8 @@ startup
 	vars.doneMaps = new List<string>();
     vars.DoLoad = false;
     vars.EndSplit = false;
-
+    //There is a few instances where the game loads worlds out of order so we're adding a counter to fix it
+    vars.Counter = 0;
 
     // Taken from Dude Simulator 3 (Meta worked on it)
     if (timer.CurrentTimingMethod == TimingMethod.RealTime)
@@ -66,7 +67,7 @@ startup
         settings.Add("02_05_World", true, "Pillars Of Creation", "Mission Splits");
         settings.Add("02_06_world", true, "Something Lurks In The Sand", "Mission Splits");
         settings.Add("02_07_world", true, "Minigames", "Mission Splits");
-        settings.Add("03_01_world", true, "Can Anyone Hear Me?", "Mission Splits");
+        settings.Add("2", true, "Can Anyone Hear Me?", "Mission Splits");
         settings.Add("03_02_world", true, "Danse Macabre", "Mission Splits");
         settings.Add("03_03_World", true, "Elevator Maintenance", "Mission Splits");
         settings.Add("03_04_World", true, "Too Close To The Sun", "Mission Splits");
@@ -197,17 +198,17 @@ startup
         tB("02_07_world","02_07_worldBP_CheckpointTriggerMovable32","Colour Puzzle IV"),
         tB("02_07_world","02_07_worldBP_CheckpointTriggerMovable14","Fight & Cutscene IV"),
         //Can Anyone Hear Me?
-        tB("03_01_world","03_01_worldBP_CheckpointTrigger19","Bike Section I"),
-        tB("03_01_world","03_01_worldBP_CheckpointTrigger8","Bike Section II"),
-        tB("03_01_world","03_01_worldBP_CheckpointTrigger18","Bike Section III"),
-        tB("03_01_world","03_01_worldBP_CheckpointTrigger9","Bike Section IV"),
-        tB("03_01_world","03_01_worldBP_CheckpointTrigger11","Bike Section V (Biker Maniacs I)"),
-        tB("03_01_world","03_01_worldBP_CheckpointTrigger12","Bike Section VI"),
-        tB("03_01_world","03_01_worldBP_CheckpointTrigger13","Bike Section VII"),
-        tB("03_01_world","03_01_worldBP_CheckpointTrigger14","Bike Section VIII (Biker Maniacs 2)"),
-        tB("03_01_world","03_01_worldBP_CheckpointTrigger3","Bike Section IX"),
-        tB("03_01_world","03_01_worldBP_CheckpointTrigger4","Bike Section X (Inside Dharma)"),
-        tB("03_01_world","03_01_worldBP_CheckpointTrigger16","Arena Fight"),
+        tB("2","03_01_worldBP_CheckpointTrigger19","Bike Section I"),
+        tB("2","03_01_worldBP_CheckpointTrigger8","Bike Section II"),
+        tB("2","03_01_worldBP_CheckpointTrigger18","Bike Section III"),
+        tB("2","03_01_worldBP_CheckpointTrigger9","Bike Section IV"),
+        tB("2","03_01_worldBP_CheckpointTrigger11","Bike Section V (Biker Maniacs I)"),
+        tB("2","03_01_worldBP_CheckpointTrigger12","Bike Section VI"),
+        tB("2","03_01_worldBP_CheckpointTrigger13","Bike Section VII"),
+        tB("2","03_01_worldBP_CheckpointTrigger14","Bike Section VIII (Biker Maniacs 2)"),
+        tB("2","03_01_worldBP_CheckpointTrigger3","Bike Section IX"),
+        tB("2","03_01_worldBP_CheckpointTrigger4","Bike Section X (Inside Dharma)"),
+        tB("2","03_01_worldBP_CheckpointTrigger16","Arena Fight"),
         //Danse Macabre
         tB("03_02_world","03_02_worldBP_CheckpointTrigger2","Dismantler Phase I"),
         tB("03_02_world","03_02_worldBP_CheckpointTrigger5","Green Trees Phase I"),
@@ -430,6 +431,16 @@ update
     current.CurrentSpeed = (float)hVel;
     current.MotorcycleSpeed = vars.Watchers["MotorcycleVelocity"].Current;
     
+    // Code original written by Micrologist (until unstated)
+        // The game is considered to be loading if any scenes are loading synchronously
+    current.loading = vars.Watchers["syncLoadCount"].Current > 0;
+        // Get the current world name as string, only if *UWorld isnt null
+    var worldFName = vars.Watchers["worldFName"].Current;
+    current.world = worldFName != 0x0 ? vars.ReadFName(worldFName) : old.world;
+        // Get the Name of the current target for the CameraManager
+    current.camTarget = vars.ReadFName(vars.Watchers["camViewTargetFName"].Current);
+    // End of code original written by Micrologist
+
     //Code written by Kuno / Meta
     current.EndLoading = vars.Watchers["EndLevel"].Current;
     current.WorldNewCheckpoint = (current.world + current.checkpoint).Replace(" ", "");
@@ -444,15 +455,10 @@ update
 
     }    
 
-    // Code original written by Micrologist (until unstated)
-        // The game is considered to be loading if any scenes are loading synchronously
-    current.loading = vars.Watchers["syncLoadCount"].Current > 0;
-        // Get the current world name as string, only if *UWorld isnt null
-    var worldFName = vars.Watchers["worldFName"].Current;
-    current.world = worldFName != 0x0 ? vars.ReadFName(worldFName) : old.world;
-        // Get the Name of the current target for the CameraManager
-    current.camTarget = vars.ReadFName(vars.Watchers["camViewTargetFName"].Current);
-    // End of code original written by Micrologist
+    if (current.world == "03_01_world" && old.world != "03_01_world")
+    {
+        vars.Counter++;
+    }
 
     //Code written by Kuno / Meta
         //There is a weird space between when the end level screen appears vs when loading starts, so we're checking if we're on an endloading screen then setting doload to true
@@ -547,9 +553,16 @@ onStart
 split
 {
     //Split if the current world is enabled, and not inside of our donemaps list
-    if (settings[current.world] && (!vars.doneMaps.Contains(current.world)))
+    if (settings[current.world] && (!vars.doneMaps.Contains(current.world)) && (!current.loading))
     {
         vars.doneMaps.Add(current.world);
+        print("Splti on:" + current.world);
+        return true;
+    }
+
+    if (settings[vars.Counter.ToString()] && !vars.doneMaps.Contains(vars.Counter.ToString()))
+    {
+        vars.doneMaps.Add(vars.Counter.ToString());
         return true;
     }
 
@@ -581,6 +594,7 @@ onReset
     vars.doneMaps.Clear();
     vars.EndSplit = false;
     current.Movie = "";
+    vars.Counter = 0;
 }
 
 exit
