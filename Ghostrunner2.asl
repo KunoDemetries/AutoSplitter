@@ -305,8 +305,9 @@ init
     var PlayerController = scn.Scan(PlayerControllerTrg);
     var EndLeveltrg = new SigScanTarget(3, "4c 8b 05 ?? ?? ?? ?? 33 ff 4c 8b c9"){ OnFound = (p, s, ptr) => ptr + 0x4 + game.ReadValue<int>(ptr) };
     var EndLevel = scn.Scan(EndLeveltrg);
-    var MovieTrg = new SigScanTarget(3, "48 8d 15 ?? ?? ?? ?? 48 8b cb ff 90 ?? ?? ?? ?? 48 8b 8b") { OnFound = (p, s, ptr) => ptr + 0x4 + game.ReadValue<int>(ptr) };
-    var Movie = scn.Scan(MovieTrg);
+
+
+    print(uWorld.ToString("X"));
 
     // Code original written by Diggity (converted into a sgiscan by Kuno/Meta)
     var GNamePoolTrg = new SigScanTarget(3, "48 89 05 ?? ?? ?? ?? 48 83 c4 ?? c3") { OnFound = (p, s, ptr) => ptr + 0x4 + game.ReadValue<int>(ptr) };
@@ -336,7 +337,7 @@ init
             //Current velocity shown on the motorcycle in KMH
         new MemoryWatcher<float>(new DeepPointer(EndLevel + 0x1000, 0x20, 0x294)) {Name = "MotorcycleVelocity"},
             //Typically only works on the last two end movies and the intro one (excludes the credits one)
-        new MemoryWatcher<long>(new DeepPointer(Movie, 0x10, 0x20, 0x248, 0x0 + 0x3b8)) { Name = "curMovieName"},
+        new MemoryWatcher<long>(new DeepPointer(uWorld, 0x138, 0x20, 0xE8, 0x248, 0x0 + 0x3bc)) { Name = "curMovieName"},
             //Current player x and y velocity not on the motorcycle, in UE4 units
         new MemoryWatcher<float>(new DeepPointer(PlayerController, 0x30, 0x250, 0x290, 0x140)) {Name = "xVel"},
         new MemoryWatcher<float>(new DeepPointer(PlayerController, 0x30, 0x250, 0x290, 0x144)) {Name = "yVel"},
@@ -396,7 +397,7 @@ init
         {
             var ssPtr = game.ReadValue<IntPtr>((IntPtr) (giss + i * 0x18 + 0x8));
             var name = vars.ReadFNameOfObject(ssPtr);
-            print(name + " at " + ssPtr.ToString("X"));
+            //print(name + " at " + ssPtr.ToString("X"));
             if (name == "CheckpointSubsystem") {
                 vars.Checkpoint = new MemoryWatcher<long>(new DeepPointer(ssPtr + 0x50, 0x18));
             }
@@ -433,6 +434,7 @@ update
     current.EndLoading = vars.Watchers["EndLevel"].Current;
     current.WorldNewCheckpoint = (current.world + current.checkpoint).Replace(" ", "");
         // The movie address doesn't initialize until the movie actually starts playing, so doing this so it doesn't constantly throw an error message saying it's a nullptr
+
     try 
     {
         current.Movie = vars.ReadFName(vars.Watchers["curMovieName"].Current);
@@ -441,7 +443,7 @@ update
     {
 
     }    
-    
+
     // Code original written by Micrologist (until unstated)
         // The game is considered to be loading if any scenes are loading synchronously
     current.loading = vars.Watchers["syncLoadCount"].Current > 0;
@@ -568,6 +570,7 @@ split
     if (current.Movie == "UI.Video.Outro" && vars.EndSplit == false)
     {
         vars.EndSplit = true;
+        print("end splitt");
         return true;
     }
 }
@@ -577,6 +580,7 @@ onReset
     //Clearing out donemaps, and setting endsplit back to false
     vars.doneMaps.Clear();
     vars.EndSplit = false;
+    current.Movie = "";
 }
 
 exit
