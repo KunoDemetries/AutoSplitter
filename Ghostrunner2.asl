@@ -94,7 +94,7 @@ startup
         tB("01_01_World","01_01_WorldBP_CheckpointTrigger4","Pipes Section"),
         tB("01_01_World","01_01_WorldBP_CheckpointTrigger34","Water Room"),
         tB("01_01_World","01_01_WorldBP_CheckpointTrigger3","Single Barrel Blowup Checkpoint [Restricted Route]"),
-        tB("01_01_World","01_01_WorldBP_CheckpointTrigger28","Flux Skip"),
+        tB("01_01_World","01_01_WorldBP_CheckpointTrigger28","Flux Skip[Route Dependant]"),
         tB("01_01_World","01_01_WorldBP_CheckpointTrigger_Cybervoid","Final Arena Complete"),
         tB("01_01_World","01_01_WorldBP_CheckpointTrigger_Cybervoid2","Cybervoid I"),
         //The Hackers Den
@@ -119,8 +119,8 @@ startup
         tB("01_04_world","01_04_worldBP_CheckpointTrigger14","Avatar Phase I"),
         tB("01_04_world","01_04_worldBP_CheckpointTrigger15","Avatar Phase I (End of Ground Avatars)"),
         tB("01_04_world","01_04_worldBP_CheckpointTrigger6","Avatar Phase I (Air Avatars)"),
-        tB("01_04_world","01_04_worldBP_CheckpointTrigger2","Rahu I"),
-        tB("01_04_world","01_04_worldBP_CheckpointTrigger3","Rahu II"),
+        tB("01_04_world","01_04_worldBP_CheckpointTrigger2","Rahu I [Restricted Route]"),
+        tB("01_04_world","01_04_worldBP_CheckpointTrigger3","Rahu II [Rahu Phase Skip]"),
         tB("01_04_world","01_04_worldBP_CheckpointTrigger4","Rahu III"),
         tB("01_04_world","01_04_worldBP_CheckpointTrigger5","Rahu IV"),
         tB("01_04_world","01_04_worldBP_CheckpointTrigger7","Rahu V"),
@@ -252,9 +252,9 @@ startup
     vars.ILStartCamTargets = new Dictionary<string, Tuple<string, string>>
     {
         { "00_02_world", Tuple.Create("ExpiredSpawnable", "BP_PlayerCharacter_C") },
-        { "01_01_World", Tuple.Create("BP_CinematicCamera", "BP_PlayerCharacter_C") },
-        { "01_02_World", Tuple.Create("BP_CinematicCamera", "BP_PlayerCharacter_C") },
-        { "01_03_World", Tuple.Create("BP_CinematicCamera", "BP_PlayerCharacter_C") },
+        { "01_01_World", Tuple.Create("BP_PlayerCharacter_C", "-") },
+        { "01_02_World", Tuple.Create("BP_PlayerCharacter_C", "-") },
+        { "01_03_World", Tuple.Create("BP_PlayerCharacter_C", "-") },
         { "01_04_world", Tuple.Create("BP_PlayerCharacter_C", "-") },
         { "02_01_WORLD", Tuple.Create("CineCameraActor", "CS_09_Connor_s_Death") },
         { "VSL_01_World", Tuple.Create("CS1_Opening01", "BP_PlayerCharacter_C") },
@@ -267,7 +267,7 @@ startup
         { "03_02_world", Tuple.Create("BP_CinematicCamera", "BP_PlayerCharacter_C") },
         { "03_03_World", Tuple.Create("BP_PlayerCharacter_C", "-") },
         //{ "03_03_World", Tuple.Create("BP_CinematicCamera", "BP_PlayerCharacter_C") },
-        { "03_04_World", Tuple.Create("BP_CinematicCamera", "BP_PlayerCharacter_C") },
+        { "03_04_World", Tuple.Create("BP_PlayerCharacter_C", "-") },
         { "03_05_World", Tuple.Create("CS4_Mitra_Intro", "BP_PlayerCharacter_C") },
         // ...
     };
