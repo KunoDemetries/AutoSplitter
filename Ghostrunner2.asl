@@ -84,7 +84,7 @@ startup
         tB("00_01_world","00_01_worldBP_CheckpointTrigger22","Arena II"),
         tB("00_01_world","00_01_worldBP_CheckpointTrigger31","Trains I"),
         tB("00_01_world","00_01_worldBP_CheckpointTrigger16","Arena III"),
-        tB("00_01_world","00_01_worldBP_CheckpointTrigger20","Platforming I"),
+        tB("00_01_world","00_01_worldBP_CheckpointTrigger33","Platforming I"),
         tB("00_01_world","00_01_worldBP_CheckpointTrigger21","Arena IV"),
         tB("00_01_world","00_01_worldBP_CheckpointTrigger24","Trains II"),
         tB("00_01_world","00_01_worldBP_CheckpointTrigger27","Platforming II"),
