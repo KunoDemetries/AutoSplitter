@@ -505,6 +505,8 @@ update
             vars.SetTextComponent("Speed:",current.CurrentSpeed.ToString("0000.00"));
         }
     }
+
+    print(current.checkpoint);
 }
 
 isLoading
@@ -533,7 +535,7 @@ start
             //Check one is checking if we're inbetween two camera regions, check two is for certain levels without cutscenes. Can anyone hear me is the only one with an issue being able to work with both so we just excluded it from the second check
             if (old.camTarget == targets.Item1 && current.camTarget == targets.Item2 || old.camTarget == targets.Item1 && old.loading != current.loading && current.world != "03_01_world")
             {
-                vars.Checkpoint.Reset();
+                current.checkpoint = "";
                 return true;
             }
         }
@@ -547,7 +549,9 @@ start
 onStart
 {
     timer.IsGameTimePaused = true;
+    current.checkpoint = "";
     vars.doneMaps.Add(current.world);
+    vars.Checkpoint.Reset();
 }
 
 split
@@ -556,7 +560,7 @@ split
     if (settings[current.world] && (!vars.doneMaps.Contains(current.world)) && (!current.loading))
     {
         vars.doneMaps.Add(current.world);
-        print("Splti on:" + current.world);
+        print("Split on:" + current.world);
         return true;
     }
 
@@ -564,18 +568,21 @@ split
     if (settings[current.WorldNewCheckpoint] && (!vars.doneMaps.Contains(current.WorldNewCheckpoint)))
     {
         vars.doneMaps.Add(current.WorldNewCheckpoint);
+        print("Split on new checkpoint:" + current.WorldNewCheckpoint);
         return true;
     }
 
     if (settings[vars.Counter.ToString()] && !vars.doneMaps.Contains(vars.Counter.ToString()))
     {
         vars.doneMaps.Add(vars.Counter.ToString());
+        print("Split on new counter:" + vars.Counter.ToString());
         return true;
     }
 
     //There is a hub section we return to a few times throughout the game, this is a generic check nothing major
     if (settings["Hub Splits"] && (current.world == "HUB_Blockout" && old.world != "HUB_Blockout"))
     {
+        print("Split on Hub");
         return true;
     }
 
@@ -583,7 +590,7 @@ split
     if (current.Movie == "UI.Video.Outro" && vars.EndSplit == false)
     {
         vars.EndSplit = true;
-        print("end splitt");
+        print("end split");
         return true;
     }
 }
@@ -596,6 +603,7 @@ onReset
     current.Movie = "";
     vars.Counter = 0;
     current.checkpoint = "";
+    vars.Checkpoint.Reset();
 }
 
 exit
