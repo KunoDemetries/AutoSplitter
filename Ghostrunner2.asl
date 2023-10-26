@@ -560,16 +560,16 @@ split
         return true;
     }
 
-    if (settings[vars.Counter.ToString()] && !vars.doneMaps.Contains(vars.Counter.ToString()))
-    {
-        vars.doneMaps.Add(vars.Counter.ToString());
-        return true;
-    }
-
     //Split if the current world we're in and the checkpoint we just reached is in settings, and not in our donemaps (also used for done checkpoints)
     if (settings[current.WorldNewCheckpoint] && (!vars.doneMaps.Contains(current.WorldNewCheckpoint)))
     {
         vars.doneMaps.Add(current.WorldNewCheckpoint);
+        return true;
+    }
+
+    if (settings[vars.Counter.ToString()] && !vars.doneMaps.Contains(vars.Counter.ToString()))
+    {
+        vars.doneMaps.Add(vars.Counter.ToString());
         return true;
     }
 
@@ -595,6 +595,7 @@ onReset
     vars.EndSplit = false;
     current.Movie = "";
     vars.Counter = 0;
+    current.checkpoint = "";
 }
 
 exit
