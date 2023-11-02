@@ -276,8 +276,8 @@ startup
     //Parent setting
 	settings.Add("Variable Information", true, "Variable Information");
 	//Child settings that will sit beneath Parent setting
-	settings.Add("Camera", true, "Current Camera Target", "Variable Information");
-    settings.Add("Map", true, "Current Map", "Variable Information");
+	settings.Add("Camera", false, "Current Camera Target", "Variable Information");
+    settings.Add("Map", false, "Current Map", "Variable Information");
 
     // Code written by Kuno / Meta
     settings.Add("Checkpoint", true, "Current Checkpoint", "Variable Information");
