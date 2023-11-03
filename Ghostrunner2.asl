@@ -10,6 +10,7 @@ startup
 	vars.doneMaps = new List<string>();
     vars.DoLoad = false;
     vars.EndSplit = false;
+    vars.scanCooldown = new Stopwatch();
     //There is a few instances where the game loads worlds out of order so we're adding a counter to fix it
     vars.Counter = 0;
 
@@ -453,6 +454,12 @@ update
 
     }    
 
+    if (vars.scanCooldown.Elapsed.TotalMilliseconds > 499)
+    {
+        vars.scanCooldown.Stop(); 
+    }
+    print(vars.scanCooldown.Elapsed.TotalMilliseconds.ToString());
+
     if (current.world == "03_01_world" && old.world != "03_01_world")
     {
         vars.Counter++;
@@ -546,6 +553,7 @@ start
 
 onStart
 {
+    vars.scanCooldown.Start();
     timer.IsGameTimePaused = true;
     current.checkpoint = "";
     vars.doneMaps.Add(current.world);
@@ -554,43 +562,46 @@ onStart
 
 split
 {
-    //Split if the current world is enabled, and not inside of our donemaps list
-    if (settings[current.world] && (!vars.doneMaps.Contains(current.world)) && (!current.loading))
-    {
-        vars.doneMaps.Add(current.world);
-        print("Split on:" + current.world);
-        return true;
-    }
+   if ((vars.scanCooldown.Elapsed.TotalMilliseconds >= 500))
+   {
+         //Split if the current world is enabled, and not inside of our donemaps list
+        if (settings[current.world] && (!vars.doneMaps.Contains(current.world)) && (!current.loading))
+        {
+            vars.doneMaps.Add(current.world);
+            print("Split on:" + current.world);
+            return true;
+        }
 
-    //Split if the current world we're in and the checkpoint we just reached is in settings, and not in our donemaps (also used for done checkpoints)
-    if (settings[current.WorldNewCheckpoint] && (!vars.doneMaps.Contains(current.WorldNewCheckpoint)))
-    {
-        vars.doneMaps.Add(current.WorldNewCheckpoint);
-        print("Split on new checkpoint:" + current.WorldNewCheckpoint);
-        return true;
-    }
+        //Split if the current world we're in and the checkpoint we just reached is in settings, and not in our donemaps (also used for done checkpoints)
+        if (settings[current.WorldNewCheckpoint] && (!vars.doneMaps.Contains(current.WorldNewCheckpoint)))
+        {
+            vars.doneMaps.Add(current.WorldNewCheckpoint);
+            print("Split on new checkpoint:" + current.WorldNewCheckpoint);
+            return true;
+        }
 
-    if (settings[vars.Counter.ToString()] && !vars.doneMaps.Contains(vars.Counter.ToString()))
-    {
-        vars.doneMaps.Add(vars.Counter.ToString());
-        print("Split on new counter:" + vars.Counter.ToString());
-        return true;
-    }
+        if (settings[vars.Counter.ToString()] && !vars.doneMaps.Contains(vars.Counter.ToString()))
+        {
+            vars.doneMaps.Add(vars.Counter.ToString());
+            print("Split on new counter:" + vars.Counter.ToString());
+            return true;
+        }
 
-    //There is a hub section we return to a few times throughout the game, this is a generic check nothing major
-    if (settings["Hub Splits"] && (current.world == "HUB_Blockout" && old.world != "HUB_Blockout"))
-    {
-        print("Split on Hub");
-        return true;
-    }
+        //There is a hub section we return to a few times throughout the game, this is a generic check nothing major
+        if (settings["Hub Splits"] && (current.world == "HUB_Blockout" && old.world != "HUB_Blockout"))
+        {
+            print("Split on Hub");
+            return true;
+        }
 
-    //End time for full game runs is on the ending movie, DMGvol helped us find the current.Movie playing and we're just checking if we reached it. Alongside, if we already endsplitted just in case so it doesn't split a billion times if the runner wasn't on their end split (for whatever reason)
-    if (current.Movie == "UI.Video.Outro" && vars.EndSplit == false)
-    {
-        vars.EndSplit = true;
-        print("end split");
-        return true;
-    }
+        //End time for full game runs is on the ending movie, DMGvol helped us find the current.Movie playing and we're just checking if we reached it. Alongside, if we already endsplitted just in case so it doesn't split a billion times if the runner wasn't on their end split (for whatever reason)
+        if (current.Movie == "UI.Video.Outro" && vars.EndSplit == false)
+        {
+            vars.EndSplit = true;
+            print("end split");
+            return true;
+        }
+   }
 }
 
 onReset
@@ -598,6 +609,7 @@ onReset
     //Clearing out donemaps, and setting endsplit back to false
     vars.doneMaps.Clear();
     vars.EndSplit = false;
+    vars.scanCooldown.Reset();
     current.Movie = "";
     vars.Counter = 0;
     current.checkpoint = "";
