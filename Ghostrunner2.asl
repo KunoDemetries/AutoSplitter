@@ -150,12 +150,9 @@ startup
         tB("VSL_02_World","VSL_02_WorldBP_CheckpointTrigger21","Crawlers II"),
         tB("VSL_02_World","VSL_02_WorldBP_CheckpointTrigger22","Bollards I"),
         tB("VSL_02_World","VSL_02_WorldBP_CheckpointTrigger24","Bollards II"),
-        //Winds of The Desolate
-        tB("02_04_WORLD","02_04_WORLDBP_CheckpointTrigger52","Shuriken Puzzle"),                      
+        //Winds of The Desolate                      
         tB("02_04_WORLD","02_04_WORLDBP_CheckpointTrigger33","Bike (Lasers)"),
-        tB("02_04_WORLD","02_04_WORLDBP_CheckpointTrigger34","Bike (Downtown)"),
         tB("02_04_WORLD","02_04_WORLDBP_CheckpointTrigger50","Gate I"),
-        tB("02_04_WORLD","02_04_WORLDBP_CheckpointTrigger11","Bike (Bridge)"),
         tB("02_04_WORLD","02_04_WORLDBP_CheckpointTrigger41","Gate II"),           
         tB("02_04_WORLD","02_04_WORLDBP_CheckpointTrigger16","Gate III"),         
         tB("02_04_WORLD","02_04_WORLDBP_CheckpointTrigger39","Gate IV"),
