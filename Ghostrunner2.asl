@@ -109,7 +109,7 @@ startup
         tB("01_02_World","01_02_WorldBP_CheckpointTriggerAfterShurikenCV","Shuriken Cybervoid II"),
         //Behind The Curtain
         tB("01_03_World","01_03_WorldBP_CheckpointTrigger43","Cybervoid"),
-        tB("01_03_World","01_03_WorldBP_CheckpointTrigger10","Checkpoint before Arena I / After Big Room"),
+        tB("01_03_World","01_03_WorldBP_CheckpointTrigger10","Checkpoint before Arena I / After Panda Skip"),
         tB("01_03_World","01_03_WorldBP_CheckpointTrigger31","Arena I"),
         tB("01_03_World","01_03_WorldBP_CheckpointTrigger36","Arena II [Restricted]"),
         tB("01_03_World","01_03_WorldBP_CheckpointTrigger7","Arena III / Arena III Skip"),
