@@ -1,13 +1,7 @@
 // Splits once loading is done because can't do a logical check for which load screen is which without entering the level first sadly
 // Easiest fix compared to trying to sort through hours of finding a code for the current map as it's usually locked cause UE4 bad
-state("CallOfCthulhu", "version.initial")
+state("CallOfCthulhu")
 {
-    int loading1 : 0x031351D0, 0x8;
-}
-
-state("CallOfCthulhu", "version.latest")
-{
-    int loading1 : 0x031351D0, 0x8;
 }
 
 startup
@@ -35,13 +29,6 @@ startup
 			settings.Add(Tag.Key, true, Tag.Value, "missions");
     	};
 
-    vars.onStart = (EventHandler)((s, e) =>
-    {
-		vars.counter = 0;
-    });
-
-    timer.OnStart += vars.onStart;
-
     	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
         {
         var timingMessage = MessageBox.Show (
@@ -63,49 +50,37 @@ init
 {
 	vars.counter = 0; // Just so there is custimization per load, and that it doesn't decide to split within the same world
 	vars.oldcomparision = 0; // Just in case you die or soft-reset it doesn't split again, comparing this to the current.loading1 per each split
+
+  //Code original written by Micrologist
+    var scn = new SignatureScanner(game, game.MainModule.BaseAddress, game.MainModule.ModuleMemorySize);
+    var syncLoadTrg = new SigScanTarget(3, "44 8b 05 ?? ?? ?? ?? 48 8b da 4a 8d 0c c2") { OnFound = (p, s, ptr) => ptr + 0x4 + game.ReadValue<int>(ptr) };
+    var syncLoadCounterPtr = scn.Scan(syncLoadTrg);
+
+
+	vars.Watchers = new MemoryWatcherList
+    {
+        // GSyncLoadCount
+        new MemoryWatcher<int>(new DeepPointer(syncLoadCounterPtr)) { Name = "syncLoadCount" },
+    };
 }
 
 update
 {
-	if ((current.loading1 != 2) && (old.loading1 == 2) && (vars.oldcomparision != current.loading1))
-	{
-		vars.counter++;
-	}
-
+        vars.Watchers.UpdateAll(game);
+    current.Loading = vars.Watchers["syncLoadCount"].Current;
 }
 
-start
+onStart
 {
-    if (modules.First().ModuleMemorySize == 0x57397248)
-        version = "version.initial";
-    else
-        version = "version.latest";
-
-	if ((current.loading1 != 2) && (old.loading1 == 2))
-	{
-		vars.counter = 0;
-		return true;
-	}
+    vars.counter = 0;
 }
 
-split
+onReset
 {
-    string currentMap = (vars.counter.ToString());
-
-	if ((settings[currentMap]) && (old.loading1 != current.loading1) && (!vars.doneMaps.Contains(currentMap)))
-	{
-		vars.oldcomparision = current.loading1;
-		return true;		
-	}
+    vars.counter = 0;
 }
-
 
 isLoading
 {
-	return (current.loading1 == 2); 
-}
-
-exit 
-{
-    timer.OnStart -= vars.onStart;
+	return (current.Loading == 0); 
 }
