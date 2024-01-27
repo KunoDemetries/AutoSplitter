@@ -1,35 +1,37 @@
-state("Tales of Arise", "Steam 1.1.0.0")
-{
-    byte LoadingScreen : 0x42792FA;  //160 not / 32 loading
-    string150 CurCutscene : 0x047C4220, 0x68, 0x20, 0x1F8;
-}
 
-state("Tales of Arise", "Steam 1.3.0.0")
+state("Tales of Arise")
 {
-    byte LoadingScreen : 0x3DC9E4A;  //160 not / 32 loading
-    string150 CurCutscene : 0x042C8DF0, 0x68, 0x20, 0x1F8;
-}
-
-state("Tales of Arise", "Steam 1.4.0.0")
-{
-    byte LoadingScreen : 0x3DC9E4A;  //160 not / 32 loading
-    string150 CurCutscene : 0x042C8DF0, 0x68, 0x20, 0x1F8;
+    //byte LoadingScreen : 0x42C82EE;
+    //string150 CurCutscene : 0x0481FBA0, 0x68, 0x20, 0x1F8;
 }
 
 init
 {
-    switch (modules.First().ModuleMemorySize) 
+    //Code original written by Micrologist
+    var scn = new SignatureScanner(game, game.MainModule.BaseAddress, game.MainModule.ModuleMemorySize);
+    var LoadTrg = new SigScanTarget(2, "83 3d ?? ?? ?? ?? ?? 75 ?? 80 ba") { OnFound = (p, s, ptr) => ptr + 0x4 + game.ReadValue<int>(ptr) };
+    var Load = scn.Scan(LoadTrg);
+    var CutsceneTrg = new SigScanTarget(3, "48 83 3d ?? ?? ?? ?? ?? 75 ?? 48 8b 44 24 ?? 48 89 05 ?? ?? ?? ?? 48 8b 44 24 ?? 48 89 05 ?? ?? ?? ?? eb ?? 48 8b 44 24 ?? 48 c7 40 ?? ?? ?? ?? ?? 48 8b 44 24") { OnFound = (p, s, ptr) => ptr + 0x4 + game.ReadValue<int>(ptr) };
+    var Cutscene = scn.Scan(CutsceneTrg);
+    print(Load.ToString("X"));
+        vars.Watchers = new MemoryWatcherList
     {
-        case 85544960: 
-            version = "Steam 1.1.0.0";
-        break;
-        case 77914112: 
-            version = "Steam 1.3.0.0";
-        break;
-        case 77918208:
-            version = "Steam 1.4.0.0";
-        break;
-    }
+        //Code original written by Micrologist (changed from ulong to long to work with diggity's FnameReader)
+        new MemoryWatcher<byte>(new DeepPointer(Load - 0x1)) { Name = "Loading" },
+        new StringWatcher(new DeepPointer(Cutscene + 0x1, 0x68, 0x20, 0x1F8), 100) { Name = "Cutscene"},
+    };
+
+    //Generic line of text updating the watchers list and creating current.camtarget and world (to not have it print null errors later on) 
+    vars.Watchers.UpdateAll(game);
+}
+
+update
+{
+    //Generic line of text updating the watchers list
+    vars.Watchers.UpdateAll(game);
+    current.CurCutscene = vars.Watchers["Cutscene"].Current;
+    current.LoadingScreen = vars.Watchers["Loading"].Current;
+    print(current.LoadingScreen.ToString());
 }
 
 start
