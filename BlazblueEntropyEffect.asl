@@ -54,7 +54,7 @@ onStart
 
 split
 {
-    if ((settings["BK"]) && (current.BossTotalHealth == 0) && (old.BossTotalHealth > 0) && (vars.HighestBossHealth >= 17000))
+    if ((settings["BK"]) && (current.BossTotalHealth == 0) && (old.BossTotalHealth > 0) && (vars.HighestBossHealth >= 17000) && (((old.BossTotalHealth - current.BossTotalHealth) < 8000)))
     {
         vars.HighestBossHealth = 0;
         return true;
