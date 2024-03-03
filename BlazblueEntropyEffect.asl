@@ -1,4 +1,4 @@
-state("BlazblueEntropyEffect")
+state("BlazblueEntropyEffect", "Default")
 {
     //Gameplay.GameInputManager private LockFlag m_uiActionFlag
     int ActionFlag : "GameAssembly.dll", 0x046D98B0, 0xB8, 0x0, 0x58;
@@ -6,29 +6,28 @@ state("BlazblueEntropyEffect")
     int BossTotalHealth : "GameAssembly.dll", 0x0458A7C8, 0xB8, 0x0, 0x48, 0xA0, 0x28, 0x300;
 }
 
+state("BlazblueEntropyEffect", "Update 2/29/24")
+{
+    //Gameplay.GameInputManager private LockFlag m_uiActionFlag
+    int ActionFlag : "GameAssembly.dll", 0x046C5E80, 0xB8, 0x0, 0x58; //13A30
+    
+    int BossTotalHealth : "GameAssembly.dll", 0x04584060, 0xB8, 0x0, 0xA0, 0x28, 0x300;
+}
+
 init
 {
     vars.HighestBossHealth = 0;
-/*	var	gameAssembly = game.ModulesWow64Safe().FirstOrDefault(m => m.ModuleName == "GameAssembly.dll");
-    var scn = new SignatureScanner(game, gameAssembly.BaseAddress, gameAssembly.ModuleMemorySize);
-    var BossTotalHealthtrg = new SigScanTarget(4, "40 7a ?? b2") { OnFound = (p, s, ptr) => ptr + 0x4 + game.ReadValue<int>(ptr) - 0x2C6};
-    var BossTotalHealthPtr = scn.Scan(BossTotalHealthtrg); 
-
-    var ActionFlagtrg = new SigScanTarget(4, "a0 ?? ?? ?? ?? ?? ?? ?? ?? cb ?? ?? ?? ?? ?? ?? 00 00 13 00") { OnFound = (p, s, ptr) => ptr + 0x4 + game.ReadValue<int>(ptr)};
-    var ActionFlagPtr = scn.Scan(ActionFlagtrg); 
-
-    print(BossTotalHealthPtr.ToString("X"));
-        vars.Watchers = new MemoryWatcherList
+    switch (modules.First().ModuleMemorySize) 
     {
-        //Code original written by Micrologist (changed from ulong to long to work with diggity's FnameReader)
-        new MemoryWatcher<int>(new DeepPointer(BossTotalHealthPtr, 0xB8, 0x0, 0x58)) { Name = "BossTotalHealth" },
-        new MemoryWatcher<int>(new DeepPointer(ActionFlagPtr, 0xB8, 0x0, 0x48, 0xA0, 0x28, 0x300)) { Name = "ActionFlag" },
-    };
-
-    //Generic line of text updating the watchers list and creating current.camtarget and world (to not have it print null errors later on) 
-    vars.Watchers.UpdateAll(game);
-    */
+        case 688128 :
+            version = "Update 2/29/24";
+        break;
+                default:        
+            version = "Default";
+        break;
+    }
 }
+
 startup
 {
     settings.Add("BK", true, "Split on Boss Kills");
@@ -36,11 +35,6 @@ startup
 
 update
 {
-  /*  vars.Watchers.UpdateAll(game);
-    current.BossTotalHealth = vars.Watchers["BossTotalHealth"].Current;
-    old.BossTotalHealth = vars.Watchers["BossTotalHealth"].Old;
-    current.ActionFlag = vars.Watchers["ActionFlag"].Current;
-*/
     if (current.BossTotalHealth > vars.HighestBossHealth)
     {
         vars.HighestBossHealth = current.BossTotalHealth;
