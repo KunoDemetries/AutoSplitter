@@ -14,13 +14,21 @@ state("BlazblueEntropyEffect", "Update 2/29/24")
     int BossTotalHealth : "GameAssembly.dll", 0x04584060, 0xB8, 0x0, 0xA0, 0x28, 0x300;
 }
 
+state("BlazblueEntropyEffect", "Update 3/10/24")
+{
+    //Gameplay.GameInputManager private LockFlag m_uiActionFlag
+    int ActionFlag : "GameAssembly.dll", 0x046EAB90, 0xB8, 0x0, 0x58; //13A30
+    
+    int BossTotalHealth : "GameAssembly.dll", 0x0459A720, 0xB8, 0x0, 0xA0, 0x28, 0x300;
+}
+
 init
 {
     vars.HighestBossHealth = 0;
     switch (modules.First().ModuleMemorySize) 
     {
-        case 688128 :
-            version = "Update 2/29/24";
+                case 688128 :
+            version = "Update 3/10/24";
         break;
                 default:        
             version = "Default";
