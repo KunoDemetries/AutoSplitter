@@ -36,7 +36,7 @@ init
     switch (modules.First().ModuleMemorySize) 
     {
                 case 688128 :
-            version = "Update 3/12/24";
+            version = "Default";
         break;
                 default:        
             version = "Default";
