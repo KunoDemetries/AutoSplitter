@@ -1,10 +1,18 @@
 // Thanks Kuno for the help much <3
+state("sniper5_dx12", "Steam 2.31")
+{
+	string110 CurCutscene : 0x02689EE8, 0x38, 0x248, 0x0, 0x0;
+	string14 CurMap : 0x30591CE;
+	int start : 0x273264C;	// main menu 5, in game 13, loading 3, second cutscene is 8, first 5. E8E3EC
+}
+
 state("sniper5_dx12", "Steam 2.30")
 {
 	string110 CurCutscene : 0x02688EE8, 0x38, 0x248, 0x0, 0x0;
 	string14 CurMap : 0x30581DE;
 	int start : 0x273164C;	// main menu 5, in game 13, loading 3, second cutscene is 8, first 5. E8E3EC
 }
+
 state("sniper5_dx12", "Steam 2.21")
 {
 	string110 CurCutscene : 0x02688EE8, 0x38, 0x248, 0x0, 0x0;
@@ -98,6 +106,9 @@ init
 		break;
 	case 397815808	:
 		version = "Steam 2.30";
+		break;
+	case 405721088	:
+		version = "Steam 2.31";
 		break;
     }
 	vars.doneMaps = new List<string>(); // You get kicked to the main menu, so adding this just in case

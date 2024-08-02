@@ -1,149 +1,189 @@
-/*  Originally made by Meta: https://twitter.com/ItsCamNotCan
-    Redone by Kuno Demetries: https://t.co/D8xyyuVeak
-*/
+// autosplitter and layout by nyutie
+// first time doin any of this :3_:
 
-state("ThankYouVeryCool-Win64-Shipping", "4.1.0")
-{
-    //int loading   : 0x521BBE4; // if this gets re-added in, make sure to also add it to init
-    //int level     : 0x5219EA0;
-    int menuState : 0x4F54688;
-    float IGT     : 0x0543C7F0, 0x118, 0xA18;
+state("ThankYouVeryCool-Win64-Shipping", "oldleaderboards steam") {
+    // float levelTimer: 0x5B0F540, 0x118, 0xB54;
+    float fullTimer: 0x5B0F540, 0x118, 0xB58;
+    bool isOnMainMenu: 0x59C7EE0, 0x8D0, 0x0, 0x16B0, 0xD8;
 }
 
-state("ThankYouVeryCool-Win64-Shipping", "4.27.2")
-{
-    //int loading   : 0x5639D84; // 2 is loading, 0 isn't
-    //int level     : 0x5219EA0; 
-    int menuState : 0x5375080;
-    float IGT     : 0x05893910, 0x118, 0xAAC;
-    string110 CurLevel : 0x0588F548, 0x130, 0x38, 0x70, 0x4F3;
+state("ThankYouVeryCool-Win64-Shipping", "oldleaderboards epic") {
+    // float levelTimer: 0x5DC0380, 0x118, 0xB54;
+    float fullTimer: 0x5DC0380, 0x118, 0xB58;
+    bool isOnMainMenu: 0x5D52E90, 0x30, 0x60, 0x560, 0x320;
 }
 
-init
-{
-    vars.menuState = false;
-    vars.totalGameTime = 0;
-    vars.loading = 0;
-    vars.doneMaps = new List<string>();
-
-    switch (modules.First().ModuleMemorySize) 
-    {
-        case 98951168: 
-            version = "4.27.2";
-            break;
-        default:        version = "4.1.0"; 
-            break;
-    }
+state("ThankYouVeryCool-Win64-Shipping", "firefight2 steam patch 1") {
+    // float levelTimer: 0x5B19140, 0x118, 0xB64;
+    float fullTimer: 0x5B19140, 0x118, 0xB68;
+    bool isOnMainMenu: 0x59D1AE0, 0x2190, 0x0, 0xEA0, 0x27C;
 }
 
 startup
 {
-    settings.Add("Levels", true, "All Levels");
-
-    vars.missions2 = new Dictionary<string,string> 
-	{ 	
-        {"/Game/Campaign/Trash/CDA_Trash.CDA_Trash_C", "Trash Compactor"},
-        {"/Game/Campaign/TrashDiveTut/CDA_TrashDive.CDA_TrashDive_C", "Compact Controls"},
-        {"/Game/Campaign/AboveTrash/CDA_AboveTrash.CDA_AboveTrash_C", "Maintenance"},
-        {"/Game/Campaign/Trash_turrets/CDA_Turrets.CDA_Turrets_C", "Security Hut"}, 
-        {"/Game/Campaign/trash_combat/CDA_TrashCombat.CDA_TrashCombat_C", "Security Hut 2"},
-        {"/Game/Campaign/TrashControlRoom/CDA_WasteManagement.CDA_WasteManagement_C", "Waste Management"},
-        {"/Game/Campaign/MeatPlant/CDA_RedHouse.CDA_RedHouse_C", "Red House"},
-        {"/Game/Campaign/MeatProc/CDA_RedProc.CDA_RedProc_C", "Red Processing"},
-        {"/Game/Campaign/HospitlCafe/CDA_Cafeteria.CDA_Cafeteria_C", "Cafeteria"},
-        {"/Game/Campaign/Labs/CDA_Labs.CDA_Labs_C", "R&B Lab"},
-        {"/Game/Campaign/LabBasement/CDA_LabBasement.CDA_LabBasement_C", "Production Lab"},
-        {"/Game/Campaign/HospitalCare/CDA_CyberHospital.CDA_CyberHospital_C", "Cybermedicine"},
-        {"/Game/Campaign/Corridor/CDA_Corridor.CDA_Corridor_C", "Corridor"},
-        {"/Game/Campaign/Vents1/CDA_Vents1.CDA_Vents1_C", "Service Vents (Hospital Vents)"},
-        {"/Game/Campaign/Vents_two/CDA_Vents2.CDA_Vents2_C", "Subway Vents"},
-        {"/Game/Campaign/Oxygenate/CDA_Oxygenate.CDA_Oxygenate_C", "Cleave"},
-        {"/Game/Campaign/TrainStation/CDA_SubwayStation.CDA_SubwayStation_C", "Train Station"},
-        {"/Game/Campaign/Train0/CDA_Train0.CDA_Train0_C", "Train Zero"},
-        {"/Game/Campaign/TrainOne/CDA_TrainOne.CDA_TrainOne_C", "Train"},
-        {"/Game/Campaign/Checkpoint/CDA_Checkoint.CDA_Checkoint_C", "Checkpoint"},
-        {"/Game/Campaign/Intelligence/CDA_Intel.CDA_Intel_C", "Intelligence"},
-        {"/Game/Campaign/DataPrism/CDA_DataPrism.CDA_DataPrism_C", "Data Prism"},
-        {"/Game/Campaign/ServerRoom/CDA_Serveroom.CDA_Serveroom_C", "Server Room"},
-        {"/Game/Campaign/Armory/CDA_Armory.CDA_Armory_C", "Armory"},
-        {"/Game/Campaign/Prison/CDA_Prison.CDA_Prison_C", "Prison"},
-        {"/Game/Campaign/Vents3/CDA_Vents3.CDA_Vents3_C", "Admin Vents (Vent 3)"},
-        {"/Game/Campaign/Anxiety/CDA_Anxiety.CDA_Anxiety_C", "Forest"},
-        {"/Game/Campaign/Reception/CDA_Reception.CDA_Reception_C", "Reception"},
-        {"/Game/Campaign/LowerAdmin/CDA_LowerAdmin.CDA_LowerAdmin_C", "Lower Administration"},
-        {"/Game/Campaign/MiddleAdmin/CDA_MiddleAdmin2.CDA_MiddleAdmin2_C", "Middle Admin"},
-        {"/Game/Campaign/UpperAdmin/CDA_UpperAdmin.CDA_UpperAdmin_C", "Upper Admin"},
-        {"/Game/Campaign/TeleportingLab/CDA_Teleporter.CDA_Teleporter_C", "Portal Lab"},
-        {"/Game/Campaign/Barraks/CDA_Barracks.CDA_Barracks_C", "Barracks"},
-        {"/Game/Campaign/Apartments/CDA_Apartments.CDA_Apartments_C", "Apartments"},
-        {"/Game/Campaign/Mall/CDA_Mall.CDA_Mall_C", "Greens"},
-        {"/Game/Campaign/Asention/CDA_Asention.CDA_Asention_C", "Towers"},
-        {"/Game/Campaign/GlassMoon/CDA_GlassMoon.CDA_GlassMoon_C", "City"},
-        {"/Game/Campaign/Nightclub/CDA_Nightclub.CDA_Nightclub_C", "Party Mansion"},
-        {"/Game/Campaign/ceooffice/CDA_ceooffice.CDA_ceooffice_C", "CEO Office"},
-        {"/Game/Campaign/Penthouse/CDA_Penthouse.CDA_Penthouse_C", "Penthouse"},
-        {"/Game/Campaign/Museum1/CDA_Gallery.CDA_Gallery_C", "Art Gallery"},
-        {"/Game/Campaign/Museum/CDA_Museum.CDA_Museum_C", "Museum"},
-        {"/Game/Campaign/Garden/CDA_Garden.CDA_Garden_C", "Garden"},
-        {"/Game/Campaign/Mansion/CDA_Mansion.CDA_Mansion_C", "Estate"},
-        {"/Game/Campaign/TheWall/CDA_TheWall.CDA_TheWall_C", "The Wall"},
-        {"/Game/Campaign/Cage/CDA_Cage.CDA_Cage_C", "Conscience"},
-        {"/Game/Campaign/Escapism/CDA_Escapism.CDA_Escapism_C", "Escapism"},
-    };
-	foreach (var Tag in vars.missions2)
-	{
-		settings.Add(Tag.Key, true, Tag.Value, "Levels");
-    };
-
-    vars.stopwatch = new Stopwatch();
-    if (timer.CurrentTimingMethod == TimingMethod.RealTime)
-	{        
-		var timingMessage = MessageBox.Show (
-			"This game uses Time without Loads (Game Time) as the main timing method.\n"+
-			"LiveSplit is currently set to show Real Time (RTA).\n"+
-			"Would you like to set the timing method to Game Time?",
-			"LiveSplit | Severed Steel",
-			MessageBoxButtons.YesNo,MessageBoxIcon.Question
-		);
-		
-		if (timingMessage == DialogResult.Yes)
-		{
-			timer.CurrentTimingMethod = TimingMethod.GameTime;
-		}
+    if(timer.CurrentTimingMethod == TimingMethod.RealTime) // copied this from somewhere lmao
+    {
+        var timingMessage = MessageBox.Show
+        (
+            "This game uses Game Time (time without loads) as the main timing method.\n"+
+            "LiveSplit is currently set to show Real Time (time INCLUDING loads).\n"+
+            "Would you like the timing method to be set to Game Time for you?",
+            vars.aslName+" | LiveSplit",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question
+        );
+        if (timingMessage == DialogResult.Yes) timer.CurrentTimingMethod = TimingMethod.GameTime;
 	}
+
+    vars.MapReferences = new List<string>()
+    {
+        "/Game/Campaign/Trash/CDA_Trash.CDA_Trash_C",
+        "/Game/Campaign/TrashDiveTut/CDA_TrashDive.CDA_TrashDive_C",
+        "/Game/Campaign/AboveTrash/CDA_AboveTrash.CDA_AboveTrash_C",
+        "/Game/Campaign/Trash_turrets/CDA_Turrets.CDA_Turrets_C",
+        "/Game/Campaign/trash_combat/CDA_TrashCombat.CDA_TrashCombat_C",
+        "/Game/Campaign/TrashControlRoom/CDA_WasteManagement.CDA_WasteManagement_C",
+        "/Game/Campaign/MeatPlant/CDA_RedHouse.CDA_RedHouse_C",
+        "/Game/Campaign/MeatProc/CDA_RedProc.CDA_RedProc_C",
+        "/Game/Campaign/HospitlCafe/CDA_Cafeteria.CDA_Cafeteria_C",
+        "/Game/Campaign/Labs/CDA_Labs.CDA_Labs_C",
+        "/Game/Campaign/LabBasement/CDA_LabBasement.CDA_LabBasement_C",
+        "/Game/Campaign/HospitalCare/CDA_CyberHospital.CDA_CyberHospital_C",
+        "/Game/Campaign/Corridor/CDA_Corridor.CDA_Corridor_C",
+        "/Game/Campaign/Vents1/CDA_Vents1.CDA_Vents1_C",
+        "/Game/Campaign/Vents_two/CDA_Vents2.CDA_Vents2_C",
+        "/Game/Campaign/Oxygenate/CDA_Oxygenate.CDA_Oxygenate_C",
+        "/Game/Campaign/TrainStation/CDA_SubwayStation.CDA_SubwayStation_C",
+        "/Game/Campaign/Train0/CDA_Train0.CDA_Train0_C",
+        "/Game/Campaign/TrainOne/CDA_TrainOne.CDA_TrainOne_C",
+        "/Game/Campaign/Checkpoint/CDA_Checkoint.CDA_Checkoint_C",
+        "/Game/Campaign/Intelligence/CDA_Intel.CDA_Intel_C",
+        "/Game/Campaign/DataPrism/CDA_DataPrism.CDA_DataPrism_C",
+        "/Game/Campaign/ServerRoom/CDA_Serveroom.CDA_Serveroom_C",
+        "/Game/Campaign/Armory/CDA_Armory.CDA_Armory_C",
+        "/Game/Campaign/Prison/CDA_Prison.CDA_Prison_C",
+        "/Game/Campaign/Vents3/CDA_Vents3.CDA_Vents3_C",
+        "/Game/Campaign/Anxiety/CDA_Anxiety.CDA_Anxiety_C",
+        "/Game/Campaign/Reception/CDA_Reception.CDA_Reception_C",
+        "/Game/Campaign/LowerAdmin/CDA_LowerAdmin.CDA_LowerAdmin_C",
+        "/Game/Campaign/MiddleAdmin/CDA_MiddleAdmin2.CDA_MiddleAdmin2_C",
+        "/Game/Campaign/UpperAdmin/CDA_UpperAdmin.CDA_UpperAdmin_C",
+        "/Game/Campaign/TeleportingLab/CDA_Teleporter.CDA_Teleporter_C",
+        "/Game/Campaign/Barraks/CDA_Barracks.CDA_Barracks_C",
+        "/Game/Campaign/Apartments/CDA_Apartments.CDA_Apartments_C",
+        "/Game/Campaign/Mall/CDA_Mall.CDA_Mall_C",
+        "/Game/Campaign/Asention/CDA_Asention.CDA_Asention_C",
+        "/Game/Campaign/GlassMoon/CDA_GlassMoon.CDA_GlassMoon_C",
+        "/Game/Campaign/Nightclub/CDA_Nightclub.CDA_Nightclub_C",
+        "/Game/Campaign/ceooffice/CDA_ceooffice.CDA_ceooffice_C",
+        "/Game/Campaign/Penthouse/CDA_Penthouse.CDA_Penthouse_C",
+        "/Game/Campaign/Museum1/CDA_Gallery.CDA_Gallery_C",
+        "/Game/Campaign/Museum/CDA_Museum.CDA_Museum_C",
+        "/Game/Campaign/Garden/CDA_Garden.CDA_Garden_C",
+        "/Game/Campaign/Mansion/CDA_Mansion.CDA_Mansion_C",
+        "/Game/Campaign/TheWall/CDA_TheWall.CDA_TheWall_C",
+        "/Game/Campaign/Cage/CDA_Cage.CDA_Cage_C",
+        "/Game/Campaign/Escapism/CDA_Escapism.CDA_Escapism_C"
+    };
+}
+
+init
+{
+    switch ((long)modules.First().ModuleMemorySize) {
+        case 0x605D000:
+            version = "oldleaderboards steam";
+            vars.SaveOffsetPath = new DeepPointer(0x5B0B178, 0x130, 0x38, 0x70, 0x459);
+            break;
+        case 0x6380000:
+            version = "oldleaderboards epic";
+            vars.SaveOffsetPath = new DeepPointer(0x5DBBFB8, 0x130, 0x38, 0x70, 0x459);
+            break;
+        case 0x60B0000:
+            version = "firefight2 steam patch 1";
+            vars.SaveOffsetPath = new DeepPointer(0x5B14D78, 0x130, 0x38, 0x70, 0x459);
+            break;
+        default:
+            MessageBox.Show
+            (
+                "Unsupported version of the game! If you're on GOG, sorry, I don't have it.\n" +
+                "If you're on Steam/Epic, I'm probably already working on the update!\n\n" +
+                "If you have any questions you can find me on the official Greylock Discord server, or the official SS/EPN speedrun Discord server.\n\n" +
+                "modules.First().BaseAddress: 0x" + modules.First().BaseAddress.ToString("X") + "\n" + 
+                "modules.first().ModuleMemorySize: 0x" + modules.First().ModuleMemorySize.ToString("X") + "\n",
+                "SS-autosplitter", // caption
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning
+            );
+            return;
+    }
+
+    timer.IsGameTimePaused = false;
+    vars.CurrentMapIndex = -2;
+}
+
+update
+{
+    if (version == "") {
+        return false; // stops update
+    }
+
+    IntPtr resolvedSavePath = IntPtr.Zero;
+    vars.SaveOffsetPath.DerefOffsets(game, out resolvedSavePath);
+    vars.SaveOffset = resolvedSavePath;
+
+    IntPtr saveOffset = vars.SaveOffset;
+    int campaignLevelReferenceStringLength = game.ReadValue<int>(saveOffset + 0x82);
+    vars.CampaignLevelReferenceString = game.ReadString(saveOffset + 0x82 + 0x4, campaignLevelReferenceStringLength);
 }
 
 start
 {
-    if (current.menuState == 7)
+    if (!current.isOnMainMenu && vars.CampaignLevelReferenceString == vars.MapReferences[0] && current.fullTimer > 0f && old.fullTimer == 0f)
     {
-        vars.doneMaps.Add(current.CurLevel);
+        vars.CurrentMapIndex = 0;
         return true;
     }
 }
 
 split
 {
-    if ((current.CurLevel != old.CurLevel) && (!vars.doneMaps.Contains(current.CurLevel)))
+    int nowCurrentMapIndex = vars.MapReferences.IndexOf(vars.CampaignLevelReferenceString);
+    if (nowCurrentMapIndex == vars.CurrentMapIndex + 1)
     {
-        vars.doneMaps.Add(current.CurLevel);
+        vars.CurrentMapIndex = nowCurrentMapIndex;
+        return true;
+    }
+    else if (nowCurrentMapIndex == vars.MapReferences.Count - 1 && current.fullTimer == 0f) // last map
+    {
         return true;
     }
 }
 
-onReset
+reset
 {
-    vars.doneMaps.Clear();
-}
-
-gameTime 
-{
-    return TimeSpan.FromSeconds(vars.totalGameTime + current.IGT);
+    if (current.isOnMainMenu)
+    {
+        return true;
+    }
 }
 
 isLoading
 {
-    return true;
+    if (!current.isOnMainMenu && current.fullTimer == old.fullTimer)
+    {
+        return true;
+    }
+    return false;
+}
+
+gameTime
+{
+    return TimeSpan.FromSeconds(current.fullTimer != 0f ? current.fullTimer : old.fullTimer);
+}
+
+onReset
+{
+    vars.CurrentMapIndex = -2;
 }
 
 exit

@@ -165,5 +165,5 @@ onReset
 
 isLoading
 {
-	return (!current.Loader);
+	return (!current.Loader) || (current.SpecOpsCampMapID == "airport");
 }
