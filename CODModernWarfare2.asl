@@ -11,26 +11,7 @@ init
 {
 	vars.doneMaps = new List<string>(); // Adding cause of SpecOps
     // Resetting happens slightly different for spec-ops runs so we need to be able to check what type of run we're doing
-    vars.campaign = new List<string> {
-        "S.S.D.D.",
-        "Team Player",
-        "Cliffhanger",
-        "No Russian",
-        "Takedown",
-        "Wolverines",
-        "The Hornets Nest",
-        "Exodus",
-        "The Only Easy Day Was Yesterday",
-        "The Gulag",
-        "Of Their Own Accord",
-        "Contingency",
-        "Second Sun",
-        "Whiskey Hotel",
-        "Loose Ends",
-        "The Enemy of My Enemy",
-        "Just Like Old Times",
-        "End"
-    };
+    vars.campaignRun = false;
 }
 
 startup
@@ -136,7 +117,7 @@ start
     return (
         current.Loader &&
         // Campaign first level
-        (current.SpecOpsCampMapID == vars.campaign[0] ||
+        (current.SpecOpsCampMapID == "trainer" ||
         // Spec ops first level
         current.SpecOpsCampMapID == "so_killspree_trainer")
     );
@@ -146,21 +127,23 @@ onStart
 {
 	vars.doneMaps.Clear(); // Needed because checkpoints bad in game 
     vars.doneMaps.Add(current.SpecOpsCampMapID); // Adding for the starting map because it's also bad
+    vars.campaignRun = current.SpecOpsCampMapID == "trainer";
 }
 
 reset
 {
     return (
-        // Starting The Pit in spec ops
-        (old.SpecOpsCampMapID == "ui" && current.SpecOpsCampMapID == "so_killspree_trainer") ||
         // Going back to the menu in campaign
-        (current.SpecOpsCampMapID == "ui" && vars.campaign.Contains(old.SpecOpsCampMapID))
+        (vars.campaignRun && current.SpecOpsCampMapID == "ui") ||
+        // Starting The Pit in spec ops
+        (!vars.campaignRun && old.SpecOpsCampMapID == "ui" && current.SpecOpsCampMapID == "so_killspree_trainer")
     );
 }
 
 onReset
 {
-    vars.doneMaps.Clear(); // Needed because checkpoints bad in game 
+    vars.doneMaps.Clear(); // Needed because checkpoints bad in game
+    vars.campaignRun = false;
 }
 
 isLoading
