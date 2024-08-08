@@ -1,8 +1,5 @@
 state("TEW2", "Current Patch")
 {
-    float ComputerLoad : 0x2ABFC1D; // 2 while loading
-    int Pause : 0x3734978; // just for rn to see what the mod wants
-    int Loading : 0x246624E; // loading 0 
     int Chapter : 0x03712248, 0x5C;
     float x : 0x39CA190;
     float y : 0x39CA194; 
@@ -11,9 +8,6 @@ state("TEW2", "Current Patch")
 
 state("TEW2", "1.02")
 {
-    int ComputerLoad : 0x3D6E634; // 0 while loading
-    int Pause : 0x3637B00; // 1 paused, 0 unpaused
-    int Loading : 0x236D5B8; // 2369317 0 loading, 2816 while not
     int Chapter : 0x3615208, 0x5C;
     float x : 0x38CD190;
     float y : 0x38CD194;
@@ -25,8 +19,9 @@ startup
     settings.Add("chap", true, "All Chapters");
     settings.Add("end", true, "End Split");
     settings.SetToolTip("end", "The end split for when you finish chapter 17. The opposite of start!");
+
     vars.Chapters = new Dictionary<string,string> 
-	    {
+        {
             {"starter","Chapter 1 - Into the Flame"},
             {"2","Chapter 2 - Something Not Quite Right"},
             {"3","Chapter 3 - Resonances"},
@@ -45,79 +40,65 @@ startup
             {"16","Chapter 16 - In Limbo"},
             {"17","Chapter 17 - A Way Out"},
         };
-    foreach (var Tag in vars.Chapters)
-		{
-			settings.Add(Tag.Key, true, Tag.Value, "chap");
-    	}; 
 
-        vars.onStart = (EventHandler)((s, e) => // thanks gelly for this, it's basically making sure it always clears the vars no matter how livesplit starts
-        {
-            vars.doneMaps.Clear();
-            vars.doneMaps.Add(current.Chapter.ToString());
-        });
+    foreach (var Tag in vars.Chapters)
+    {
+        settings.Add(Tag.Key, true, Tag.Value, "chap");
+    }; 
 
     settings.SetToolTip("starter", "This is used as the starter setting, disabling this also disables the original start command!");
 
-    timer.OnStart += vars.onStart; 
-
-	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
-        {        
+    if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
+    {        
         var timingMessage = MessageBox.Show (
-               "This game uses Time without Loads (Game Time) as the main timing method.\n"+
-                "LiveSplit is currently set to show Real Time (RTA).\n"+
-                "Would you like to set the timing method to Game Time? This will make verification easier",
-                "LiveSplit | The Evil Within 2",
-               MessageBoxButtons.YesNo,MessageBoxIcon.Question
-            );
-        
-            if (timingMessage == DialogResult.Yes)
-            {
-                timer.CurrentTimingMethod = TimingMethod.GameTime;
-            }
-        }	
+            "This game uses Time without Loads (Game Time) as the main timing method.\n"+
+            "LiveSplit is currently set to show Real Time (RTA).\n"+
+            "Would you like to set the timing method to Game Time? This will make verification easier",
+            "LiveSplit | The Evil Within 2",
+            MessageBoxButtons.YesNo,MessageBoxIcon.Question
+        );
+    
+        if (timingMessage == DialogResult.Yes)
+        {
+            timer.CurrentTimingMethod = TimingMethod.GameTime;
+        }
+    }
 }
 
 init 
 {
     switch (modules.First().ModuleMemorySize) 
     {
-        case  74637312 : version = "Current Patch"; 
+        case 74637312:
+            version = "Current Patch"; 
             break;
-        case 73007104 : version = "1.02"; 
+        case 73007104:
+            version = "1.02"; 
             break;
-        default:        version = ""; 
+        default:
+            version = ""; 
             break;
     }
 
     vars.doneMaps = new List<string>();
-    vars.endsplit = 0;
-    vars.Loader = 0;
 }
 
-update
-{
-    if(settings["end"])
-    {
-        if (version == "1.02" && current.x > 42099.80858 && current.x < 42099.80860 && current.y > -28778.58009 && current.y < -28778.58007 && current.Chapter == 17)
-        {
-            vars.endsplit = 1;
-        }
-    }
-//|| (current.ComputerLoad == 0 && current.Loading != 0)
-    if ((current.Loading == 0) || (current.Pause == 1))
-    {
-        vars.Loader = 1;
-    }
-    else
-    {
-        vars.Loader = 0;
-    }
-
-}
+update { }
 
 start
 {
-    return ((current.Chapter == 1) && (settings["starter"]) && (old.Chapter != current.Chapter) && (!vars.doneMaps.Contains(current.Chapter.ToString())));
+    return (
+        current.Chapter == 1 &&
+        settings["starter"] &&
+        old.Chapter != current.Chapter &&
+        !vars.doneMaps.Contains(current.Chapter.ToString())
+    );
+}
+
+onStart
+{
+    vars.doneMaps.Clear();
+    vars.doneMaps.Add(current.Chapter.ToString());
 }
 
 split
@@ -126,11 +107,17 @@ split
     {
         vars.doneMaps.Add(current.Chapter.ToString());
         return true;
-    }  
-    
-    if (vars.endsplit == 1)
-    {
-        vars.endsplit = 0;
+    }
+
+    if (
+        settings["end"] &&
+        version == "1.02" &&
+        current.x > 42099.80858 &&
+        current.x < 42099.8086 &&
+        current.y > -28778.58009 &&
+        current.y < -28778.58007 &&
+        current.Chapter == 17
+    ) {
         return true;
     }
 }
@@ -142,10 +129,5 @@ isLoading
 
 reset
 {
-    return (current.Chapter == 0);
-}
-
-exit 
-{
-    timer.OnStart -= vars.onStart;
+    return current.Chapter == 0;
 }
