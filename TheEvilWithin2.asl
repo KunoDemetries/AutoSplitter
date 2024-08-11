@@ -54,6 +54,7 @@ init
 update
 {
     /**
+     * These strings exist in the binary for a debug print.
      * enum GameState {
      *   STATE_PRESS_START = 0,
      *   STATE_USER_SETUP = 1,
@@ -136,9 +137,9 @@ update
 start
 {
     return (
-        current.chapterId == 1 &&
         settings["starter"] &&
         old.chapterId != current.chapterId &&
+        current.chapterId == 1 &&
         !vars.doneMaps.Contains(current.chapterId.ToString())
     );
 }
