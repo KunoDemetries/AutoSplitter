@@ -1,16 +1,4 @@
-state("TEW2", "Current Patch")
-{
-    float x : 0x39CA190;
-    float y : 0x39CA194; 
-    float z : 0x39CA198;
-}
-
-state("TEW2", "1.02")
-{
-    float x : 0x38CD190;
-    float y : 0x38CD194;
-    float z : 0x38CD198;
-}
+state("TEW2") { }
 
 startup
 {
@@ -56,22 +44,11 @@ startup
 
 init 
 {
-    switch (modules.First().ModuleMemorySize) 
-    {
-        case 74637312:
-            version = "Current Patch"; 
-            break;
-        case 73007104:
-            version = "1.02"; 
-            break;
-        default:
-            version = ""; 
-            break;
-    }
-
-    vars.idSessionLocalScan = vars.Helper.ScanRel(3, "48 8b 0d ?? ?? ?? ?? 48 8b 01 ff 50 30 83 F8 07 0F 85 ?? ?? ?? ??");
+    vars.idSessionLocalScan = vars.Helper.ScanRel(0x3, "48 8b 0d ?? ?? ?? ?? 48 8b 01 ff 50 30 83 F8 07 0F 85 ?? ?? ?? ??");
     // not exactly sure what this is, looks like the parent of UI elements so that's what I'm going with
     vars.uiParentScan = vars.Helper.ScanRel(0x17, "48 8B 93 ?? ?? ?? ?? 48 8D 8D ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 48 8B 0D ?? ?? ?? ??");
+    // not sure either, couldn't find evidence of what this actually was but this looked right
+    vars.playerPositionBaseScan = vars.Helper.ScanRel(0x1B, "f3 0f 10 98 dc 03 00 00 f3 0f 10 90 d8 03 00 00 f3 0f 10 88 d4 03 00 00 48 8b 0d");
 }
 
 update
@@ -96,12 +73,22 @@ update
      * }
      */
     current.gameState = vars.Helper.Read<int>(vars.idSessionLocalScan, 0x8);
+    // 0 in main menu, then in the save it's 1-17 based on the chapter you're in
     current.chapterId = vars.Helper.Read<int>(vars.idSessionLocalScan, 0x3D28, 0x5C);
+    
+    // player position!
+    // BD0 comes from (vars.Helper.Read<int>(vars.playerPositionBaseScan, 0x14B80, 0xA7A0) + 0x7) * 0x10
+    // but I don't think this value changes so hardcoding it here
+    current.x = vars.Helper.Read<float>(vars.playerPositionBaseScan, 0xBD0 + 0x0);
+    current.y = vars.Helper.Read<float>(vars.playerPositionBaseScan, 0xBD0 + 0x4);
+    
+    // z at 0x8
     // I constructed this by stepping through the assembly and working my way up
     // this is *not* randomly scanned
     current.isPaused = vars.Helper.Read<bool>(vars.uiParentScan, 0x28, 0x0, 0x80, 0x1C8, 0x18, 0x8, 0x8, 0xC);
     // this is nulled out on initial de-load, helps with transitions from a menu to a load screen
     current.isPausedParent = vars.Helper.Read<long>(vars.uiParentScan, 0x28);
+
     // This is the spinner on screen for saving, loading, etc.
     // There's a sibling value at 0x14 (a string) which describes what state the loader is in.
     // For the loading spinner, the percentage it's at is at 0x30
@@ -113,6 +100,7 @@ update
         vars.Log("Loaded values:");
         vars.Log("  gameState: " + current.gameState + " [at " + (vars.Helper.Read<long>(vars.idSessionLocalScan) + 0x8).ToString("X") + "]");
         vars.Log("  chapterId: " + current.chapterId);
+        vars.Log("  x / y: " + current.x + " / " + current.y);
         vars.Log("  isPaused: " + current.isPaused);
         vars.Log("  isPausedParent: " + current.isPausedParent.ToString("X"));
         vars.Log("  spinner type: '" + current.spinnerTypeString + "' [" + current.spinnerType + "]");
@@ -176,7 +164,6 @@ split
 
     if (
         settings["end"] &&
-        version == "1.02" &&
         current.chapterId == 17 &&
         current.x > 42099.80858 &&
         current.x < 42099.8086 &&
