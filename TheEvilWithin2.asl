@@ -82,8 +82,8 @@ update
     // but I don't think this value changes so hardcoding it here
     current.x = vars.Helper.Read<float>(vars.playerPositionBaseScan, 0xBD0 + 0x0);
     current.y = vars.Helper.Read<float>(vars.playerPositionBaseScan, 0xBD0 + 0x4);
-    
     // z at 0x8
+    
     // I constructed this by stepping through the assembly and working my way up
     // this is *not* randomly scanned
     current.isPaused = vars.Helper.Read<bool>(vars.uiParentScan, 0x28, 0x0, 0x80, 0x1C8, 0x18, 0x8, 0x8, 0xC);
