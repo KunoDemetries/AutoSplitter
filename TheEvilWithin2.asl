@@ -177,7 +177,7 @@ split
 
 isLoading
 {
-    return current.spinnerType == 3    // spinner is loading_area (monitor / computer warps)
+    return current.spinnerTypeString == "loading_area" // during monitor warps
         || current.isPaused            // self-explanatory!
         // user is entering a load screen, since it is deleted when the level unloads
         // (which causes isPaused to be 0 due to ZeroOrNull)
