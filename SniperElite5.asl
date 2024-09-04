@@ -1,4 +1,11 @@
 // Thanks Kuno for the help much <3
+state("sniper5_dx12", "Xbox Game Pass 2.31")
+{
+	string110 CurCutscene : 0x02728850, 0x38, 0x248, 0x0, 0x0;
+	string14 CurMap : 0x30F713E;
+	int start : 0x27D179C;	// main menu 5, in game 13, loading 3, second cutscene is 8, first 5. 27D178C
+}
+
 state("sniper5_dx12", "Steam 2.31")
 {
 	string110 CurCutscene : 0x02689EE8, 0x38, 0x248, 0x0, 0x0;
@@ -109,6 +116,9 @@ init
 		break;
 	case 405721088	:
 		version = "Steam 2.31";
+		break;
+	case 380698624	:
+		version = "Xbox Game Pass 2.31";
 		break;
     }
 	vars.doneMaps = new List<string>(); // You get kicked to the main menu, so adding this just in case
