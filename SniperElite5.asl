@@ -4,6 +4,7 @@ state("sniper5_dx12", "Xbox Game Pass 2.31")
 	string110 CurCutscene : 0x02728850, 0x38, 0x248, 0x0, 0x0;
 	string14 CurMap : 0x30F713E;
 	int start : 0x27D179C;	// main menu 5, in game 13, loading 3, second cutscene is 8, first 5. 27D178C
+	byte fades : 0x27B19D2;	//F17DEC.. F17DF4,27B19D2, 28168FC
 }
 
 state("sniper5_dx12", "Steam 2.31")
@@ -11,6 +12,7 @@ state("sniper5_dx12", "Steam 2.31")
 	string110 CurCutscene : 0x02689EE8, 0x38, 0x248, 0x0, 0x0;
 	string14 CurMap : 0x30591CE;
 	int start : 0x273264C;	// main menu 5, in game 13, loading 3, second cutscene is 8, first 5. E8E3EC
+	byte fades : 0xE9F9AC; // E801EC, E801F4, E9F9AC, 271314E. Hidden loading in the fades
 }
 
 state("sniper5_dx12", "Steam 2.30")
@@ -238,5 +240,5 @@ onReset
 
 isLoading
 {
-	return (settings["missions"] && current.start == 3);
+	return (settings["missions"] && current.start == 3 || (settings["missions"] && current.fades == 1));
 }
