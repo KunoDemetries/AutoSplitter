@@ -12,7 +12,7 @@ state("sniper5_dx12", "Steam 2.31")
 	string110 CurCutscene : 0x02689EE8, 0x38, 0x248, 0x0, 0x0;
 	string14 CurMap : 0x30591CE;
 	int start : 0x273264C;	// main menu 5, in game 13, loading 3, second cutscene is 8, first 5. E8E3EC
-	byte fades : 0xE9F9AC; // E801EC, E801F4, E9F9AC, 271314E. Hidden loading in the fades
+	byte fades : 0xE801EC; // E801EC, E801F4, E9F9AC, 271314E. Hidden loading in the fades
 }
 
 state("sniper5_dx12", "Steam 2.30")
