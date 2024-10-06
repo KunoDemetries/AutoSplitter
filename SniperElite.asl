@@ -3,6 +3,8 @@ state("sniperelite", "Steam")
 	byte Load : 0x357040;
 	byte Start : 0x35DAD4;
 	string8 CurMap : 0x418EED; //4049D9, 404995
+	byte State : 0x3AD3FC;
+	string12 WarRecord : 0x418AB0;
 	int Reset : 0x3B84A0;
 	int Cuts : 0x3ADB24;
 	int MC : 0x3AE2E0;
@@ -12,7 +14,9 @@ state("sniperelite", "GOG / Retail")
 {
 	byte Load : 0x329B07;
 	byte Start : 0x2DB89C;
-	string8 CurMap : 0x380CE5; //380D29, 39514D 
+	byte State : 0x32A18C;
+	string12 WarRecord : 0x394D30;
+	string8 CurMap : 0x380CE5; //380D29, 39514D
 	int Reset : 0x3350A0;
 	int Cuts : 0x35EC4C; //35EC4C, 32A8A8
 	int MC : 0x32B040; // 256 completed 1 failed
@@ -127,5 +131,5 @@ onReset
 
 isLoading
 {
-	return current.Load == 0;
+	return current.Load == 0 || current.State == 8 && current.WarRecord != "oldmenu1.dds";
 }
