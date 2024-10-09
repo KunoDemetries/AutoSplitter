@@ -1,77 +1,49 @@
-state("SniperEliteV2", "1.13")
+state("SniperEliteV2")
 {
-	byte Load : 0x67FC38;
-	byte Splash : 0x653B40;
-	byte Start : 0x689FE2;
-	string38 CurMap : 0x685F31;
-	byte Objective : 0x656F3C;
-	byte BulletCam : 0x65B908; //Experimental, 0x65B93C
-	//byte Cuts : 0x64932D;
-	//int MC : 0x75517C;
+	//int loading1: 0x6486C4;	
+	string65 map: 0x685F31;
 }
 
-init
-{
-    //print(modules.First().ModuleMemorySize.ToString());
-	switch(modules.First().ModuleMemorySize)
-    {
-	case 8146944 :
-        	version = "1.13";
-        	break;
-    }
-
-	vars.doneMaps = new List<string>();
-}
-
-startup
+startup 
 {
 	settings.Add("missions", true, "Missions");
-	settings.SetToolTip("missions", "Enable splits for Full Game. \n");
+
 	vars.missions = new Dictionary<string,string> 
-		{
-            {"Tutorial\\M01_Tutorial.pc", "Prologue"},		
+		{ 
 			{"Street\\M02_Street.pc", "Schonberg Streets"}, 
 			{"Facility\\M03_Facility.pc", "Mittelwerk Facility"},
 			{"BodeMuseum\\M05_BodeMuseum.pc", "Kasier Friedrich Museum"},
 			{"Bebelplatz\\M06_Bebelplatz.pc", "Opernplatz"},
-			{"Church\\M07_Church.pc", "St. Olibartus Church"},
+			{"Church\\M07_Church.pc", "St Olibartus Church"},
 			{"Flaktower\\M08_Flaktower.pc", "Tiergarten Flak Tower"},
 			{"CommandPost\\M09_CommandPost.pc", "Karlshorst Command Post"},
 			{"PotsdamerPlatz\\M10_PotsdamerPlatz.pc", "Kreuzberg HeadQuarters"},
 			{"LaunchSite\\M10a_LaunchSite.pc", "Kopenick Launch Site"},
 			{"BrandenburgGate\\M11_BrandenburgGate.pc", "Brandenburg Gate"},
-		};
-		foreach (var Tag in vars.missions)
+		}; 
+ 		foreach (var Tag in vars.missions)
 		{
 			settings.Add(Tag.Key, true, Tag.Value, "missions");
     	};
 }
-
+ 
 start
 {
-	return current.Start == 1;
+	return ((current.map == "Tutorial\\M01_Tutorial.pc") && (old.map == "nu\\Options.gui"));
 }
 
-onStart
+split 
 {
-	vars.doneMaps.Add(current.CurMap);
+    return (settings[(current.map)] && (current.map != old.map));
 }
 
-split
+ reset
 {
-    if (current.CurMap != old.CurMap && old.CurMap != "nu\\Options.gui" && settings[current.CurMap] && !vars.doneMaps.Contains(current.CurMap) || current.CurMap == "BrandenburgGate\\M11_BrandenburgGate.pc" && current.Objective == 3 && current.BulletCam == 1)
-	{
-		vars.doneMaps.Add(current.CurMap);
-		return true;		
-	}
+    return ((current.map == "nu\\Options.gui") && (old.map != "nu\\Options.gui"));
 }
 
-onReset
-{		
-	vars.doneMaps.Clear();
-}
-
-isLoading
+/*isLoading
 {
-	return current.Load == 0 || current.Splash == 0;
-}
+	return (current.loading1 == 0);
+} 
+*/ 
