@@ -1,48 +1,45 @@
 state("sniperelite", "Steam")
 {
-	byte Load : 0x357040;
+	byte Load : 0x358A71;
 	byte Start : 0x35DAD4;
-	string8 CurMap : 0x418EED; //4049D9, 404995
-	byte State : 0x3AD3FC;
+	string8 CurMap : 0x418EED;
 	string12 WarRecord : 0x418AB0;
-	int Reset : 0x3B84A0;
 	int Cuts : 0x3ADB24;
 	int MC : 0x3AE2E0;
 }
 
-state("sniperelite", "GOG / Retail")
+state("sniperelite", "GOG")
 {
-	byte Load : 0x329B07;
+	byte Load : 0x2F99C5;
 	byte Start : 0x2DB89C;
-	byte State : 0x32A18C;
+	string8 CurMap : 0x380CE5;
 	string12 WarRecord : 0x394D30;
-	string8 CurMap : 0x380CE5; //380D29, 39514D
-	int Reset : 0x3350A0;
-	int Cuts : 0x35EC4C; //35EC4C, 32A8A8
-	int MC : 0x32B040; // 256 completed 1 failed
+	int Cuts : 0x35EC4C;
+	int MC : 0x32B040;
 }
 
 init
 {
+    //print(modules.First().ModuleMemorySize.ToString());
 	switch(modules.First().ModuleMemorySize)
     {
 	case 4341760 :
         	version = "Steam";
         	break;
 	case 3805184 : 
-			version = "GOG / Retail";
+			version = "GOG";
 			break;
    }
 
-	vars.doneMaps = new List<string>(); // You get kicked to the main menu, so adding this just in case
+	vars.doneMaps = new List<string>();
 }
 
 startup
 {	
-	settings.Add("ils", true, "Individual Levels");
-	settings.SetToolTip("ils", "Enable splits for ILs. Please uncheck Missions.");
-	settings.Add("missions", false, "Missions");
-	settings.SetToolTip("missions", "Enable splits for Full Game. Please uncheck Individual Levels. \n");
+	settings.Add("ils", false, "Individual Levels");
+	settings.SetToolTip("ils", "Enables splits for ILs. Please uncheck Any% for asl to work properly.");
+	settings.Add("missions", true, "Any% or 100%");
+	settings.SetToolTip("missions", "Enables splits for Full Game. Please uncheck Individual Levels for asl to work properly.");
 
 	vars.missions = new Dictionary<string,string> 
 		{ 
@@ -73,13 +70,12 @@ startup
 			{"level08a", "Escape from Berlin -- Extract the Pilot"},
 			{"level08b", "Journey to Tempelhof"},
 			{"level08d", "Tempelhof Airport"},
-			{"level02a", "The Safehouse - 100%"},
-
 		};
 		foreach (var Tag in vars.missions)
 		{
 			settings.Add(Tag.Key, true, Tag.Value, "missions");
     	};
+		settings.Add("level02a", false, "The Safehouse - 100%", "missions");
 
 
     if (timer.CurrentTimingMethod == TimingMethod.RealTime)
@@ -89,7 +85,7 @@ startup
         	"This game uses Time without Loads (Game Time) as the main timing method.\n"+
         	"LiveSplit is currently set to show Real Time (RTA).\n"+
         	"Would you like to set the timing method to Game Time? This will make verification easier",
-        	"LiveSplit | Sniper Elite 5",
+        	"LiveSplit | Sniper Elite",
         	MessageBoxButtons.YesNo,MessageBoxIcon.Question
         );
         
@@ -112,16 +108,11 @@ onStart
 
 split
 {
-if ((current.CurMap != old.CurMap) && (settings[current.CurMap]) && (!vars.doneMaps.Contains(current.CurMap)) || (settings["ils"] && (current.Start == 5 && current.MC == 256)) || (current.CurMap == "level08d") && (current.Start == 5 && current.MC == 256) || (current.CurMap == "level02a") && (current.Start == 5 && current.MC == 256))
+if (current.CurMap != old.CurMap && settings[current.CurMap] && !vars.doneMaps.Contains(current.CurMap) || settings["ils"] && current.Start == 5 && current.MC == 256 || (current.CurMap == "level08d" || current.CurMap == "level02a") && current.Start == 5 && current.MC == 256)
 	{
 		vars.doneMaps.Add(current.CurMap);
 		return true;		
 	}
-}
-
-reset
-{
-	return (settings["ils"] && (current.Reset == 0) && old.Reset == 1);
 }
 
 onReset
@@ -131,5 +122,5 @@ onReset
 
 isLoading
 {
-	return current.Load == 0 || current.State == 8 && current.WarRecord != "oldmenu1.dds";
+	return current.Load == 0 && current.WarRecord != "oldmenu1.dds";
 }
