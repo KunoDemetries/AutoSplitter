@@ -20,7 +20,7 @@ state("SEV2_Remastered", "Remastered")
 
 init
 {
-    print(modules.First().ModuleMemorySize.ToString());
+    //print(modules.First().ModuleMemorySize.ToString());
 	switch(modules.First().ModuleMemorySize)
     {
 	case 8146944 :
