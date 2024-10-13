@@ -1,7 +1,7 @@
 state("SniperEliteV2", "1.13")
 {
-	//byte Load : 0x67FC38;
-	//byte Splash : 0x653B40; // LRT addresses has been commented out, incase Moderator of the Speedrun page makes up his mind.
+	byte Load : 0x67FC38;
+	byte Splash : 0x653B40;
 	byte Start : 0x689FE2;
 	string38 CurMap : 0x685F31;
 	byte Objective : 0x656F3C;
@@ -81,7 +81,7 @@ onReset
 	vars.doneMaps.Clear();
 }
 
-//isLoading
-//{
-//	return current.Load == 0 || current.Splash == 0;
-//}
+isLoading
+{
+	return current.Load == 0 || current.Splash == 0;
+}
