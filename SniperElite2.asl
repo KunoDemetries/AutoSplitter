@@ -10,8 +10,8 @@ state("SniperEliteV2", "1.13")
 
 state("SEV2_Remastered", "Remastered")
 {
-	//byte Load : 0x0;
-	//byte Splash : 0x0;
+	byte Load : 0x751D0D;
+	byte Splash : 0x74C670;
 	byte Start : 0x799A77;
 	string38 CurMap : 0x7CFC7D;
 	byte Objective : 0x7CF568;
