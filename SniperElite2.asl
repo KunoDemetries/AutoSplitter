@@ -60,7 +60,7 @@ startup
     {        
     	var timingMessage = MessageBox.Show
 		(
-        	"This game uses Time without Loads (Game Time) as the main timing method.\n"+
+        	"This game allows to use Load Removed Time (Game Time) \n"+
         	"LiveSplit is currently set to show Real Time (RTA).\n"+
         	"Would you like to set the timing method to Game Time? This will make verification easier",
         	"LiveSplit | Sniper Elite V2",
