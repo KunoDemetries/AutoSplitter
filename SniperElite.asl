@@ -98,7 +98,7 @@ startup
 
 start
 {
-	return (current.Start == 5 && (current.Cuts == 0) && old.Start == 2) || (current.CurMap == "level02a") && (current.Start == 5 && old.Start ==255);
+	return current.Start == 5 && current.Cuts == 0 && old.Start == 2 || current.CurMap == "level02a" && current.Start == 5 && old.Start == 255;
 }
 
 onStart
@@ -108,7 +108,7 @@ onStart
 
 split
 {
-if (current.CurMap != old.CurMap && settings[current.CurMap] && !vars.doneMaps.Contains(current.CurMap) || settings["ils"] && current.Start == 5 && current.MC == 256 || (current.CurMap == "level08d" || current.CurMap == "level02a") && current.Start == 5 && current.MC == 256)
+if (current.CurMap != old.CurMap && settings[current.CurMap] && !vars.doneMaps.Contains(current.CurMap) || settings["ils"] && current.Start == 5 && current.MC == 256 || current.CurMap == "level02a" && current.Start == 5 && current.MC == 256 || current.CurMap == "level08d" && old.Start == 5 && current.Start == 2)
 	{
 		vars.doneMaps.Add(current.CurMap);
 		return true;		
