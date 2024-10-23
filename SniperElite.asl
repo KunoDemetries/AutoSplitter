@@ -108,7 +108,7 @@ onStart
 
 split
 {
-if (current.CurMap != old.CurMap && settings[current.CurMap] && !vars.doneMaps.Contains(current.CurMap) || settings["ils"] && current.Start == 5 && current.MC == 256 || current.CurMap == "level02a" && current.Start == 5 && current.MC == 256 || current.CurMap == "level08d" && old.Start == 5 && current.Start == 2)
+if (current.CurMap != old.CurMap && current.CurMap != "level08d" && old.CurMap != "level08d" && settings[current.CurMap] && !vars.doneMaps.Contains(current.CurMap) || settings["ils"] && current.Start == 5 && current.MC == 256 || current.CurMap == "level02a" && current.Start == 5 && current.MC == 256 || current.CurMap == "level08d" && old.Start == 5 && current.Start == 2)
 	{
 		vars.doneMaps.Add(current.CurMap);
 		return true;		
