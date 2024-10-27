@@ -38,7 +38,7 @@ startup
 {	
 	settings.Add("ils", false, "Individual Levels");
 	settings.SetToolTip("ils", "Enables splits for ILs. Please uncheck Any% for asl to work properly.");
-	settings.Add("missions", true, "Any% or 100%");
+	settings.Add("missions", true, "Any%");
 	settings.SetToolTip("missions", "Enables splits for Full Game. Please uncheck Individual Levels for asl to work properly.");
 
 	vars.missions = new Dictionary<string,string> 
@@ -75,8 +75,6 @@ startup
 		{
 			settings.Add(Tag.Key, true, Tag.Value, "missions");
     	};
-		settings.Add("level02a", false, "The Safehouse - 100%", "missions");
-
 
     if (timer.CurrentTimingMethod == TimingMethod.RealTime)
     {        
