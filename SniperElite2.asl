@@ -5,7 +5,17 @@ state("SniperEliteV2", "1.13")
 	byte Start : 0x689FE2;
 	string38 CurMap : 0x685F31;
 	byte Objective : 0x656F3C;
-	byte BulletCam : 0x65B917; //Experimental
+	byte BulletCam : 0x755165; //Experimental, 0x65B917
+}
+
+state("SniperEliteV2", "Skidrow 1.0")
+{
+	byte Load : 0x5E8C88;
+	byte Splash : 0x5F39F8;
+	byte Start : 0x689FE2;
+	string38 CurMap : 0x625061;
+	byte Objective : 0x624994;
+	byte BulletCam : 0x5FB3E8; //Experimental
 }
 
 state("SEV2_Remastered", "Remastered")
@@ -28,6 +38,9 @@ init
         	break;
 	case 18169856 :
 	        version = "Remastered";
+			break;
+	case 7737344 :
+	        version = "Skidrow 1.0";
 			break;
     }
 	vars.doneMaps = new List<string>();
@@ -55,7 +68,6 @@ startup
 		{
 			settings.Add(Tag.Key, true, Tag.Value, "missions");
     	};
-
     if (timer.CurrentTimingMethod == TimingMethod.RealTime)
     {        
     	var timingMessage = MessageBox.Show
@@ -86,7 +98,7 @@ onStart
 
 split
 {
-    if (current.CurMap != old.CurMap && old.CurMap != "nu\\Options.gui" && settings[current.CurMap] && !vars.doneMaps.Contains(current.CurMap) || current.CurMap == "BrandenburgGate\\M11_BrandenburgGate.pc" && current.Objective == 3 && current.BulletCam == 1)
+    if (current.CurMap != old.CurMap && old.CurMap != "nu\\Options.gui" && old.CurMap != "3D_FrontEnd\\3D_FrontEnd.ts" && settings[current.CurMap] && !vars.doneMaps.Contains(current.CurMap) || current.CurMap == "BrandenburgGate\\M11_BrandenburgGate.pc" && current.Objective == 3 && current.BulletCam == 1)
 	{
 		vars.doneMaps.Add(current.CurMap);
 		return true;		
