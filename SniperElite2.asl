@@ -12,7 +12,7 @@ state("SniperEliteV2", "Skidrow 1.0")
 {
 	byte Load : 0x5E8C88;
 	byte Splash : 0x5F39F8;
-	byte Start : 0x689FE2;
+	byte Start : 0x629319;
 	string38 CurMap : 0x625061;
 	byte Objective : 0x624994;
 	byte BulletCam : 0x5FB3E8; //Experimental
