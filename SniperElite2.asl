@@ -5,17 +5,17 @@ state("SniperEliteV2", "1.13")
 	byte Start : 0x689FE2;
 	string38 CurMap : 0x685F31;
 	byte Objective : 0x656F3C;
-	byte BulletCam : 0x755165; //Experimental, 0x65B917
+	byte BulletCam : 0x65B917; //Experimental
 }
 
 state("SniperEliteV2", "Skidrow 1.0")
 {
 	byte Load : 0x5E8C88;
 	byte Splash : 0x5F39F8;
-	byte Start : 0x629319;
+	byte Start : 0x689FE2;
 	string38 CurMap : 0x625061;
 	byte Objective : 0x624994;
-	byte BulletCam : 0x5FB3E8; //Experimental
+	byte BulletCam : 0x5FB3F7; //Experimental
 }
 
 state("SEV2_Remastered", "Remastered")
@@ -41,6 +41,9 @@ init
 			break;
 	case 7737344 :
 	        version = "Skidrow 1.0";
+			break;
+	case 7733248 :
+	        version = "1.0 - Not supported";
 			break;
     }
 	vars.doneMaps = new List<string>();
