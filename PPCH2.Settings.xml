@@ -1,0 +1,38 @@
+<Settings>
+    <Setting Id="Checkpoint"  Label="Checkpoint Splits" State="false">
+		<Setting Id="1"  Label="Fixed power, and Opened B/R Door" State="false"/>
+		<Setting Id="2"  Label="After sliding down the blue slide" State="false"/>
+		<Setting Id="3"  Label="Fixed power section 2" State="false"/>
+		<Setting Id="4"  Label="Mommy's Monologue Finished" State="false"/>
+		<Setting Id="5"  Label="Entering Molding Room" State="false"/>
+		<Setting Id="6"  Label="Green Hand Fixed" State="false"/>
+		<Setting Id="7"  Label="Entering Musical Memory" State="false"/>
+		<Setting Id="8"  Label="End of introuction to Musical Memory, starting game" State="false"/>
+		<Setting Id="9"  Label="End of round 1 of Musical Memory" State="false"/>
+		<Setting Id="10"  Label="End of round 2 of Musical Memory" State="false"/>
+		<Setting Id="11"  Label="End of round 3 of Musical Memory" State="false"/>
+		<Setting Id="12"  Label="End of round 4 of Musical Memory" State="false"/>
+		<Setting Id="13"  Label="Entering Product Storage" State="false"/>
+		<Setting Id="14"  Label="Leaving Product Storage" State="false"/>
+		<Setting Id="15"  Label="Return to Train Section" State="false"/>
+		<Setting Id="16"  Label="Entering Wack-A-Wuggy" State="false"/>
+		<Setting Id="17"  Label="End of introuction to Wack-A-Wuggy, starting game" State="false"/>
+		<Setting Id="18"  Label="End of Wack-A-Wuggy" State="false"/>
+		<Setting Id="19"  Label="Entering Cart Corridors" State="false"/>
+		<Setting Id="20"  Label="Pushing Barry The Cart down the trackway (Returning to Hub)" State="false"/>
+		<Setting Id="21"  Label="Entering Statues" State="false"/>
+		<Setting Id="22"  Label="Fixed electricty to statues" State="false"/>
+		<Setting Id="23"  Label="Start of statues" State="false"/>
+		<Setting Id="24"  Label="Leaving statues" State="false"/>
+		<Setting Id="25"  Label="Water Treatment" State="false"/>
+		<Setting Id="26"  Label="Leaving Water Treatment" State="false"/>
+		<Setting Id="27"  Label="Fixed electricty in the underground" State="false"/>
+		<Setting Id="28"  Label="Hide and Seek with Mommy" State="false"/>
+		<Setting Id="29"  Label="Power lever section" State="false"/>
+		<Setting Id="30"  Label="Finished Power lever section" State="false"/>
+		<Setting Id="31"  Label="Hide from mommy" State="false"/>
+		<Setting Id="32"  Label="Chase scene through tunnels with mommy" State="false"/>
+		<Setting Id="33"  Label="Entering hallway, past the tunnel section" State="false"/>
+	</Setting>
+	<Setting Id="Final"  Label="Final Split (Start Train)" State="false"/>
+</Settings>
