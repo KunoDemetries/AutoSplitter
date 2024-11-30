@@ -72,8 +72,6 @@ init
 		vars.Helper["TrainStopped"] = vars.Helper.Make<float>(Train, 0x170, 0x5F0, 0x600, 0x2A0);
 	}
 		
-		
-	
 	vars.FNameToString = (Func<ulong, string>)(fName =>
 	{
 		var nameIdx  = (fName & 0x000000000000FFFF) >> 0x00;
@@ -107,6 +105,8 @@ init
 
 		return name.Substring(0, under + 1);
 	});	
+
+	vars.Combination = "1423";
 }
 
 update
@@ -121,6 +121,53 @@ update
 	{
 		vars.completedSplits.Clear();
 	}
+
+	string CurTrain = null;
+    string CurTrainHex = "00-54-72-61-69-6E-43-6F-64-65-56-61-72-69-61-74-69-6F-6E-49-6E-55-73-65-00-0C-00-00-00-49-6E-74-50-72-6F-70-65-72-74-79-00-04-00-00-00-00-00-00-00-00-";
+    string CurCheckpointHex = "43-68-65-63-6B-70-6F-69-6E-74-00-0C-00-00-00-49-6E-74-50-72-6F-70-65-72-74-79-00-04-00-00-00-00-00-00-00-00-";
+    if (settings["Combo_Setting"]) 
+    {
+        if ((current.isGameLoaded == 1))
+        {
+            string logPath = Environment.GetEnvironmentVariable("AppData")+"\\..\\local\\Playtime_Prototype4\\Saved\\SaveGames\\Chap2Checkpoint.sav";
+            
+            byte[] data = File.ReadAllBytes(logPath);
+            string hex = BitConverter.ToString(data);
+            int traincode = hex.IndexOf(CurTrainHex);
+            int checkpoint = hex.IndexOf(CurCheckpointHex);
+            if ((traincode != -1) || (checkpoint != -1))
+            {
+                CurTrain = hex.Substring(traincode + CurTrainHex.Length, 2);
+                vars.CurCheckpoint = hex.Substring(checkpoint + CurCheckpointHex.Length, 2);
+            }
+            switch (CurTrain) 
+            {
+                case "00" : vars.Combination = "1423"; 
+                    break;
+                case "01" : vars.Combination = "2431"; 
+                    break;
+                case "02" : vars.Combination = "1324";
+                    break;
+                case "03" : vars.Combination = "4312"; 
+                    break;
+                case "04" : vars.Combination = "3241"; 
+                    break;
+                case "05" : vars.Combination = "4213"; 
+                    break;
+                case "06" : vars.Combination = "3124"; 
+                    break;
+                case "07" : vars.Combination = "2314"; 
+                    break;
+                case "08" : vars.Combination = "4231"; 
+                    break;
+                case "09" : vars.Combination = "1243"; 
+                    break;
+                default:  vars.Combination = "1423"; 
+                    break;
+            }
+        }
+        vars.SetTextComponent("Current Combination:", (vars.Combination.ToString())); 
+    }
 
 	//print(current.Items2.ToString());
 	
