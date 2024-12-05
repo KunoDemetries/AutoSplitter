@@ -5,17 +5,15 @@
 
 state("iw3sp", "V1.0") // Steam Version
 {
-  	int Loader :	0x10B1100;
-	string20 CurrentLevelName :	0x6C3140;
+  	int load :	0x10B1100;
+	string20 map :	0x6C3140;
 	int EndSplit :	0xCDE4C8;
 }
 
-
-
 state("iw3sp", "V1.5") // Modified .exe to support more physical memory
 {
-  	int Loader :	0x1C75F4, 0x0;
-	string20 CurrentLevelName :	0x4EA64, 0x50C;
+  	int load :	0x1C75F4, 0x0;
+	string20 map :	0x4FA248;
 	int EndSplit :	0xCDE4C8;
 }
 
@@ -53,9 +51,7 @@ startup
     };
         foreach (var s in sB) settings.Add(s.Item2, true, s.Item3, s.Item1);
 
-	refreshRate = 30;
-
-	if (timer.CurrentTimingMethod == TimingMethod.RealTime) // stolen from dude simulator 3, basically asks the runner to set their livesplit to game time
+	if (timer.CurrentTimingMethod == TimingMethod.RealTime) 
     {        
         var timingMessage = MessageBox.Show 
 		(
@@ -71,66 +67,62 @@ startup
             timer.CurrentTimingMethod = TimingMethod.GameTime;
         }
     }
+
+    vars.doneMaps = new List<string>();
+    vars.startMaps = new List<string>{"killhouse", "blackout", "village_assault", "icbm"};
+	vars.coupOffset = false;
+	vars.currentTime = new TimeSpan(0, 0, 0);
+	vars.lastGameplayMap = "";
+	vars.firstGameplayMap = "";
 }
 
 init 
 {
-	vars.doneMaps = new List<string>(); // Actually needed because intel%
-	vars.coupOffset = false;
-	vars.currentTime = new TimeSpan(0, 0, 0);	//TimeSpan object used to add a timer offset after The Coup
 	if (modules.First().ModuleMemorySize == 0x1D03000)
         version = "V1.0";
     else if (modules.First().ModuleMemorySize == 0x1D00EC2)
         version = "V1.5";
 }
 
-update 
-{
-	vars.currentTime = timer.CurrentTime.GameTime;	//keep the variable updated with the current time on the timer
-}
-
 start 
 {
-	//changed start condition to happen only after loading in rather than any time in the load
-	return (current.CurrentLevelName == "killhouse" && current.Loader != 0 && old.Loader == 0);
+	if (vars.startMaps.Contains(current.map) && (vars.firstGameplayMap == "" || vars.firstGameplayMap == current.map) && current.load != 0 && old.load == 0) {
+		vars.firstGameplayMap = current.map;
+		return true;
+	};
 }
 
 onStart
 {
-	vars.doneMaps.Clear();		//clear the doneMaps list
+	vars.doneMaps.Clear();
 	vars.coupOffset = false;
 }
 
 split 
 {
-	if ((current.CurrentLevelName != old.CurrentLevelName) && (!vars.doneMaps.Contains(current.CurrentLevelName)))
-	{					//on map change
-		if (current.CurrentLevelName == "coup") 
-		{				//if the last map was The Coup. kuno note: Changed to do it on coup and not after it's skipped ie into the next level 
-			vars.currentTime = timer.CurrentTime.GameTime;	//set a variable to the value of current time
-			vars.coupOffset = true;				//add 4:44 to the timer
-			if (settings["coup"]) 
-			{				//if the split for The Coup is enabled
-				vars.doneMaps.Add(old.CurrentLevelName);		//add the last map to done splits list
-				return true;				//split
-			}
+	if (current.map != old.map && old.map != "ui")
+		vars.lastGameplayMap = old.map; 
+
+	if (current.map != old.map && current.map != "ui" && !vars.doneMaps.Contains(vars.lastGameplayMap)) {
+		if (current.map == "coup") { 
+			vars.currentTime = timer.CurrentTime.GameTime;	
+			vars.coupOffset = true;	
 		}	
-		else 
-		{						//if map is NOT The Coup
-			if (settings[current.CurrentLevelName]) 
-			{		//if setting for last map is enabled
-				vars.doneMaps.Add(old.CurrentLevelName);	//add the last map to done splits list
-				return true;			//split
-			}
-		}	
+		 					
+			
+		vars.doneMaps.Add(vars.lastGameplayMap);	
+		return settings[vars.lastGameplayMap];			
+		
+			
 	}	
-	//Endsplit for the game
-	if (current.CurrentLevelName == "jeepride" && current.EndSplit != 147865) 
+
+	//Endsplit for vanilla
+	if (current.map == "jeepride" && current.EndSplit != old.EndSplit && (old.EndSplit == 147865 && current.EndSplit != 147865 || current.EndSplit == 147865 && old.EndSplit != 147865)) 
 	{
 		return true;
 	}
 	//Endsplit solution for speedrun mod
-	else if (old.CurrentLevelName == "jeepride" && current.CurrentLevelName == "ac130")
+	else if (old.map == "jeepride" && current.map == "ac130")
 	{
 		return true;
 	}
@@ -138,7 +130,7 @@ split
  
 reset 
 {
-	return (current.CurrentLevelName == "ui" && old.CurrentLevelName != "coup");
+	return (current.map == vars.firstGameplayMap && old.map == "ui");
 }
 
 onReset
@@ -148,16 +140,15 @@ onReset
 
 gameTime 
 {
-	if (vars.coupOffset == true) 
-	{					//when offset gets set to true
-		vars.coupOffset = false;				//set it back to false
-		return vars.currentTime.Add(new TimeSpan (0, 4, 44));	//set the timer to current timer time + 284s (4m44s)
+	if (vars.coupOffset == true) {					
+		vars.coupOffset = false;				
+		return vars.currentTime.Add(new TimeSpan (0, 4, 44));
 	}
 }
 
 isLoading 
 {
-		return (current.Loader == 0) || (current.CurrentLevelName == "coup");
+		return (current.load == 0) || (current.map == "coup");
 }
 
 exit 
