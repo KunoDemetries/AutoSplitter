@@ -7,6 +7,7 @@ state("CoDWaW")
 
 startup 
 {
+    settings.Add("Cutscene Time Fix", true, "Substract 62.55s from the timer after finishing TLTB");
 	settings.Add("WAW", true, "All Missions");
 		
 	vars.missions = new Dictionary<string,string> 
@@ -71,6 +72,17 @@ onStart
 isLoading
 {
     return (!current.Loader);
+}
+
+update
+{
+	//massive shoutout to Ero for the help here. This is basically *adding* time to LiveSplits "loading times" which is then subtracting from RTA to display the time as LRT
+    if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "see1" && current.CurrentLevelName == "pel1a_load")
+    {
+        print("CTF Executed Succesfully");
+        const double Offset = 62.55;
+        timer.LoadingTimes += TimeSpan.FromSeconds(Offset);
+    }
 }
 
 split
