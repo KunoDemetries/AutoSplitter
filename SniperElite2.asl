@@ -5,17 +5,17 @@ state("SniperEliteV2", "1.13")
 	byte Start : 0x689FE2;
 	string38 CurMap : 0x685F31;
 	byte Objective : 0x656F3C;
-	byte BulletCam : 0x65B917; //Experimental
+	byte BulletCam : 0x65B917;
 }
 
 state("SniperEliteV2", "Skidrow 1.0")
 {
 	byte Load : 0x5E8C88;
 	byte Splash : 0x5F39F8;
-	byte Start : 0x629319;
+	byte Start : 0x689FE2;
 	string38 CurMap : 0x625061;
 	byte Objective : 0x624994;
-	byte BulletCam : 0x5FB3F7; //Experimental
+	byte BulletCam : 0x5FB3F7;
 }
 
 state("SEV2_Remastered", "Remastered")
@@ -25,7 +25,17 @@ state("SEV2_Remastered", "Remastered")
 	byte Start : 0x799A77;
 	string38 CurMap : 0x7CFC7D;
 	byte Objective : 0x7CF568;
-	byte BulletCam : 0x76DD17; //Experimental
+	byte BulletCam : 0x76DD17;
+}
+
+state("SniperEliteV2_D3D11_UWP_Retail_Submission", "Remastered - UWP")
+{
+	byte Load : 0xB31147;
+	byte Splash : 0xA95184;
+	byte Start : 0xB55BE7;
+    string38 CurMap : 0xB8368D;
+	byte Objective : 0xB82F68;
+    byte BulletCam : 0xAB62DF;
 }
 
 init
@@ -45,6 +55,9 @@ init
 	case 7733248 :
 	        version = "1.0 - Not supported";
 			break;
+    case 21979136 :
+            version = "Remastered - UWP";
+            break;
     }
 	vars.doneMaps = new List<string>();
 }
