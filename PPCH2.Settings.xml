@@ -1,4 +1,5 @@
 <Settings>
+    <Setting Id="Combo_Setting"  Label="Train Combination" State="false"/>
     <Setting Id="Checkpoint"  Label="Checkpoint Splits" State="false">
 		<Setting Id="1"  Label="Fixed power, and Opened B/R Door" State="false"/>
 		<Setting Id="2"  Label="After sliding down the blue slide" State="false"/>
