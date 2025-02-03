@@ -206,8 +206,8 @@ split
 	}
 	
 	// Debug. Comment out before release.
-	if (!string.IsNullOrEmpty(setting))
-	vars.Log(setting);
+	//if (!string.IsNullOrEmpty(setting))
+	//vars.Log(setting);
 	
 	if (settings.ContainsKey(setting) && settings[setting] && vars.completedSplits.Add(setting)){
 		return true;
