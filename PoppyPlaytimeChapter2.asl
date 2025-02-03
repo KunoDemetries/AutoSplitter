@@ -13,7 +13,7 @@ startup
 	Assembly.Load(File.ReadAllBytes("Components/asl-help")).CreateInstance("Basic");
 	vars.Helper.Settings.CreateFromXml("Components/PPCH2.Settings.xml");
 	
-	vars.splitstoComplete = new HashSet<string>();
+	vars.completedSplits = new HashSet<string>();
 }
 
 init
@@ -30,8 +30,6 @@ init
 			version = "Steam 31/10/24";
 			break;
 	}
-	
-	vars.completedSplits = new List<byte>();
 
 	IntPtr gWorld = vars.Helper.ScanRel(3, "48 8B 05 ???????? 48 3B C? 48 0F 44 C? 48 89 05 ???????? E8");
 	IntPtr gEngine = vars.Helper.ScanRel(3, "48 89 05 ???????? 48 85 c9 74 ?? e8 ???????? 48 8d 4d");
@@ -183,15 +181,15 @@ split
 {
 	string setting = "";
 	
-	if(vars.FNameToShortString2(current.AuthorityGameMode) == "MainMenu_Gamemode_C_"){
+	if(vars.FNameToShortString2(current.AuthorityGameMode) == "Chapter2_Gamemode_C_"){
 		if(current.CheckpointID != old.CheckpointID){
-			setting = current.CheckpointID;
+			setting = current.CheckpointID.ToString();
 		}
 	}
 	
 	// Debug. Comment out before release.
-	if (!string.IsNullOrEmpty(setting))
-	vars.Log(setting);
+	//if (!string.IsNullOrEmpty(setting))
+	//vars.Log(setting);
 	
 	if (settings.ContainsKey(setting) && settings[setting] && vars.completedSplits.Add(setting)){
 		return true;
