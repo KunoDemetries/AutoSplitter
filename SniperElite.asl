@@ -41,7 +41,7 @@ startup
 	settings.SetToolTip("ils", "Enables splits for ILs. Please uncheck Any% for asl to work properly.");
 	settings.Add("missions", true, "Any%");
 	settings.SetToolTip("missions", "Enables splits for Full Game. Please uncheck Individual Levels for asl to work properly.");
-	
+
 	refreshRate = 60;
 
 	vars.missions = new Dictionary<string,string> 
@@ -83,9 +83,10 @@ startup
     {        
     	var timingMessage = MessageBox.Show
 		(
-        	"This game uses Time without Loads (Game Time) as the main timing method.\n"+
-        	"LiveSplit is currently set to show Real Time (RTA).\n"+
-        	"Would you like to set the timing method to Game Time? This will make verification easier",
+        	"This game uses 'Load Removed Time' (Game Time) as the main timing method.\n"+
+        	"LiveSplit is currently set to show 'Real Time Attack' (Real Time).\n"+
+			"\n"+
+        	"Would you like to set the timing method to LRT ?",
         	"LiveSplit | Sniper Elite",
         	MessageBoxButtons.YesNo,MessageBoxIcon.Question
         );
@@ -95,25 +96,6 @@ startup
             timer.CurrentTimingMethod = TimingMethod.GameTime;
         }
     }
-	if (timer.CurrentTimingMethod == TimingMethod.GameTime)
-	{
-		var result = MessageBox.Show
-		(
-			"Please make sure your game is properly FPS locked.\n"+
-			"\n"+
-			"If you're using Game Time timing method without framerate being capped\n"+
-			"LiveSplit will fail to count Load Removed Time\n"+
-			"\n Click Yes - if you're sure."+
-			"\n Click No - to find out how to lock your fps.",
-			"Sniper Elite",
-			MessageBoxButtons.YesNo,
-			MessageBoxIcon.Information
-		);
-		if (result == DialogResult.No)
-		{
-			Process.Start("https://www.youtube.com/watch?v=raEg3GiT57I");
-		}
-	}
 }
 
 start
@@ -125,18 +107,38 @@ start
 onStart
 {
 	vars.doneMaps.Add(current.CurMap);
+	
+	if (current.Framerate > 125 && timer.CurrentTimingMethod == TimingMethod.GameTime)
+	{
+		var result = MessageBox.Show
+		(
+			"Please make sure your game is properly FPS locked.\n"+
+			"\n"+
+			"Game Time timing method depends on game's framerate and\n"+
+			"LiveSplit will fail to count Load Removed Time.\n"+
+			"\n"+
+			"Max allowed framerate cap: 120\n"+
+			"Click Yes - if you understand.\n"+
+			"Click No - to find out how to lock your fps.",
+			"LiveSplit | Sniper Elite",
+			MessageBoxButtons.YesNo,
+			MessageBoxIcon.Error
+		);
+		if (result == DialogResult.No)
+		{
+			Process.Start("https://www.youtube.com/watch?v=raEg3GiT57I");
+		}
+	}
 }
 
 split
 {
-	if(current.CurMap != old.CurMap && settings[current.CurMap] && !vars.doneMaps.Contains(current.CurMap) ||
+	return current.CurMap != old.CurMap && settings[current.CurMap] && !vars.doneMaps.Contains(current.CurMap) ||
 	settings["ils"] && current.Start == 5 && current.MC == 256 ||
 	current.CurMap == "level02a" && current.Start == 5 && current.MC == 256 ||
-	current.CurMap == "level08d" && old.Start == 5 && current.Start == 2)
-	{
-		vars.doneMaps.Add(current.CurMap);
-		return true;
-	}
+	current.CurMap == "level08d" && old.Start == 5 && current.Start == 2;
+
+	vars.doneMaps.Add(current.CurMap);
 }
 
 onReset
@@ -147,5 +149,5 @@ onReset
 isLoading
 {
 	return current.Load == 0 && current.WarRecord != "oldmenu1.dds" ||
-	current.Framerate > 240; //Requires the game to be fps capped.
+	current.Framerate > 125; //Requires the game to be fps capped.
 }
