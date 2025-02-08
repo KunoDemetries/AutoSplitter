@@ -1,9 +1,10 @@
 state("sniperelite", "Steam")
 {
-	byte Load: 0x358A71;
+	byte Load: 0x3A35A9;
 	byte Start: 0x35DAD4;
 	string8 CurMap: 0x418EED;
-	string12 WarRecord: 0x418AB0;
+	string21 WarRecord: 0x418AA8;
+	byte Briefing: 0x3B7299;
 	int Cuts: 0x3ADB24;
 	int MC: 0x3AE2E0;
 	float Framerate: 0x368390;
@@ -11,10 +12,11 @@ state("sniperelite", "Steam")
 
 state("sniperelite", "GOG")
 {
-	byte Load: 0x2D69B1;
+	byte Load: 0x320D25;
 	byte Start: 0x2DB89C;
 	string8 CurMap: 0x380CE5;
-	string12 WarRecord: 0x394D30;
+	string21 WarRecord: 0x394D28;
+	byte Briefing: 0x333F91;
 	int Cuts: 0x35EC4C;
 	int MC: 0x32B040;
 	float Framerate: 0x2E60D0;
@@ -43,7 +45,8 @@ startup
 	settings.SetToolTip("missions", "Enables splits for Full Game. Please uncheck Individual Levels for asl to work properly.");
 
 	refreshRate = 60;
-
+	
+	vars.WarRec = 0;
 	vars.missions = new Dictionary<string,string> 
 		{ 
     	    {"level01a", "(Karlshorst) Meet the Informant"},
@@ -107,28 +110,6 @@ start
 onStart
 {
 	vars.doneMaps.Add(current.CurMap);
-	
-	if (current.Framerate > 125 && timer.CurrentTimingMethod == TimingMethod.GameTime)
-	{
-		var result = MessageBox.Show
-		(
-			"Please make sure your game is properly FPS locked.\n"+
-			"\n"+
-			"Game Time timing method depends on game's framerate and\n"+
-			"LiveSplit will fail to count Load Removed Time.\n"+
-			"\n"+
-			"Max allowed framerate cap: 120\n"+
-			"Click Yes - if you understand.\n"+
-			"Click No - to find out how to lock your fps.",
-			"LiveSplit | Sniper Elite",
-			MessageBoxButtons.YesNo,
-			MessageBoxIcon.Error
-		);
-		if (result == DialogResult.No)
-		{
-			Process.Start("https://www.youtube.com/watch?v=raEg3GiT57I");
-		}
-	}
 }
 
 split
@@ -148,6 +129,15 @@ onReset
 
 isLoading
 {
-	return current.Load == 0 && current.WarRecord != "oldmenu1.dds" ||
-	current.Framerate > 125; //Requires the game to be fps capped.
+	if(old.WarRecord == "\\frontend\\gamespy.dds" && current.WarRecord == "\\splash\\oldmenu1.dds")
+	{
+		vars.WarRec = 1;
+	}
+	else if(current.WarRecord == "\\splash\\loading\\level" && current.WarRecord != old.WarRecord)
+	{
+		vars.WarRec = 0;
+	}
+
+	return current.Load == 0 && current.Briefing != 1 && vars.WarRec != 1 && current.Framerate < 10000 ||
+	current.Framerate > 10000;
 }
