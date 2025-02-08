@@ -125,15 +125,16 @@ split
 onReset
 {		
 	vars.doneMaps.Clear();
+	vars.WarRec = 0;
 }
 
 isLoading
 {
-	if(old.WarRecord == "\\frontend\\gamespy.dds" && current.WarRecord == "\\splash\\oldmenu1.dds")
+	if(current.Framerate == 60 && current.WarRecord == "\\splash\\oldmenu1.dds")
 	{
 		vars.WarRec = 1;
 	}
-	else if(current.WarRecord == "\\splash\\loading\\level" && current.WarRecord != old.WarRecord)
+	else if(current.WarRecord == "\\splash\\loading\\level" && current.WarRecord != old.WarRecord || current.WarRecord == "\\splash\\frontsc2.dds" && current.WarRecord != old.WarRecord)
 	{
 		vars.WarRec = 0;
 	}
