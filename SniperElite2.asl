@@ -20,7 +20,7 @@ state("SniperEliteV2", "Skidrow 1.0")
 
 state("SEV2_Remastered", "Remastered")
 {
-	byte Load : 0x751D0D;
+	byte Load : 0x774FE3;
 	byte Splash : 0x74C670;
 	byte Start : 0x799A77;
 	string38 CurMap : 0x7CFC7D;
