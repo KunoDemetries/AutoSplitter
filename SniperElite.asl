@@ -130,7 +130,7 @@ onReset
 
 isLoading
 {
-	if(current.Framerate == 60 && current.WarRecord == "\\splash\\oldmenu1.dds")
+	if((current.Framerate != old.Framerate && old.Framerate == 60) && current.WarRecord == "\\splash\\oldmenu1.dds")
 	{
 		vars.WarRec = 1;
 	}
@@ -139,6 +139,6 @@ isLoading
 		vars.WarRec = 0;
 	}
 
-	return current.Load == 0 && current.Briefing != 1 && vars.WarRec != 1 && current.Framerate < 10000 ||
+	return current.Load == 0 && (current.Briefing != 1 && current.Framerate < 10000) && vars.WarRec != 1 ||
 	current.Framerate > 10000;
 }
