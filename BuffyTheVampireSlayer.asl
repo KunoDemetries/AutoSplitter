@@ -17,6 +17,7 @@ startup
     {
         emu.Make<int>("IGT", 0x324130);
         emu.Make<int>("CurMapID", 0x324128);
+	emu.Make<int>("MonstersKilled", 0x324138);
 
         return true;
     });
