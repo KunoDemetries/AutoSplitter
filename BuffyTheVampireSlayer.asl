@@ -1,28 +1,27 @@
-state("pcsx2")
+//Made with US version of the game and PCSX2 Nightly
+state("LiveSplit")
 {
-    int CurItemSelected : 0x012457B4, 0x6E4;
-    int Loader : 0x0123E454, 0xFD4; 
-    int CurMapID : 0x0123E450, 0x128;
-    int IGT : 0x0123E450, 0x130;
 }
 
 init
 {
     vars.doneMaps = new List<string>(); 
 	vars.timeTotal = 0;
-
-    switch(modules.First().ModuleMemorySize)
-    {
-	case 47538176 :
-        version = "PCSX2 Emulator 1.6.0";
-        break;
-    default:        version = "Wrong version of PCSX2"; 
-        break;
-    }
 }
 
 startup
 {
+    Assembly.Load(File.ReadAllBytes("Components/emu-help-v2")).CreateInstance("PS2");
+
+    vars.Helper.Load = (Func<dynamic, bool>)(emu => 
+    {
+        emu.Make<int>("IGT", 0x324130);
+        emu.Make<int>("CurMapID", 0x324128);
+	emu.Make<int>("MonstersKilled", 0x324138);
+
+        return true;
+    });
+
     settings.Add("BTVS", true, "Buffy The Vampire Slayer - Chaos Bleeds");
 
     vars.missions2 = new Dictionary<string,string> 
@@ -44,6 +43,30 @@ startup
 	{
 		settings.Add(Tag.Key, true, Tag.Value, "BTVS");
     };
+
+    //creates text components for variable information
+	vars.SetTextComponent = (Action<string, string>)((id, text) =>
+	{
+	        var textSettings = timer.Layout.Components.Where(x => x.GetType().Name == "TextComponent").Select(x => x.GetType().GetProperty("Settings").GetValue(x, null));
+	        var textSetting = textSettings.FirstOrDefault(x => (x.GetType().GetProperty("Text1").GetValue(x, null) as string) == id);
+	        if (textSetting == null)
+	        {
+	        var textComponentAssembly = Assembly.LoadFrom("Components\\LiveSplit.Text.dll");
+	        var textComponent = Activator.CreateInstance(textComponentAssembly.GetType("LiveSplit.UI.Components.TextComponent"), timer);
+	        timer.Layout.LayoutComponents.Add(new LiveSplit.UI.Components.LayoutComponent("LiveSplit.Text.dll", textComponent as LiveSplit.UI.Components.IComponent));
+	
+	        textSetting = textComponent.GetType().GetProperty("Settings", BindingFlags.Instance | BindingFlags.Public).GetValue(textComponent, null);
+	        textSetting.GetType().GetProperty("Text1").SetValue(textSetting, id);
+	        }
+	
+	        if (textSetting != null)
+	        textSetting.GetType().GetProperty("Text2").SetValue(textSetting, text);
+    });
+
+    //Parent setting
+	settings.Add("Variable Information", true, "Variable Information");
+	//Child settings that will sit beneath Parent setting
+	settings.Add("MK", false, "Current Number of Monsters Killed This Level", "Variable Information");
 }
 
 update
@@ -54,6 +77,13 @@ update
 	{
 		vars.timeTotal += timeDiff;
 	}
+
+    //Prints the current map to the Livesplit layout if the setting is enabled
+        if(settings["MK"]) 
+    {
+        vars.SetTextComponent("Monsters Killed This Level: ",current.MonstersKilled.ToString());
+        if (old.MonstersKilled != current.MonstersKilled) print("Monsters Killed This Level: " + current.MonstersKilled.ToString());
+    }
 }
 
 gameTime
