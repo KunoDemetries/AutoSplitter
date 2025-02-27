@@ -6,6 +6,8 @@ state("SniperEliteV2", "1.13")
 	string38 CurMap : 0x685F31;
 	byte Objective : 0x656F3C;
 	byte BulletCam : 0x65B917;
+	byte MC : 0x75517C;
+	byte isPaused : 0x68A2EA;
 }
 
 state("SniperEliteV2", "Skidrow 1.0")
@@ -16,6 +18,8 @@ state("SniperEliteV2", "Skidrow 1.0")
 	string38 CurMap : 0x625061;
 	byte Objective : 0x624994;
 	byte BulletCam : 0x5FB3F7;
+	byte MC : 0x0;
+	byte isPaused : 0x0;
 }
 
 state("SEV2_Remastered", "Remastered")
@@ -26,6 +30,8 @@ state("SEV2_Remastered", "Remastered")
 	string38 CurMap : 0x7CFC7D;
 	byte Objective : 0x7CF568;
 	byte BulletCam : 0x76DD17;
+	byte MC : 0x799A63;
+	byte isPaused : 0x79A038;
 }
 
 state("SniperEliteV2_D3D11_UWP_Retail_Submission", "Remastered - UWP")
@@ -36,6 +42,8 @@ state("SniperEliteV2_D3D11_UWP_Retail_Submission", "Remastered - UWP")
     string38 CurMap : 0xB8368D;
 	byte Objective : 0xB82F68;
     byte BulletCam : 0xAB62DF;
+	byte MC : 0x0;
+	byte isPaused : 0x0;
 }
 
 init
@@ -64,8 +72,15 @@ init
 
 startup
 {
+	settings.Add("IL", false, "Individual Levels");
+	settings.SetToolTip("IL", "Enable split for Individual Level.\n");
 	settings.Add("missions", true, "Missions");
-	settings.SetToolTip("missions", "Enable splits for Full Game. \n");
+	settings.SetToolTip
+	(
+	"missions",
+	"Enable splits for Full Game.\n"+
+	"(Disable Individual Levels splitting !)"
+	);
 	vars.missions = new Dictionary<string,string> 
 		{
             {"Tutorial\\M01_Tutorial.pc", "Prologue"},		
@@ -104,7 +119,8 @@ startup
 
 start
 {
-	return current.Start == 1;
+	return settings["missions"] && current.Start == 1 && current.Start != old.Start ||
+	settings["IL"] && current.Splash == 1 && old.Splash == 0 && current.CurMap != "nu\\Options.gui" && current.isPaused == 0;
 }
 
 onStart
@@ -114,11 +130,10 @@ onStart
 
 split
 {
-    if (current.CurMap != old.CurMap && old.CurMap != "nu\\Options.gui" && old.CurMap != "3D_FrontEnd\\3D_FrontEnd.ts" && settings[current.CurMap] && !vars.doneMaps.Contains(current.CurMap) || current.CurMap == "BrandenburgGate\\M11_BrandenburgGate.pc" && current.Objective == 3 && current.BulletCam == 1)
-	{
-		vars.doneMaps.Add(current.CurMap);
-		return true;		
-	}
+	vars.doneMaps.Add(current.CurMap);
+	return current.CurMap != old.CurMap && old.CurMap != "nu\\Options.gui" && old.CurMap != "3D_FrontEnd\\3D_FrontEnd.ts" && settings[current.CurMap] && !vars.doneMaps.Contains(current.CurMap) ||
+	current.CurMap == "BrandenburgGate\\M11_BrandenburgGate.pc" && current.Objective == 3 && current.BulletCam == 1 ||
+	settings["IL"] && current.MC == 1;
 }
 
 onReset
