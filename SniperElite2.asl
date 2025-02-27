@@ -130,10 +130,10 @@ onStart
 
 split
 {
-	vars.doneMaps.Add(current.CurMap);
 	return current.CurMap != old.CurMap && old.CurMap != "nu\\Options.gui" && old.CurMap != "3D_FrontEnd\\3D_FrontEnd.ts" && settings[current.CurMap] && !vars.doneMaps.Contains(current.CurMap) ||
 	current.CurMap == "BrandenburgGate\\M11_BrandenburgGate.pc" && current.Objective == 3 && current.BulletCam == 1 ||
 	settings["IL"] && current.MC == 1;
+	vars.doneMaps.Add(current.CurMap);
 }
 
 onReset
