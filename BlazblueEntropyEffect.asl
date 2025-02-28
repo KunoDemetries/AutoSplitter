@@ -1,77 +1,56 @@
-state("BlazblueEntropyEffect", "Default")
+state("BlazblueEntropyEffect") { }
+
+startup
 {
-    //Gameplay.GameInputManager private LockFlag m_uiActionFlag
-    int ActionFlag : "GameAssembly.dll", 0x046D98B0, 0xB8, 0x0, 0x58;
-    
-    int BossTotalHealth : "GameAssembly.dll", 0x0458A7C8, 0xB8, 0x0, 0x48, 0xA0, 0x28, 0x300;
+    Assembly.Load(File.ReadAllBytes("Components/asl-help")).CreateInstance("Unity");
+    vars.Helper.GameName = "Blazblue";
+    vars.Helper.AlertLoadless();
+
+    settings.Add("boss-kills", true, "Split on boss kills");
+
+    vars.ActionFlags_AsyncLoading = 1 << 0;
 }
 
-state("BlazblueEntropyEffect", "Update 2/29/24")
+onSplit
 {
-    //Gameplay.GameInputManager private LockFlag m_uiActionFlag
-    int ActionFlag : "GameAssembly.dll", 0x046C5E80, 0xB8, 0x0, 0x58; //13A30
-    
-    int BossTotalHealth : "GameAssembly.dll", 0x04584060, 0xB8, 0x0, 0xA0, 0x28, 0x300;
-}
-
-state("BlazblueEntropyEffect", "Update 3/10/24")
-{
-    //Gameplay.GameInputManager private LockFlag m_uiActionFlag
-    int ActionFlag : "GameAssembly.dll", 0x046EAB90, 0xB8, 0x0, 0x58; //13A30
-    
-    int BossTotalHealth : "GameAssembly.dll", 0x0459A720, 0xB8, 0x0, 0xA0, 0x28, 0x300;
-}
-
-state("BlazblueEntropyEffect", "Update 3/12/24")
-{
-    //Gameplay.GameInputManager private LockFlag m_uiActionFlag
-    int ActionFlag : "GameAssembly.dll", 0x046EC6C8, 0xB8, 0x0, 0x58; //13A30
-    
-    int BossTotalHealth : "GameAssembly.dll", 0x0459BAB0, 0xB8, 0x0, 0xA0, 0x28, 0x300;
+    vars.HighestSeenHp = 0;
 }
 
 init
 {
-    vars.HighestBossHealth = 0;
-    switch (modules.First().ModuleMemorySize) 
+    vars.Helper.TryLoad = (Func<dynamic, bool>)(mono =>
     {
-                case 688128 :
-            version = "Default";
-        break;
-                default:        
-            version = "Default";
-        break;
-    }
-}
+        var gim = mono["GameInputManager", 1];
+        vars.Helper["ActionFlags"] = gim.Make<int>("s_instance", "m_uiActionFlag");
 
-startup
-{
-    settings.Add("BK", true, "Split on Boss Kills");
+        var bb = mono["BattleBase"];
+        var ab = mono["ActorBase"];
+        var atm = mono["ActorTargetMgr"];
+        var po = mono["PlayerObj"];
+        vars.Helper["LastHitHp"] = bb.Make<int>("Cur", "PlayerSelf", ab["TargetMgr"], atm["m_lastHit"], po["m_LastUpdateHP"] + sizeof(int));
+
+        return true;
+    });
+
+    vars.HighestSeenHp = 0;
 }
 
 update
 {
-    if (current.BossTotalHealth > vars.HighestBossHealth)
+    if (current.LastHitHp > vars.HighestSeenHp)
     {
-        vars.HighestBossHealth = current.BossTotalHealth;
+        vars.HighestSeenHp = current.LastHitHp;
     }
-}
 
-onStart
-{
-    vars.HighestBossHealth = 0;
+    print(current.LastHitHp.ToString());
 }
 
 split
 {
-    if ((settings["BK"]) && (current.BossTotalHealth == 0) && (old.BossTotalHealth > 0) && (vars.HighestBossHealth >= 17000) && (((old.BossTotalHealth - current.BossTotalHealth) < 8000)))
-    {
-        vars.HighestBossHealth = 0;
-        return true;
-    }
+    return settings["boss-kills"] && old.LastHitHp > 0 && current.LastHitHp <= 350 && vars.HighestSeenHp > 17000;
 }
 
 isLoading
 {
-    return (current.ActionFlag & 1) != 0;
+    return (current.ActionFlags & vars.ActionFlags_AsyncLoading) != 0;
 }
