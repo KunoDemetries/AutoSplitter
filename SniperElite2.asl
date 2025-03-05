@@ -6,7 +6,7 @@ state("SniperEliteV2", "1.13")
 	string38 CurMap : 0x685F31;
 	byte Objective : 0x656F3C;
 	byte BulletCam : 0x65B917;
-	byte MC : 0x75517C;
+	byte MC : 0x689FD2;
 	byte isPaused : 0x68A2EA;
 }
 
@@ -39,34 +39,34 @@ state("SniperEliteV2_D3D11_UWP_Retail_Submission", "Remastered - UWP")
 	byte Load : 0xB31147;
 	byte Splash : 0xA95184;
 	byte Start : 0xB55BE7;
-    string38 CurMap : 0xB8368D;
+	string38 CurMap : 0xB8368D;
 	byte Objective : 0xB82F68;
-    byte BulletCam : 0xAB62DF;
+	byte BulletCam : 0xAB62DF;
 	byte MC : 0x0;
 	byte isPaused : 0x0;
 }
 
 init
 {
-    //print(modules.First().ModuleMemorySize.ToString());
+	//print(modules.First().ModuleMemorySize.ToString());
 	switch(modules.First().ModuleMemorySize)
-    {
+	{
 	case 8146944 :
-        	version = "1.13";
-        	break;
+		version = "1.13";
+		break;
 	case 18169856 :
-	        version = "Remastered";
-			break;
+		version = "Remastered";
+		break;
 	case 7737344 :
-	        version = "Skidrow 1.0";
+		version = "Skidrow 1.0";
 			break;
 	case 7733248 :
-	        version = "1.0 - Not supported";
-			break;
-    case 21979136 :
-            version = "Remastered - UWP";
-            break;
-    }
+		version = "1.0 - Not supported";
+		break;
+	case 21979136 :
+		version = "Remastered - UWP";
+		break;
+	}
 	vars.doneMaps = new List<string>();
 }
 
@@ -77,44 +77,44 @@ startup
 	settings.Add("missions", true, "Missions");
 	settings.SetToolTip
 	(
-	"missions",
-	"Enable splits for Full Game.\n"+
-	"(Disable Individual Levels splitting !)"
+		"missions",
+		"Enable splits for Full Game.\n"+
+		"(Disable Individual Levels splitting !)"
 	);
 	vars.missions = new Dictionary<string,string> 
-		{
-            {"Tutorial\\M01_Tutorial.pc", "Prologue"},		
-			{"Street\\M02_Street.pc", "Schonberg Streets"}, 
-			{"Facility\\M03_Facility.pc", "Mittelwerk Facility"},
-			{"BodeMuseum\\M05_BodeMuseum.pc", "Kasier Friedrich Museum"},
-			{"Bebelplatz\\M06_Bebelplatz.pc", "Opernplatz"},
-			{"Church\\M07_Church.pc", "St. Olibartus Church"},
-			{"Flaktower\\M08_Flaktower.pc", "Tiergarten Flak Tower"},
-			{"CommandPost\\M09_CommandPost.pc", "Karlshorst Command Post"},
-			{"PotsdamerPlatz\\M10_PotsdamerPlatz.pc", "Kreuzberg HeadQuarters"},
-			{"LaunchSite\\M10a_LaunchSite.pc", "Kopenick Launch Site"},
-			{"BrandenburgGate\\M11_BrandenburgGate.pc", "Brandenburg Gate"},
-		};
-		foreach (var Tag in vars.missions)
-		{
-			settings.Add(Tag.Key, true, Tag.Value, "missions");
-    	};
-    if (timer.CurrentTimingMethod == TimingMethod.RealTime)
-    {        
-    	var timingMessage = MessageBox.Show
+	{
+		{"Tutorial\\M01_Tutorial.pc", "Prologue"},
+		{"Street\\M02_Street.pc", "Schonberg Streets"},
+		{"Facility\\M03_Facility.pc", "Mittelwerk Facility"},
+		{"BodeMuseum\\M05_BodeMuseum.pc", "Kasier Friedrich Museum"},
+		{"Bebelplatz\\M06_Bebelplatz.pc", "Opernplatz"},
+		{"Church\\M07_Church.pc", "St. Olibartus Church"},
+		{"Flaktower\\M08_Flaktower.pc", "Tiergarten Flak Tower"},
+		{"CommandPost\\M09_CommandPost.pc", "Karlshorst Command Post"},
+		{"PotsdamerPlatz\\M10_PotsdamerPlatz.pc", "Kreuzberg HeadQuarters"},
+		{"LaunchSite\\M10a_LaunchSite.pc", "Kopenick Launch Site"},
+		{"BrandenburgGate\\M11_BrandenburgGate.pc", "Brandenburg Gate"},
+	};
+	foreach (var Tag in vars.missions)
+	{
+		settings.Add(Tag.Key, true, Tag.Value, "missions");
+	};
+	if (timer.CurrentTimingMethod == TimingMethod.RealTime)
+	{
+		var timingMessage = MessageBox.Show
 		(
-        	"This game allows to use Load Removed Time (Game Time) \n"+
-        	"LiveSplit is currently set to show Real Time (RTA).\n"+
-        	"Would you like to set the timing method to Game Time? This will make verification easier",
-        	"LiveSplit | Sniper Elite V2",
-        	MessageBoxButtons.YesNo,MessageBoxIcon.Question
-        );
-        
-        if (timingMessage == DialogResult.Yes)
-        {
-            timer.CurrentTimingMethod = TimingMethod.GameTime;
-        }
-    }
+			"This game allows to use Load Removed Time (Game Time) \n"+
+			"LiveSplit is currently set to show Real Time (RTA).\n"+
+			"Would you like to set the timing method to Game Time? This will make verification easier",
+			"LiveSplit | Sniper Elite V2",
+			MessageBoxButtons.YesNo,MessageBoxIcon.Question
+		);
+
+		if (timingMessage == DialogResult.Yes)
+		{
+			timer.CurrentTimingMethod = TimingMethod.GameTime;
+		}
+	}
 }
 
 start
@@ -137,7 +137,7 @@ split
 }
 
 onReset
-{		
+{
 	vars.doneMaps.Clear();
 }
 
