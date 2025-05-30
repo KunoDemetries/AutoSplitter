@@ -1,11 +1,45 @@
-/*
-Because of the frequence of the game being updates this is now a stump until either warzone dies, or the game has a campaign only mode.
-
-*/
 state("ModernWarfare")
 {
-    string100 map : 0xDE83FA1;
-    int loading1 :  0xEDD51C4;
+}
+
+init
+{
+    vars.doneMaps = new List<string>(); // You can accidently enter a previous level so adding this just in case someone gets kicked to the menu
+    var pattern = new SigScanTarget(0x7, "4c 8d 3d ?? ?? ?? ?? 66 66 0f 1f 84 00 ?? ?? ?? ?? 4b 8d 04 c0");
+    vars.watchers = new MemoryWatcherList();
+
+    vars.gameOffset = IntPtr.Zero;
+    int scanAttempts = 10;
+    while (scanAttempts-- > 0)
+    {
+        foreach (var page in game.MemoryPages(true).Reverse())
+        {
+        var scanner = new SignatureScanner(game, page.BaseAddress, (int)page.RegionSize);
+        vars.GetStaticPointerFromSig = (Func<string, int, IntPtr>) ( (signature, instructionOffset) => {
+
+        var pattern1 = new SigScanTarget(signature);
+        var location = scanner.Scan(pattern1);
+        if (location == IntPtr.Zero) return IntPtr.Zero;
+        int offset = game.ReadValue<int>((IntPtr)location + instructionOffset);
+        return (IntPtr)location + offset + instructionOffset + 0x4;
+    });
+            if ((vars.gameOffset = scanner.Scan(pattern)) != IntPtr.Zero)
+            {
+                print("Found static Game members at 0x" + vars.gameOffset.ToString("X8"));
+                scanAttempts = 0;
+                break;
+            }
+        }
+        if (scanAttempts == 0) break;
+        print("Could not find pattern, retrying " + scanAttempts + " more times.");
+        Thread.Sleep(1000);
+    }
+
+    vars.mapname = vars.GetStaticPointerFromSig("4c 8d 3d ?? ?? ?? ?? 66 66 0f 1f 84 00 ?? ?? ?? ?? 4b 8d 04 c0", 0x3);
+    vars.loading = vars.GetStaticPointerFromSig("80 3d ?? ?? ?? ?? ?? 74 ?? 48 8b 0d ?? ?? ?? ?? e8", 0x2);
+    print( vars.loading.ToString("X8"));
+    vars.watchers.Add(new StringWatcher(vars.mapname, 40) { Name = "MapName" }); 
+    vars.watchers.Add(new MemoryWatcher<int>(new DeepPointer(vars.loading + 0x1)) { Name = "loading"});
 }
 
 startup 
@@ -76,9 +110,18 @@ startup
         }	
 }
 
-init
+update
 {
-    vars.doneMaps = new List<string>(); // You can accidently enter a previous level so adding this just in case someone gets kicked to the menu
+    vars.watchers.UpdateAll(game);
+   // print(vars.watchers["MapName"].Current.ToString());
+    current.loading = vars.watchers["loading"].Current;
+    current.map = old.map = vars.watchers["MapName"].Current;
+    print(vars.watchers["loading"].Current.ToString());
+}
+
+isLoading
+{
+    return (current.loading == 1);
 }
 
 split
@@ -93,19 +136,19 @@ split
 
 start
 {
-	if ((current.map == "proxywar") && (current.loading1 == 1118989) && ((old.loading1 != 1118989)))
+	if ((current.map == "proxywar") && (current.loading == 0) && ((old.loading != 1)))
     {
 		vars.doneMaps.Clear();
     	return true;
     }
 }
 
-isLoading
-{
-    return ((current.loading1 == 1118988));
-}
-
 exit 
 {
     timer.OnStart -= vars.onStart;
+}
+
+onReset
+{
+    vars.doneMaps.Clear();
 }
