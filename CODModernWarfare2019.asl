@@ -53,7 +53,7 @@ startup
 		{ 
     		{"piccadilly","Piccadilly"},
     		{"safehouse","embedded"},
-    		{"ouse_finale","Proxy War"},
+    		{"safehouse_finale","Proxy War"},
     		{"townhoused","Clean House"},
     		{"marines","Hunting Party"},
     		{"embassy","Embassy"},
@@ -108,6 +108,7 @@ startup
                 timer.CurrentTimingMethod = TimingMethod.GameTime;
             }
         }	
+        
 }
 
 update
@@ -126,7 +127,7 @@ isLoading
 
 split
 {
-	if ((current.map != old.map) && (settings[(current.map)]) && (!vars.doneMaps.Contains(current.map)))
+	if ((settings[(current.map)]) && (!vars.doneMaps.Contains(current.map)))
 	{
 		vars.doneMaps.Add(current.map);	
 		return true;
@@ -141,6 +142,11 @@ start
 		vars.doneMaps.Clear();
     	return true;
     }
+}
+
+onStart
+{
+    vars.doneMaps.Add(current.map);
 }
 
 exit 
