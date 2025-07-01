@@ -6,7 +6,7 @@ state("s2_sp64_ship")
 
 startup 
 {
-	settings.Add("Cutscene Time Fix", true, "Adds 62.8s to Hill 493, 2:58.6 to Ambush, & 48.7 to Epilogue");
+	settings.Add("Cutscene Time Fix", false, "Adds 62.8s to Hill 493, 2:58.6 to Ambush, & 48.7 to Epilogue");
 	settings.Add("missions", true, "Missions");
 
 	vars.missions = new Dictionary<string,string> 
