@@ -74,23 +74,37 @@ split
 update
 {
 	//massive shoutout to Ero for the help here. This is basically *removing* time from LiveSplits "loading times" which is then adding to RTA to display the time as LRT
-	if 
-	(
-		settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "hill" ||
-		settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "taken" ||
-		settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "labor_camp"
-	)
-	{vars.addCTFTimer.Start();}
-
-	if(vars.addCTFTimer.Elapsed.TotalSeconds < 2)
+	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "hill")
 	{
-	const double HillOffset = 62.8; 
-	const double TakenOffset = 178.6; 
-	const double LaborOffset = 48.7; 
-	timer.LoadingTimes -= TimeSpan.FromSeconds(HillOffset);
-	timer.LoadingTimes -= TimeSpan.FromSeconds(TakenOffset);
-	timer.LoadingTimes -= TimeSpan.FromSeconds(LaborOffset);
-	vars.addCTFTimer.Reset();
+		vars.addCTFTimer.Start();
+		const double HillOffset = 62.8;
+		if(vars.addCTFTimer.Elapsed.TotalSeconds < 2)
+		{
+			timer.LoadingTimes -= TimeSpan.FromSeconds(HillOffset);
+			vars.addCTFTimer.Reset();
+		}
+	}
+
+	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "taken")
+	{
+		vars.addCTFTimer.Start();
+		const double TakenOffset = 178.6;
+		if(vars.addCTFTimer.Elapsed.TotalSeconds < 2)
+		{
+			timer.LoadingTimes -= TimeSpan.FromSeconds(TakenOffset);
+			vars.addCTFTimer.Reset();
+		}
+	}
+
+	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "labor_camp")
+	{
+		vars.addCTFTimer.Start();
+		const double LaborOffset = 48.7;
+		if(vars.addCTFTimer.Elapsed.TotalSeconds < 2)
+		{
+			timer.LoadingTimes -= TimeSpan.FromSeconds(LaborOffset);
+			vars.addCTFTimer.Reset();
+		}
 	}
 }
 
