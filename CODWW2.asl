@@ -78,7 +78,7 @@ update
 	{
 		vars.addCTFTimer.Start();
 		const double HillOffset = 62.8;
-		if(vars.addCTFTimer.Elapsed.TotalSeconds < 2)
+		if(vars.addCTFTimer.Elapsed.TotalSeconds > 2)
 		{
 			timer.LoadingTimes -= TimeSpan.FromSeconds(HillOffset);
 			vars.addCTFTimer.Reset();
@@ -89,7 +89,7 @@ update
 	{
 		vars.addCTFTimer.Start();
 		const double TakenOffset = 178.6;
-		if(vars.addCTFTimer.Elapsed.TotalSeconds < 2)
+		if(vars.addCTFTimer.Elapsed.TotalSeconds > 2)
 		{
 			timer.LoadingTimes -= TimeSpan.FromSeconds(TakenOffset);
 			vars.addCTFTimer.Reset();
@@ -100,7 +100,7 @@ update
 	{
 		vars.addCTFTimer.Start();
 		const double LaborOffset = 48.7;
-		if(vars.addCTFTimer.Elapsed.TotalSeconds < 2)
+		if(vars.addCTFTimer.Elapsed.TotalSeconds > 2)
 		{
 			timer.LoadingTimes -= TimeSpan.FromSeconds(LaborOffset);
 			vars.addCTFTimer.Reset();
