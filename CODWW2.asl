@@ -6,7 +6,7 @@ state("s2_sp64_ship")
 
 startup 
 {
-	settings.Add("Cutscene Time Fix", false, "Adds 62.8s to Hill 493, 2:58.6 to Ambush, & 48.7 to Epilogue");
+	settings.Add("Cutscene Time Fix", true, "Adds 62.8s to Hill 493, 2:58.6 to Ambush, & 48.7 to Epilogue");
 	settings.Add("missions", true, "Missions");
 
 	vars.missions = new Dictionary<string,string> 
@@ -60,6 +60,15 @@ onStart
 	vars.doneMaps.Clear();
 }
 
+split
+{
+	if ((current.CurrentLevelName != old.CurrentLevelName) && (settings[current.CurrentLevelName]) && (!vars.doneMaps.Contains(current.CurrentLevelName))) 
+	{
+		vars.doneMaps.Add(old.CurrentLevelName);
+		return true;	
+	}
+}
+
 update
 {
 	//massive shoutout to Ero for the help here. This is basically *removing* time from LiveSplits "loading times" which is then adding to RTA to display the time as LRT
@@ -70,17 +79,8 @@ update
 	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "taken")
 	{print("Taken CTF Executed Successfully"); const double TakenOffset = 178.6; timer.LoadingTimes -= TimeSpan.FromSeconds(TakenOffset);}
 
-	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "taken_tent")
+	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "labor_camp")
 	{print("Hill CTF Executed Successfully"); const double LaborOffset = 48.7; timer.LoadingTimes -= TimeSpan.FromSeconds(LaborOffset);}
-}
-
-split
-{
-	if ((current.CurrentLevelName != old.CurrentLevelName) && (settings[current.CurrentLevelName]) && (!vars.doneMaps.Contains(current.CurrentLevelName))) 
-	{
-		vars.doneMaps.Add(old.CurrentLevelName);
-		return true;	
-	}
 }
 
 isLoading
