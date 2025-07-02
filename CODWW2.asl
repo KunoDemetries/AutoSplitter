@@ -70,7 +70,7 @@ update
 	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "taken")
 	{print("Taken CTF Executed Successfully"); const double TakenOffset = 178.6; timer.LoadingTimes -= TimeSpan.FromSeconds(TakenOffset);}
 
-	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "taken_tent" && current.CurrentLevelName == "labor_camp")
+	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "taken_tent")
 	{print("Hill CTF Executed Successfully"); const double LaborOffset = 48.7; timer.LoadingTimes -= TimeSpan.FromSeconds(LaborOffset);}
 }
 
