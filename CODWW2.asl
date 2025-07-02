@@ -9,6 +9,8 @@ startup
 	settings.Add("Cutscene Time Fix", true, "Adds 62.8s to Hill 493, 2:58.6 to Ambush, & 48.7 to Epilogue");
 	settings.Add("missions", true, "Missions");
 
+	vars.addCTFTimer = new Stopwatch();
+
 	vars.missions = new Dictionary<string,string> 
 		{  
 			{"cobra", "Operation Cobra"}, 
@@ -73,13 +75,13 @@ update
 {
 	//massive shoutout to Ero for the help here. This is basically *removing* time from LiveSplits "loading times" which is then adding to RTA to display the time as LRT
 	// this is probably a really backwards way of doing it, there must be a simpler way but im unsure - Meta
-	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "hill")
+	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "hill" && old.Loader == 0 current.loader != 0)
 	{print("Hill CTF Executed Successfully"); const double HillOffset = 62.8; timer.LoadingTimes -= TimeSpan.FromSeconds(HillOffset);}
 
-	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "taken")
+	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "taken" && old.Loader == 0 current.loader != 0)
 	{print("Taken CTF Executed Successfully"); const double TakenOffset = 178.6; timer.LoadingTimes -= TimeSpan.FromSeconds(TakenOffset);}
 
-	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "labor_camp")
+	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "labor_camp" && old.Loader == 0 current.loader != 0)
 	{print("Hill CTF Executed Successfully"); const double LaborOffset = 48.7; timer.LoadingTimes -= TimeSpan.FromSeconds(LaborOffset);}
 }
 
