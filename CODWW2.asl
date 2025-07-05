@@ -9,8 +9,6 @@ startup
 	settings.Add("Cutscene Time Fix", true, "Adds 62.8s to Hill 493, 2:58.6 to Ambush, & 48.7 to Epilogue");
 	settings.Add("missions", true, "Missions");
 
-	vars.addCTFTimer = new Stopwatch();
-
 	vars.missions = new Dictionary<string,string> 
 		{  
 			{"cobra", "Operation Cobra"}, 
@@ -62,49 +60,26 @@ onStart
 	vars.doneMaps.Clear();
 }
 
+update
+{
+	//massive shoutout to Ero for the help here. This is basically *removing* time from LiveSplits "loading times" which is then adding to RTA to display the time as LRT
+	// this is probably a really backwards way of doing it, there must be a simpler way but im unsure - Meta
+	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "hill" && current.CurrentLevelName == "mission_select")
+	{print("Hill CTF Executed Successfully"); const double HillOffset = 62.8; timer.LoadingTimes -= TimeSpan.FromSeconds(HillOffset);}
+
+	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "taken" && current.CurrentLevelName == "mission_select")
+	{print("Taken CTF Executed Successfully"); const double TakenOffset = 178.6; timer.LoadingTimes -= TimeSpan.FromSeconds(TakenOffset);}
+
+	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "remagen" && current.CurrentLevelName == "labor_camp")
+	{print("Labor CTF Executed Successfully"); const double LaborOffset = 48.7; timer.LoadingTimes -= TimeSpan.FromSeconds(LaborOffset);}
+}
+
 split
 {
 	if ((current.CurrentLevelName != old.CurrentLevelName) && (settings[current.CurrentLevelName]) && (!vars.doneMaps.Contains(current.CurrentLevelName))) 
 	{
 		vars.doneMaps.Add(old.CurrentLevelName);
 		return true;	
-	}
-}
-
-update
-{
-	//massive shoutout to Ero for the help here. This is basically *removing* time from LiveSplits "loading times" which is then adding to RTA to display the time as LRT
-	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "hill")
-	{
-		vars.addCTFTimer.Start();
-		const double HillOffset = 62.8;
-		if(vars.addCTFTimer.Elapsed.TotalSeconds > 2)
-		{
-			timer.LoadingTimes -= TimeSpan.FromSeconds(HillOffset);
-			vars.addCTFTimer.Reset();
-		}
-	}
-
-	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "taken")
-	{
-		vars.addCTFTimer.Start();
-		const double TakenOffset = 178.6;
-		if(vars.addCTFTimer.Elapsed.TotalSeconds > 2)
-		{
-			timer.LoadingTimes -= TimeSpan.FromSeconds(TakenOffset);
-			vars.addCTFTimer.Reset();
-		}
-	}
-
-	if (settings["Cutscene Time Fix"] && old.CurrentLevelName == "mission_select" && current.CurrentLevelName == "labor_camp")
-	{
-		vars.addCTFTimer.Start();
-		const double LaborOffset = 48.7;
-		if(vars.addCTFTimer.Elapsed.TotalSeconds > 2)
-		{
-			timer.LoadingTimes -= TimeSpan.FromSeconds(LaborOffset);
-			vars.addCTFTimer.Reset();
-		}
 	}
 }
 
