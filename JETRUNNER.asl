@@ -26,8 +26,8 @@ startup
 		{ "Level Splits", true, "Level Splits", null },
 		{"GameInfo", 					true, "Print Various Game Info",						null},
 			{"Level",                   true, "Current Level",                                 "GameInfo"},
-            {"mIGT",                   true, "Current marathon IGT",                                 "GameInfo"},
-            {"placeholder",                   true, "placeholder",                                 "GameInfo"},
+            {"mIGT",                   false, "Current marathon IGT",                                 "GameInfo"},
+            {"placeholder",                   false, "placeholder",                                 "GameInfo"},
 		};
 		vars.Helper.Settings.Create(_settings);
 		
@@ -391,5 +391,6 @@ split
             vars.split = 0; 
         return true;
     }
+
 
 }
