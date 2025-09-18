@@ -157,10 +157,10 @@ init
 	IntPtr gWorld  = vars.Helper.ScanRel(3, "48 8B 1D ?? ?? ?? ?? 48 85 DB 74 ?? 41 B0");
 	IntPtr gEngine = vars.Helper.ScanRel(3, "48 8b 0d ?? ?? ?? ?? 48 85 c9 74 ?? 48 8b 89 ?? ?? ?? ?? 48 85 c9 74 ?? 48 8b 01 ff 50 ?? 88 06");
 	IntPtr fNamePool = vars.Helper.ScanRel(3, "48 8d 05 ?? ?? ?? ?? eb ?? 48 8d 0d ?? ?? ?? ?? e8 ?? ?? ?? ?? c6 05 ?? ?? ?? ?? ?? 0f 10 07");
-
+    print(gWorld.ToString("X"));
 	vars.Helper["WorldFName"]         = vars.Helper.Make<ulong>(gWorld, 0x18);    vars.hasWorldPtr    = true;
-    vars.Helper["IndividiaulIGT"]         = vars.Helper.Make<float>(gWorld, 0x1B0, 0x230, 0x20, 0x164);    vars.hasIndividualIGTPtr    = true; 
-    vars.Helper["MarathonIGT"]         = vars.Helper.Make<float>(gWorld, 0x1B0, 0x230, 0x20, 0x1E4);    vars.hasMarathonIGTPtr    = true; 
+    vars.Helper["IndividiaulIGT"]         = vars.Helper.Make<float>(gWorld, 0x1B0, 0x230, 0x20, 0x194);    vars.hasIndividualIGTPtr    = true; 
+    vars.Helper["MarathonIGT"]         = vars.Helper.Make<float>(gWorld, 0x1B0, 0x230, 0x20, 0x214);    vars.hasMarathonIGTPtr    = true; 
     // GEngine - SBGameInstance(1248) - CurrentCampaign(1D8) - CampaignId(030)
 	vars.Helper["campaignIDName"] = vars.Helper.Make<ulong>(gEngine, 0x1248, 0x1D8, 0x038); 
    
@@ -223,7 +223,7 @@ update
     ((Action)vars.RefreshNames)();
 
     vars.SetTextIfEnabled("Level", current.mapPretty);
-    vars.SetTextIfEnabled("mIGT", vars.LevelsEntered.Count);
+    vars.SetTextIfEnabled("mIGT", current.IndividiaulIGT);
 
     if (current.CurTimingMethod == 0)
         vars.SetTextIfEnabled("placeholder", "we're not in marathon");
