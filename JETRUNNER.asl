@@ -87,7 +87,7 @@ startup
             {"Skydiving_WB", "Skydiving"},
             {"Crevasse_WB", "The Crevasse"},
             {"JetValley_WB", "Jet Valley"},
-            {"DoubleTrouble_WB", "Dobule Trouble"},
+            {"DoubleTrouble_WB", "Double Trouble"},
             {"HookJungle_WB", "Hook Jungle"},
             {"HighTech_WB", "High Tech"},
             {"TheGreatWall_WB", "The Great Wall"},
@@ -394,3 +394,4 @@ split
 
 
 }
+
