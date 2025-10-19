@@ -4,10 +4,16 @@ state("DMC-DevilMayCry", "1.0")
     string20 Checkpoint : 0x111; // I was told not to worry about V1.0 as nobody runs on it, but I have to add this in the code or it won't init 
 }
 
-state("DMC-DevilMayCry", "Current")
+state("DMC-DevilMayCry", "Last Version Before 2025 Update")
 {
 	int loading : "DMC-DevilMayCry.exe", 0x2759300, 0x5B4;
-    string20 Checkpoint : 0x02733378, 0x560, 0x0;
+    string50 Checkpoint : 0x2733378, 0x560, 0x0;
+}
+
+state("DMC-DevilMayCry", "Current")
+{
+	int loading : "DMC-DevilMayCry.exe", 0x27521C0, 0x5B4;
+    string50 Checkpoint : 0x272C328, 0x560, 0x0;
 }
 
 init
@@ -17,6 +23,9 @@ init
 	{
 		case 47788032:
 			version = "1.0";
+			break;
+		case 47902720:
+			version = "Last Version Before 2025 Update";
 			break;
 		default:
 			version = "Current";
@@ -54,7 +63,8 @@ startup
         tB("DMC", "ch18_main", "Demon's Den"),
         tB("DMC", "ch19_main", "Face of The Demon"),
         tB("DMC", "ch20_main", "The End"),
-        tB("Ver", "DLC1_ch1_main", "Personal Hell"),
+        tB("Ver", "DLC1_Ch1_main", "Personal Hell New Game"),
+		tB("Ver", "DLC1_ch1_main", "Personal Hell New Game+"),
         tB("Ver", "DLC1_ch2_main", "Hollow"),
         tB("Ver", "DLC1_ch3_main", "Power Struggle"),
         tB("Ver", "DLC1_ch4_main", "Heartless"),
@@ -112,7 +122,7 @@ start // Just for ILs I'mma have it start on every entrance to each IL
     }
 }
 
-split
+split 
 {
     if (settings[current.Checkpoint] && (current.loading != 0) && (!vars.doneMaps.Contains(current.Checkpoint)))
     {
@@ -124,4 +134,11 @@ split
 isLoading
 {
 	return current.loading != 0;
+}
+
+reset // Adding for Vergil's Downfall Runners per Their Request
+{
+	if (current.loading != 0 && current.Checkpoint == "mainmenu_startup_vergil") {
+		return true;
+	}
 }
