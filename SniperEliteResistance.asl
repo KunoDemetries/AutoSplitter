@@ -1,3 +1,10 @@
+state("SniperResistance_dx12", "Steam 1.31")
+{
+string25 CurMap : 0x309291E;
+int start : 0x1295130;
+byte fades: 0x25E302C; // Fades after load needs testing. 25E302C or 26C29D4
+}
+
 state("SniperResistance_dx12", "Steam 1.05")
 {
 string25 CurMap : 0x308D5FE;
@@ -23,6 +30,9 @@ init
 {
 	switch(modules.First().ModuleMemorySize)
     {
+	case 264851456  :
+			version = "Steam 1.31";
+			break;
 	case 255025152 :
 			version = "Steam 1.05";
 			break;
@@ -72,7 +82,10 @@ startup
     	    {"Vineyard.asr", "Lock, Stock and Barrels"},
 			{"Liberte.asr", "End of the Line"},
 			{"Epilogue.asr", "All or Nothing"},
-			{"DLC_KillHitlerFilmSet.asr", "Lights, Camera, Achtung!: DLC"},
+			{"DLC_KillHitlerFilmSet.asr", "Lights, Camera, Achtung!: DLC"}, //DLC_Clearing.asr
+			{"DLC_Siege.asr", "Vercors Vendetta"},
+			{"DLC_Sudwall.asr", "Striking Range"},
+			{"DLC_Clearing.asr", "Mud and Thunder"},
 		};
 		foreach (var Tag in vars.missions)
 		{
@@ -131,4 +144,3 @@ isLoading
 {
 	return (settings["missions"] && current.start == 3) || (settings["missions"] && current.fades == 1);
 }
-
