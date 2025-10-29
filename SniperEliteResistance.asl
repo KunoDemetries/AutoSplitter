@@ -123,7 +123,7 @@ onStart
 
 split
 {
-	if ((current.CurMap != old.CurMap) && (settings[current.CurMap]) && (!vars.doneMaps.Contains(current.CurMap)) || (old.start == 14) && (current.start == 8) && (settings["ils"]) || (old.start == 14) && (current.start == 8) && (current.CurMap == "DLC_KillHitlerFilmSet.asr") ||  (settings["survival"]) && (old.start == 14) && (current.start == 8) || (current.CurMap == "Epilogue.asr") && (old.start == 14) && (current.start == 9) || (current.CurMap == "Liberte.asr") && (old.start == 14) && (current.start == 9))
+	if ((current.CurMap != old.CurMap) && (settings[current.CurMap]) && (!vars.doneMaps.Contains(current.CurMap)) || (old.start == 14) && (current.start == 8) && (settings["ils"]) || (old.start == 14) && (current.start == 8) && (current.CurMap == "DLC_KillHitlerFilmSet.asr") ||  (settings["survival"]) && (old.start == 14) && (current.start == 8) || (current.CurMap == "Epilogue.asr") && (old.start == 14) && (current.start == 9) || (current.CurMap == "Liberte.asr") && (old.start == 14) && (current.start == 9) || (current.CurMap == "DLC_Clearing.asr") && (old.start == 14) && (current.start == 9) || (current.CurMap == "DLC_Sudwall.asr") && (old.start == 14) && (current.start == 9))
 	{
 		vars.doneMaps.Add(current.CurMap);
 		return true;		
@@ -144,3 +144,4 @@ isLoading
 {
 	return (settings["missions"] && current.start == 3) || (settings["missions"] && current.fades == 1);
 }
+
