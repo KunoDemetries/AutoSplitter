@@ -2,7 +2,7 @@ state("SniperResistance_dx12", "Steam 1.31")
 {
 string25 CurMap : 0x309291E;
 int start : 0x1295130;
-byte fades: 0x25E302C; // Fades after load needs testing. 25E302C or 26C29D4
+//byte fades: 0x25E302C; // Fades after load needs testing. 25E302C or 26C29D4
 }
 
 state("SniperResistance_dx12", "Steam 1.05")
@@ -68,7 +68,7 @@ startup
 	settings.Add("survival", false, "Survival");
 	settings.SetToolTip("ils", "Enable splits for Survival. Please uncheck Missions and ILs.");
 	settings.Add("missions", false, "Missions");
-	settings.SetToolTip("missions", "Enable splits for Full Game. Please uncheck Individual Levels. \n Uncheck The Atlantic Wall or it will double split for Occupied Residence");
+	settings.SetToolTip("missions", "Enable splits for Full Game. Please uncheck Individual Levels. \n Uncheck Behind Enemy Lines or it will double split for Dead Drop");
 
 	vars.missions = new Dictionary<string,string> 
 		{ 
