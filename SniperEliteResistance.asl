@@ -143,6 +143,6 @@ onReset
 
 isLoading
 {
-	return (settings["missions"] && current.start == 3) || (settings["missions"] && current.fades == 1);
+	return (settings["missions"] && current.start == 3);
 }
 
