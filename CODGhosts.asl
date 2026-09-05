@@ -1,8 +1,13 @@
 state("iw6sp64_ship")
 {
+    /*
     string50 CurrentLevelName : 0x5816540;
     int Loader : 0x6024EA0;
-    int Loader2 : 0x774853C;
+    int Loader2 : 0x774853C; */
+
+    string50 CurrentLevelName : 0x5796440; //8 0100
+    int Loader : 0x5F9EA40;
+    int Loader2 : 0x76C253C; // 86000
 }
 
 startup
@@ -68,5 +73,10 @@ isLoading
 
 reset
 {
-    return (current.CurrentLevelName == null);
+    return (current.CurrentLevelName == null || current.CurrentLevelName == "");
+}
+
+update
+{
+    print(current.CurrentLevelName);
 }
