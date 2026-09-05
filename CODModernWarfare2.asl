@@ -1,10 +1,18 @@
 state("iw4sp")
 {	
+    /*
 	//string131 MapID : 0x5DA560;
 	bool Loader : 0x171338C; // Originally a 4byte
 	int KnifeThrown : 0x3E3ED0;
     string100 SpecOpsCampMapID : 0x89C598;
-    float ArmorPiercingEnemies : 0x36006C;   
+    float ArmorPiercingEnemies : 0x36006C;   */
+
+	//string131 MapID : 0x5DA560;
+	bool Loader : 0x1AC2324; // Originally a 4byte // 3A EF98
+	int KnifeThrown : 0x495A90;  // or 495A14 or e24128
+    string100 SpecOpsCampMapID : 0xB679D8; // 2C B440
+    float ArmorPiercingEnemies : 0x422F40;   // or 40d5e0, 418284, cf7c5c
+
 }
 
 init
@@ -12,6 +20,8 @@ init
 	vars.doneMaps = new List<string>(); // Adding cause of SpecOps
     // Resetting happens slightly different for spec-ops runs so we need to be able to check what type of run we're doing
     vars.campaignRun = false;
+    // Sig scan watchers
+
 }
 
 startup
@@ -96,6 +106,7 @@ startup
         }	
 }
 
+
 split
 {	return (
         // Campaign knife throw
@@ -148,5 +159,5 @@ onReset
 
 isLoading
 {
-	return (!current.Loader) || (current.SpecOpsCampMapID == "airport");
+	return (current.Loader) || (current.SpecOpsCampMapID == "airport");
 }
