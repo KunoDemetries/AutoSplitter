@@ -1,4 +1,14 @@
 // Thanks Kuno for the help much <3
+// June 9 2025 Update
+
+state("sniper5_dx12", "Steam 2.41")
+{
+	string110 CurCutscene : 0x02689EE8, 0x38, 0x248, 0x0, 0x0;
+	string14 CurMap : 0x30591CE;
+	int start : 0x273264C;	// main menu 5, in game 13, loading 3, second cutscene is 8, first 5. E8E3EC,, ,, 273264C.. 273265C
+	byte fades : 0xE801EC; // E801EC, E801F4, E9F9AC, 271314E. Hidden loading in the fades
+}
+
 state("sniper5_dx12", "Xbox Game Pass 2.31")
 {
 	string110 CurCutscene : 0x02728850, 0x38, 0x248, 0x0, 0x0;
@@ -121,6 +131,9 @@ init
 		break;
 	case 380698624	:
 		version = "Xbox Game Pass 2.31";
+		break;
+	case 401862656  :
+		version = "Steam 2.41";
 		break;
     }
 	vars.doneMaps = new List<string>(); // You get kicked to the main menu, so adding this just in case
