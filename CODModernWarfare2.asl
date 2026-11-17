@@ -1,22 +1,29 @@
-state("iw4sp")
-{	
-    /*
-	//string131 MapID : 0x5DA560;
-	bool Loader : 0x171338C; // Originally a 4byte
-	int KnifeThrown : 0x3E3ED0;
-    string100 SpecOpsCampMapID : 0x89C598;
-    float ArmorPiercingEnemies : 0x36006C;   */
+// Current Steam version (64-bit)
+state("iw4sp", "Current")
+{
+	bool Loader : 0x19B48D4;
+	int KnifeThrown : 0xE24128;
+    string100 SpecOpsCampMapID : 0xB679D8;
+    float ArmorPiercingEnemies : 0x423288;
+}
 
-	//string131 MapID : 0x5DA560;
-	bool Loader : 0x1AC2324; // Originally a 4byte // 3A EF98
-	int KnifeThrown : 0x495A90;  // or 495A14 or e24128
-    string100 SpecOpsCampMapID : 0xB679D8; // 2C B440
-    float ArmorPiercingEnemies : 0x422F40;   // or 40d5e0, 418284, cf7c5c
-
+// Downpatched 1.0 version (32-bit)
+state("iw4sp", "1.0")
+{
+	bool Loader : 0x1716904;
+	int KnifeThrown : 0xB273C0;
+    string100 SpecOpsCampMapID : 0x89FB18;
+    float ArmorPiercingEnemies : 0x37872C;
 }
 
 init
 {
+    // Both versions are iw4sp.exe: 1.0 is the 32-bit one, the current Steam version is 64-bit
+    if (modules.First().ModuleMemorySize == 0x2153000) version = "1.0";
+    else if (game.Is64Bit()) version = "Current";
+    else version = "";
+    print("[MW2 ASL] version: " + (version == "" ? "unknown" : version));
+
 	vars.doneMaps = new List<string>(); // Adding cause of SpecOps
     // Resetting happens slightly different for spec-ops runs so we need to be able to check what type of run we're doing
     vars.campaignRun = false;
@@ -107,12 +114,18 @@ startup
 }
 
 
+update
+{
+    // Unknown game version: no addresses to read, so do nothing
+    if (version == "") return false;
+}
+
 split
 {	return (
         // Campaign knife throw
         (settings["campaign_end"] && current.KnifeThrown == 600 && current.SpecOpsCampMapID == "ending") ||
         // Spec ops kill last enemy on Armour Piercing
-        (settings["spec_ops_end"] && current.SpecOpsCampMapID == "so_takeover_oilrig" && current.Loader && current.ArmorPiercingEnemies == 0 && old.ArmorPiercingEnemies > 0) ||
+        (settings["spec_ops_end"] && current.SpecOpsCampMapID == "so_takeover_oilrig" && current.ArmorPiercingEnemies == 0 && old.ArmorPiercingEnemies > 0) ||
         // Level change
         (!vars.doneMaps.Contains(current.SpecOpsCampMapID) && current.SpecOpsCampMapID != "ui" && settings[current.SpecOpsCampMapID] && current.SpecOpsCampMapID != old.SpecOpsCampMapID)
     );
@@ -147,7 +160,8 @@ reset
         // Going back to the menu in campaign
         (vars.campaignRun && current.SpecOpsCampMapID == "ui") ||
         // Starting The Pit in spec ops
-        (!vars.campaignRun && old.SpecOpsCampMapID == "ui" && current.SpecOpsCampMapID == "so_killspree_trainer")
+        // ("" too: the map name is briefly empty between "ui" and the level at the start of a load)
+        (!vars.campaignRun && (old.SpecOpsCampMapID == "ui" || old.SpecOpsCampMapID == "") && current.SpecOpsCampMapID == "so_killspree_trainer")
     );
 }
 
@@ -159,5 +173,5 @@ onReset
 
 isLoading
 {
-	return (current.Loader) || (current.SpecOpsCampMapID == "airport");
+	return (!current.Loader) || (current.SpecOpsCampMapID == "airport");
 }
