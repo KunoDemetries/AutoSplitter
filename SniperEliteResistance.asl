@@ -143,6 +143,6 @@ onReset
 
 isLoading
 {
-	return (settings["missions"] && current.start == 3);
+	return (settings["missions"] && current.start == 3) || (current.CurMap == "Castle.asr" && current.start == 6);
 }
 
