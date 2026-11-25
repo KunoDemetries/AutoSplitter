@@ -3,6 +3,7 @@ state("SniperResistance_dx12", "Steam 1.31")
 string25 CurMap : 0x309291E;
 int start : 0x1295130;
 string62 cutscene: 0x26C1108, 0x8, 0x248, 0x0, 0x1C;
+byte fades: 0x3082A08;
 //byte fades: 0x25E302C; // Fades after load needs testing. 25E302C or 26C29D4
 }
 
@@ -143,6 +144,7 @@ onReset
 
 isLoading
 {
-	return (settings["missions"] && current.start == 3) || (current.CurMap == "Castle.asr" && current.start == 6);
+	return (settings["missions"] && current.start == 3) || (settings["missions"] && current.fades == 1) || (current.CurMap == "Castle.asr" && current.start == 6);
+
 }
 
